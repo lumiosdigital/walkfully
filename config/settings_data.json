@@ -19,10 +19,10 @@
     "maximum_font_ratio": "1.414",
     "body_font": "playfair_display_n4",
     "maximum_font_size": 18,
-    "accent": "#d97d6c",
-    "accent_contrast": "#f9f9f6",
+    "accent": "#ffcd68",
+    "accent_contrast": "#252b36",
     "header_color_scheme": "scheme-1",
-    "header_transparent_color_scheme": "scheme-3",
+    "header_transparent_color_scheme": "scheme-4",
     "header_menus_color_scheme": "scheme-1",
     "header_mobile_color_scheme": "scheme-1",
     "floating_color_scheme": "scheme-1",
@@ -98,12 +98,12 @@
       },
       "scheme-4": {
         "settings": {
-          "background": "#252b36",
+          "background": "rgba(0,0,0,0)",
           "background_gradient": "",
-          "text": "#f9f8ee",
-          "button": "#d55127",
-          "button_label": "#f9f8ee",
-          "secondary_button_label": "#363430"
+          "text": "#f7f1e5",
+          "button": "#f7f1e5",
+          "button_label": "#252b36",
+          "secondary_button_label": "#f7f1e5"
         }
       },
       "scheme-5": {

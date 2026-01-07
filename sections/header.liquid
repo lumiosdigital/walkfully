@@ -230,6 +230,18 @@
           %}
         {% endif %}
 
+        {% if section.settings.show_subscribe_button %}
+          <div class="header__subscribe-button">
+            <a
+              href="{{ section.settings.subscribe_button_link }}"
+              class="btn-subscribe"
+              {% if section.settings.subscribe_button_link == blank %}onclick="return false;"{% endif %}
+            >
+              {{ section.settings.subscribe_button_text }}
+            </a>
+          </div>
+        {% endif %}
+
         {{ account_button }}
 
         {% if settings.enable_quick_search %}
@@ -558,6 +570,27 @@
         }
       ],
       "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Subscribe Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subscribe_button",
+      "label": "Show subscribe button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "subscribe_button_text",
+      "label": "Subscribe button text",
+      "default": "Subscribe by Email"
+    },
+    {
+      "type": "url",
+      "id": "subscribe_button_link",
+      "label": "Subscribe button link"
     },
     {
       "type": "header",
