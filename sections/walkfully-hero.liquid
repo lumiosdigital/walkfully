@@ -293,6 +293,35 @@
   .header {
     margin-left: 0;
     margin-right: 0;
+    transition: opacity 0.2s ease, transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease !important;
+  }
+
+  /* Force header to stay transparent on homepage when not hovering */
+  .header.header--transparent:not(:hover):not(:focus-within) {
+    background-color: rgba(0,0,0,0) !important;
+  }
+
+  .header.header--transparent:not(:hover):not(:focus-within) .header__menu .fancy-link a,
+  .header.header--transparent:not(:hover):not(:focus-within) .nav-menu a {
+    color: var(--Cement, #F7F1E5) !important;
+  }
+
+  /* Keep icons white when transparent */
+  .header.header--transparent:not(:hover):not(:focus-within) .btn-icon {
+    color: #F7F1E5 !important;
+  }
+
+  /* Keep subscribe button white when transparent */
+  .header.header--transparent:not(:hover):not(:focus-within) .btn-subscribe {
+    color: #f7f1e5 !important;
+    border-color: #f7f1e5 !important;
+  }
+
+  .header a:not(.btn-icon),
+  .header__inner,
+  .header__menu,
+  .nav-menu {
+    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
   }
 
   /* Header Padding */
@@ -341,14 +370,6 @@
     display: block;
   }
 
-  /* Header Icons - Color change on hover */
-  .header:not(.header--is-transparent) .btn-icon svg path,
-  .header.header--transparent:hover .btn-icon svg path,
-  .header.header--transparent:focus-within .btn-icon svg path {
-    stroke: #21262F;
-    fill: #21262F;
-  }
-
   /* Header Subscribe Button Styles */
   .header__subscribe-button {
     display: none;
@@ -363,7 +384,6 @@
 
   .btn-subscribe {
     display: inline-flex;
-    align-items: center;
     justify-content: center;
     padding: 10px 20px;
     height: 40px;
@@ -377,7 +397,6 @@
     background: transparent;
     text-decoration: none;
     white-space: nowrap;
-    transition: all 0.2s ease;
   }
 
   .btn-subscribe:hover {
