@@ -1,0 +1,107 @@
+{%- liquid
+  assign should_close = false
+  assign sort_by = results.sort_by | default: results.default_sort_by
+  if results.url
+    assign results_url = results.url
+  else
+    assign terms = results.terms | escape
+    assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+  endif
+-%}
+
+{% capture reset_button %}
+  <li class="filters-active__button-container">
+    <div class="filters-active__button-container">
+      {% if show_filter_label %}
+      <span class="filters-active__buttons-heading ">{{ 'products.filters.active_filters' | t }}</span>
+      {% endif %}
+      <a href="{{ results_url }}" class="filters-active__button" aria-label="{{ 'products.filters.clear_all' | t }}">
+        <span class="filters-active__button-text-container">
+          <span class="filters-active__button-text">{{ 'products.filters.clear_all' | t }}</span>
+        </span>
+        {% render 'theme-icon', icon: 'x', size: '1em' %}
+      </a>
+    </div>
+  </li>
+{% endcapture %}
+
+<ul class="filters-active reset fs--1{% if show_filter_label %} filters-active--grouped{% endif %}">
+  {% if show_filter_label %}
+    {{ reset_button }}
+  {% endif %}
+
+  {%- for filter in results.filters -%}
+    {% if filter.active_values.size > 0 %}
+      {% if should_close %}
+        </li>
+      {% endif %}
+      <li class="filters-active__button-container">
+        {% if show_filter_label %}
+          <span class="filters-active__buttons-heading ">
+            {{ filter.label }}
+          </span>
+        {% endif %}
+
+        {% assign should_close = true %}
+        <div class="filters-active__buttons">
+    {% endif %}
+    {%- for value in filter.active_values -%}
+      <div class="filters-active__button-container">
+        <a
+          href="{{ value.url_to_remove }}"
+          data-remove-filter
+          data-type="filter"
+          class="filters-active__button"
+          data-param-name="{{ value.param_name }}"
+          data-value="{{ value.value }}"
+          aria-label="{{ 'products.filters.clear_filter' | t }}"
+        >
+          <span class="filters-active__button-text-container">
+            <span class="filters-active__button-text">{{ value.label | escape }}</span>
+          </span>
+          {% render 'theme-icon', icon: 'x', size: '1em' %}
+        </a>
+      </div>
+      {% if forloop.last %}
+        </div>
+      {% endif %}
+    {%- endfor -%}
+
+    {%- if filter.type == 'price_range' -%}
+      {% assign min = filter.min_value.value %}
+      {% assign max = filter.max_value.value %}
+      {%- if min != null or max != null -%}
+        <li class="filters-active__button-container">
+          <div class="filters-active__button-container">
+            {% if show_filter_label %}
+              <span class="filters-active__buttons-heading ">{{ filter.label }}</span>
+            {% endif %}
+            <a
+              href="{{ filter.url_to_remove }}"
+              data-remove-filter
+              data-type="price"
+              class="filters-active__button"
+              aria-label="{{ 'products.filters.clear_filter' | t }}"
+            >
+              <span class="filters-active__button-text-container">
+                {% comment %}
+                  {% if show_filter_label -%}
+                    <span class="filters-active__button-label">{{ filter.label | escape }}:</span>
+                  {%- endif %}
+                {% endcomment %}
+                <span class="filters-active__button-text">
+                  {{- min | default: 0 | money }} - {{ max | default: filter.range_max | money -}}
+                </span>
+              </span>
+              {% render 'theme-icon', icon: 'x', size: '1em' %}
+            </a>
+          </div>
+        </li>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {% unless show_filter_label %}
+    {{ reset_button }}
+  {% endunless %}
+</ul>

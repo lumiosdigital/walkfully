@@ -1,0 +1,210 @@
+<div
+  class="
+    main-account
+    grid
+    color-{{ section.settings.color_scheme }}
+    {% render 'section-classes', settings: section.settings -%}
+  "
+>
+  <div class="grid__content grid__content--plus-row-gap">
+    <div class="main-account__greeting-wrapper grid__item--span-12">
+      <div class="main-account__greeting">
+        <h1 class="fs-0 ff-b">{{ 'customer.account.welcome' | t }}</h1>
+        <p class="main-account__greeting-name fs-4">{{ customer.first_name }}</p>
+      </div>
+      <div class="main-account__logout-wrapper">
+        <a href="{{ routes.account_logout_url }}" class="btn btn--primary">
+          {{ 'customer.log_out' | t }}
+        </a>
+      </div>
+    </div>
+
+    <div class="main-account__details grid__item--span-12 grid__item--span-3-tablet">
+      <h4 class="main-account__divider-heading">{{ 'customer.account.details' | t }}</h4>
+      <div class="main-account__address-default-title">
+        {{ 'customer.account.default' | t }}
+      </div>
+
+      <div class="main-account__address fs--1">
+        {{ customer.default_address | format_address }}
+      </div>
+
+      <a
+        href="{{ routes.account_addresses_url }}"
+        class="main-account__address-view-all btn btn--secondary btn--full-width"
+      >
+        {{ 'customer.account.view_addresses' | t }}
+      </a>
+    </div>
+
+    <div class="main-account__orders grid__item--span-12 grid__item--span-9-tablet">
+      <h4 class="main-account__divider-heading">{{ 'customer.orders.title' | t }}</h4>
+
+      {% paginate customer.orders by 20 %}
+        {%- if customer.orders.size > 0 -%}
+          {%- for order in customer.orders -%}
+            <div class="main-account__order">
+              <div class="main-account__order-header">
+                <div class="main-account__order-date">
+                  <span class="fs--1">{{ 'customer.orders.date' | t }}</span>
+                  {{ order.created_at | time_tag: format: 'date' }}
+                </div>
+                <div class="fancy-link">
+                  <a
+                    href="{{ order.customer_url }}"
+                  >
+                    {{ 'customer.order.view_order' | t }}
+                  </a>
+                </div>
+              </div>
+
+              <div class="main-account__order-details">
+                <div class="main-account__order-details-item">
+                  <span class="fs--1">{{ 'customer.orders.total' | t }}</span>
+                  {{ order.total_net_amount | money_with_currency }}
+                </div>
+                <div class="main-account__order-details-item">
+                  <span class="fs--1">{{ 'customer.orders.order_number' | t }}</span>
+                  {{ order.name }}
+                </div>
+                <div class="main-account__order-details-item">
+                  <span class="fs--1">{{ 'customer.orders.payment_status' | t }}</span>
+                  {{ order.financial_status_label }}
+                </div>
+                <div class="main-account__order-details-item">
+                  <span class="fs--1">{{ 'customer.orders.fulfillment_status' | t }}</span>
+                  {{ order.fulfillment_status_label }}
+                </div>
+              </div>
+
+              {%- liquid
+                assign line_item_size = order.line_items.size
+                assign show_more_text = false
+
+                if line_item_size > 5
+                  assign show_more_text = true
+                endif
+              -%}
+
+              <div class="main-account__order-item-images main-account__order-item-images--has-more">
+                {% capture image_sizes %}
+                  {% render 'image-sizes', desktop_x_wide_width: 0.08333571429, desktop_wide_width: 0.08507692308, desktop_width: 0.1028727273, tablet_width: 0.1266444444, width: 0.22895 %}
+                {% endcapture %}
+                {% for item in order.line_items limit: 5 %}
+                  {% render 'image',
+                    image: item.image,
+                    sizes: image_sizes,
+                    aspect_ratio: settings.product_card_aspect_ratio,
+                    include_placeholder: true
+                  %}
+                {% endfor %}
+
+                {% if show_more_text %}
+                  <div class="fancy-link">
+                    <a
+                      href="{{ order.customer_url }}"
+                    >
+                      {{ 'customer.orders.more' | t }}
+                    </a>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          <p>{{ 'customer.orders.none' | t }}</p>
+        {%- endif -%}
+
+        {%- if paginate.pages > 1 -%}
+          {%- render 'pagination',
+            paginate: paginate,
+            classes: 'grid__item--span-12',
+            show_count: true,
+            type: 'general.pagination.type_orders'
+          -%}
+        {%- endif -%}
+      {% endpaginate %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-account.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_spacing_and_border.content"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "label": "t:common.top_spacing.label",
+      "options": [
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "2x-large"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "label": "t:common.bottom_spacing.label",
+      "options": [
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "2x-large"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:common.show_bottom_border.label",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

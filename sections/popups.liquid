@@ -1,0 +1,1010 @@
+<section-popups class="popups">
+  <div class="popups__overlay" data-wash></div>
+  {% for block in section.blocks %}
+    {%- liquid
+      if block.settings.show_on != blank and request.design_mode == false
+        unless block.settings.show_on == request.path
+          continue
+        endunless
+      endif
+    -%}
+
+    <component-popup
+      class="
+        popups__popup
+        color-{{ block.settings.color_scheme }}
+        {% if block.settings.image != blank %}
+          popup--has-image
+        {% endif %}
+        popup--image-position-{{ block.settings.image_position }}
+      "
+      data-id="{{ section.id }}-{{ block.id }}"
+      data-delay="{% if block.type == 'age_verification' %}0{% else %}{{ block.settings.show_popup }}{% endif %}"
+      data-show-again="{% if block.type == 'age_verification' %}0{% else %}{{ block.settings.show_again }}{% endif %}"
+      data-type="{{ block.type }}"
+      {{ block.shopify_attributes }}
+      aria-modal="true"
+      aria-labelledby="popup-title-{{ forloop.index }}"
+      aria-describedby="popup-body-{{ forloop.index }}"
+      role="dialog"
+    >
+      {% unless block.type == 'age_verification' %}
+        <div class="popups__popup-close-btn-wrapper ">
+          <button type="button" class="btn-icon" data-close aria-label="{{ 'accessibility.close' | t }}">
+            {% render 'theme-icon', icon: 'x', size: '1.25em' %}
+          </button>
+        </div>
+      {% endunless %}
+      <div class="popups__popup-inner">
+        {% if block.settings.image != blank %}
+          {% capture image_sizes %}
+          {% if block.settings.image_position == 'background' %}
+            {% render 'image-sizes',
+              desktop_x_wide_width: 0.3571428571,
+              desktop_wide_width: 0.4166666667,
+              desktop_width: 0.625,
+              tablet_width: 0.4011777778,
+              width: 0.95
+            %}
+          {% else %}
+            {% render 'image-sizes',
+              desktop_x_wide_width: 0.25,
+              desktop_wide_width: 0.2916666667,
+              desktop_width: 0.3398058252,
+              tablet_width: 0.4375,
+              width: 0.4745454545
+            %}
+          {% endif %}
+        {% endcapture %}
+          {% render 'image',
+            image: block.settings.image,
+            sizes: image_sizes,
+            wrapper_class: 'popups__popup-image',
+            aspect_ratio: block.settings.media_aspect_ratio,
+            no_radius: true
+          %}
+        {% endif %}
+
+        <div
+          class="popups__popup-overlay overlay"
+          style="--overlay-opacity: {{ block.settings.image_overlay_opacity | divided_by: 100.0 }}"
+        ></div>
+
+        <div class="popups__popup-content">
+          {% if block.settings.heading != blank %}
+            <div
+              class="
+                block-heading
+                block-heading--align-{{ section.settings.horizontal_alignment }}
+                block-heading--mobile-align-{{ section.settings.horizontal_alignment_mobile }}
+                rhythm-heading
+                rhythm-heading-size-{{ block.settings.text_size }}
+              "
+              id="popup-title-{{ forloop.index }}"
+            >
+              <h2
+                class="
+                  rte
+                  {% render 'text-control-classes', settings: block.settings %}
+                "
+              >
+                {{ block.settings.heading }}
+              </h2>
+            </div>
+          {% endif %}
+          {% if block.settings.subheading_text != blank %}
+            <div
+              class="
+                block-text
+                block-text--align-{{ section.settings.horizontal_alignment }}
+                block-text--mobile-align-{{ section.settings.horizontal_alignment_mobile }}
+                rhythm-text
+                rte
+                {% render 'text-control-classes', settings: block.settings, prefix: 'subheading' %}
+              "
+              id="popup-body-{{ forloop.index }}"
+            >
+              {{ block.settings.subheading_text }}
+            </div>
+          {% endif %}
+          {% if block.settings.button_text != blank %}
+            <div
+              class="
+                block-buttons
+                block-buttons--align-left
+                block-buttons--mobile-align-left
+                rhythm-buttons
+                {% if block.settings.enable_animations %} animate animate--slide-in{% endif %}
+              "
+            >
+              <div class="block-buttons__buttons">
+                <div class="block-buttons__button">
+                  {% render 'button',
+                    button_text: block.settings.button_text,
+                    button_link: block.settings.button_link,
+                    button_style: block.settings.button_style,
+                    button_size: block.settings.button_size
+                  %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if block.type == 'newsletter_signup' %}
+            <div
+              class="
+                block-newsletter-signup
+                block-newsletter-signup--align-{{ horizontal_alignment }}
+                block-newsletter-signup--mobile-align-{{ mobile_align }}
+                rhythm-newsletter-signup
+                section-block
+                {% if section.settings.enable_animations %}
+                  animate
+                  animate--slide-in
+                {% endif %}
+              "
+              {{ block.shopify_attributes }}
+            >
+              {%- form 'customer', id: 'newsletter-signup' -%}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                {%- if form.posted_successfully? -%}
+                  <div class="form__message no-line" role="status">
+                    <h3 class="form__message-heading fs-1 ff-b" id="NewsletterSignup-success" tabindex="-1" autofocus>
+                      {% render 'theme-icon', icon: 'check-circle', size: '1em' %}
+                      {{- 'newsletter.success' | t }}
+                    </h3>
+                  </div>
+                {% else %}
+                  <div class="field">
+                    <label class="visually-hidden" for="NewsletterForm--{{ section.id }}">
+                      {{ 'newsletter.label' | t }}
+                      <span aria-hidden="true">*</span>
+                    </label>
+                    <div class="block-newsletter-signup__input-wrapper">
+                      <div class="block-newsletter-signup__input">
+                        <input
+                          id="NewsletterForm--{{ section.id }}"
+                          type="email"
+                          name="contact[email]"
+                          class="field__input"
+                          value="{{ form.email }}"
+                          aria-required="true"
+                          autocorrect="off"
+                          autocapitalize="off"
+                          autocomplete="email"
+                          {% if form.errors %}
+                            autofocus
+                            aria-invalid="true"
+                            aria-describedby="NewsletterSignup-error"
+                          {% elsif form.posted_successfully? %}
+                            aria-describedby="NewsletterSignup-success"
+                          {% endif %}
+                          placeholder="{{ 'newsletter.label' | t }}"
+                          required
+                        >
+                        {%- if form.errors contains 'email' -%}
+                          <div id="NewsletterSignup-error" class="form__field-message fs--1">
+                            {% render 'theme-icon', icon: 'alert-circle', size: '1em' %}
+                            <span>
+                              {{- form.errors.translated_fields.email | capitalize }}
+                              {{ form.errors.messages.email -}}
+                            </span>
+                          </div>
+                        {%- endif -%}
+                      </div>
+                      <button
+                        type="submit"
+                        class="block-newsletter-signup__form-button btn btn--primary"
+                      >
+                        {{ 'newsletter.button_label' | t }}
+                      </button>
+                    </div>
+                  </div>
+                {%- endif -%}
+              {%- endform -%}
+            </div>
+          {% endif %}
+          {% if block.type == 'age_verification' %}
+            <div
+              class="
+                block-buttons
+                block-buttons--align-left
+                block-buttons--mobile-align-left
+                rhythm-buttons
+                {% if block.settings.enable_animations %} animate animate--slide-in{% endif %}
+              "
+            >
+              <div class="block-buttons__buttons">
+                <div class="block-buttons__button" data-close>
+                  <button type="button" class="btn btn--primary">
+                    {{ 'sections.popups.i_am_over' | t: age: block.settings.min_age }}
+                  </button>
+                </div>
+                <div class="block-buttons__button">
+                  <a
+                    href="{% if block.settings.exit_url != blank %}{{ block.settings.exit_url }}{% else %}/password{% endif %}"
+                    class="btn btn--secondary"
+                  >
+                    {{- 'sections.popups.i_am_under' | t: age: block.settings.min_age -}}
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </component-popup>
+
+    {% if block.type == 'age_verification' %}
+      <div class="popups__popup-overlay-block"></div>
+    {% endif %}
+  {% endfor %}
+</section-popups>
+
+{% schema %}
+{
+  "name": "t:sections.popups.name",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.popups.settings.paragraph__intro.content"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "popup",
+      "name": "t:sections.popups.blocks.popup.name",
+      "settings": [
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "t:sections.all.colors.label",
+          "default": "scheme-1"
+        },
+        {
+          "type": "select",
+          "id": "show_popup",
+          "label": "t:sections.popups.shared.show_popup.label",
+          "options": [
+            {
+              "value": "0",
+              "label": "t:sections.popups.shared.show_popup.option__immediately"
+            },
+            {
+              "value": "3",
+              "label": "t:sections.popups.shared.show_popup.option__3_s"
+            },
+            {
+              "value": "5",
+              "label": "t:sections.popups.shared.show_popup.option__5_s"
+            },
+            {
+              "value": "10",
+              "label": "t:sections.popups.shared.show_popup.option__10_s"
+            },
+            {
+              "value": "15",
+              "label": "t:sections.popups.shared.show_popup.option__15_s"
+            },
+            {
+              "value": "30",
+              "label": "t:sections.popups.shared.show_popup.option__30_s"
+            },
+            {
+              "value": "45",
+              "label": "t:sections.popups.shared.show_popup.option__45_s"
+            },
+            {
+              "value": "60",
+              "label": "t:sections.popups.shared.show_popup.option__1_m"
+            },
+            {
+              "value": "120",
+              "label": "t:sections.popups.shared.show_popup.option__2_m"
+            },
+            {
+              "value": "180",
+              "label": "t:sections.popups.shared.show_popup.option__3_m"
+            }
+          ],
+          "default": "5"
+        },
+        {
+          "type": "select",
+          "id": "show_again",
+          "label": "t:sections.popups.shared.show_again.label",
+          "info": "t:sections.popups.shared.show_again.info",
+          "options": [
+            {
+              "value": "0",
+              "label": "t:sections.popups.shared.show_again.option__never"
+            },
+            {
+              "value": "1",
+              "label": "t:sections.popups.shared.show_again.option__1_h"
+            },
+            {
+              "value": "2",
+              "label": "t:sections.popups.shared.show_again.option__2_h"
+            },
+            {
+              "value": "4",
+              "label": "t:sections.popups.shared.show_again.option__4_h"
+            },
+            {
+              "value": "24",
+              "label": "t:sections.popups.shared.show_again.option__24_h"
+            },
+            {
+              "value": "72",
+              "label": "t:sections.popups.shared.show_again.option__72_h"
+            },
+            {
+              "value": "168",
+              "label": "t:sections.popups.shared.show_again.option__168_h"
+            }
+          ],
+          "default": "0"
+        },
+        {
+          "type": "url",
+          "id": "show_on",
+          "label": "t:sections.popups.shared.show_on_page.label",
+          "info": "t:sections.popups.shared.show_on_page.info"
+        },
+        {
+          "type": "header",
+          "content": "t:common.header__content.content"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:common.image.label"
+        },
+        {
+          "type": "select",
+          "id": "media_aspect_ratio",
+          "label": "t:sections.main-product.settings.media_aspect.label",
+          "options": [
+            {
+              "value": "default",
+              "label": "t:common.aspect_ratio.option__default"
+            },
+            {
+              "value": "3-2",
+              "label": "t:common.aspect_ratio.option__3_2"
+            },
+            {
+              "value": "5-4",
+              "label": "t:common.aspect_ratio.option__5_4"
+            },
+            {
+              "value": "11-10",
+              "label": "t:common.aspect_ratio.option__11_10"
+            },
+            {
+              "value": "1-1",
+              "label": "t:common.aspect_ratio.option__1_1"
+            },
+            {
+              "value": "10-11",
+              "label": "t:common.aspect_ratio.option__10_11"
+            },
+            {
+              "value": "4-5",
+              "label": "t:common.aspect_ratio.option__4_5"
+            },
+            {
+              "value": "2-3",
+              "label": "t:common.aspect_ratio.option__2_3"
+            },
+            {
+              "value": "1-2",
+              "label": "t:common.aspect_ratio.option__1_2"
+            }
+          ],
+          "default": "10-11",
+          "visible_if": "{{ block.settings.image != blank }}"
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "t:sections.popups.shared.image_position.label",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:sections.popups.shared.image_position.option__left"
+            },
+            {
+              "value": "right",
+              "label": "t:sections.popups.shared.image_position.option__right"
+            },
+            {
+              "value": "background",
+              "label": "t:sections.popups.shared.image_position.opiton__background"
+            }
+          ],
+          "default": "left",
+          "visible_if": "{{ block.settings.image != blank }}"
+        },
+        {
+          "type": "range",
+          "id": "image_overlay_opacity",
+          "label": "t:common.image_overlay_opacity.label",
+          "info": "t:common.image_overlay_opacity.info",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 0,
+          "visible_if": "{{ block.settings.image != blank and block.settings.image_position == \"background\" }}"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "t:common.heading.label",
+          "default": "Don’t miss out"
+        },
+        {
+          "type": "select",
+          "id": "text_size",
+          "label": "t:common.heading_size.label",
+          "options": [
+            {
+              "value": "3",
+              "label": "t:common.text_size.option_h4"
+            },
+            {
+              "value": "4",
+              "label": "t:common.text_size.option_h3"
+            },
+            {
+              "value": "5",
+              "label": "t:common.text_size.option_h2"
+            },
+            {
+              "value": "6",
+              "label": "t:common.text_size.option_h1"
+            }
+          ],
+          "default": "5",
+          "visible_if": "{{ block.settings.heading != blank }}"
+        },
+        {
+          "type": "checkbox",
+          "id": "text_uppercase",
+          "label": "t:common.heading_uppercase.label",
+          "default": false,
+          "visible_if": "{{ block.settings.heading != blank }}"
+        },
+        {
+          "type": "richtext",
+          "id": "subheading_text",
+          "label": "t:common.text.label",
+          "default": "<p>Use this promotional code to save now!</p>"
+        },
+        {
+          "type": "select",
+          "id": "subheading_text_size",
+          "label": "t:common.text_size.label",
+          "options": [
+            {
+              "value": "1",
+              "label": "t:common.text_size.option_body_small"
+            },
+            {
+              "value": "2",
+              "label": "t:common.text_size.option_body"
+            },
+            {
+              "value": "3",
+              "label": "t:common.text_size.option_h4"
+            }
+          ],
+          "default": "2",
+          "visible_if": "{{ block.settings.subheading_text != blank }}"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "t:common.button_text.label",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "t:common.button_link.label"
+        },
+        {
+          "type": "select",
+          "id": "button_size",
+          "label": "t:common.button_size.label",
+          "options": [
+            {
+              "value": "compact",
+              "label": "t:common.sizing.compact"
+            },
+            {
+              "value": "standard",
+              "label": "t:common.sizing.standard"
+            },
+            {
+              "value": "large",
+              "label": "t:common.sizing.large"
+            }
+          ],
+          "default": "standard",
+          "visible_if": "{{ block.settings.button_text != blank }}"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "t:common.button_style.label",
+          "options": [
+            {
+              "value": "primary",
+              "label": "t:common.button_style.option__primary"
+            },
+            {
+              "value": "secondary",
+              "label": "t:common.button_style.option__secondary"
+            },
+            {
+              "value": "accent-primary",
+              "label": "t:common.button_style.option__accent_primary"
+            },
+            {
+              "value": "accent-secondary",
+              "label": "t:common.button_style.option__accent_secondary"
+            },
+            {
+              "value": "accent-text-link",
+              "label": "t:common.button_style.option__accent_text"
+            },
+            {
+              "value": "text-link",
+              "label": "t:common.button_style.option__text"
+            }
+          ],
+          "default": "primary",
+          "visible_if": "{{ block.settings.button_text != blank }}"
+        }
+      ]
+    },
+    {
+      "type": "newsletter_signup",
+      "name": "t:sections.popups.blocks.newsletter_signup.name",
+      "settings": [
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "t:sections.all.colors.label",
+          "default": "scheme-1"
+        },
+        {
+          "type": "select",
+          "id": "show_popup",
+          "label": "t:sections.popups.shared.show_popup.label",
+          "options": [
+            {
+              "value": "0",
+              "label": "t:sections.popups.shared.show_popup.option__immediately"
+            },
+            {
+              "value": "3",
+              "label": "t:sections.popups.shared.show_popup.option__3_s"
+            },
+            {
+              "value": "5",
+              "label": "t:sections.popups.shared.show_popup.option__5_s"
+            },
+            {
+              "value": "10",
+              "label": "t:sections.popups.shared.show_popup.option__10_s"
+            },
+            {
+              "value": "15",
+              "label": "t:sections.popups.shared.show_popup.option__15_s"
+            },
+            {
+              "value": "30",
+              "label": "t:sections.popups.shared.show_popup.option__30_s"
+            },
+            {
+              "value": "45",
+              "label": "t:sections.popups.shared.show_popup.option__45_s"
+            },
+            {
+              "value": "60",
+              "label": "t:sections.popups.shared.show_popup.option__1_m"
+            },
+            {
+              "value": "120",
+              "label": "t:sections.popups.shared.show_popup.option__2_m"
+            },
+            {
+              "value": "180",
+              "label": "t:sections.popups.shared.show_popup.option__3_m"
+            }
+          ],
+          "default": "5"
+        },
+        {
+          "type": "select",
+          "id": "show_again",
+          "label": "t:sections.popups.shared.show_again.label",
+          "info": "t:sections.popups.shared.show_again.info",
+          "options": [
+            {
+              "value": "0",
+              "label": "t:sections.popups.shared.show_again.option__never"
+            },
+            {
+              "value": "1",
+              "label": "t:sections.popups.shared.show_again.option__1_h"
+            },
+            {
+              "value": "2",
+              "label": "t:sections.popups.shared.show_again.option__2_h"
+            },
+            {
+              "value": "4",
+              "label": "t:sections.popups.shared.show_again.option__4_h"
+            },
+            {
+              "value": "24",
+              "label": "t:sections.popups.shared.show_again.option__24_h"
+            },
+            {
+              "value": "72",
+              "label": "t:sections.popups.shared.show_again.option__72_h"
+            },
+            {
+              "value": "168",
+              "label": "t:sections.popups.shared.show_again.option__168_h"
+            }
+          ],
+          "default": "0"
+        },
+        {
+          "type": "url",
+          "id": "show_on",
+          "label": "t:sections.popups.shared.show_on_page.label",
+          "info": "t:sections.popups.shared.show_on_page.info"
+        },
+        {
+          "type": "header",
+          "content": "t:common.header__content.content"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:common.image.label"
+        },
+        {
+          "type": "select",
+          "id": "media_aspect_ratio",
+          "label": "t:sections.main-product.settings.media_aspect.label",
+          "options": [
+            {
+              "value": "default",
+              "label": "t:common.aspect_ratio.option__default"
+            },
+            {
+              "value": "3-2",
+              "label": "t:common.aspect_ratio.option__3_2"
+            },
+            {
+              "value": "5-4",
+              "label": "t:common.aspect_ratio.option__5_4"
+            },
+            {
+              "value": "11-10",
+              "label": "t:common.aspect_ratio.option__11_10"
+            },
+            {
+              "value": "1-1",
+              "label": "t:common.aspect_ratio.option__1_1"
+            },
+            {
+              "value": "10-11",
+              "label": "t:common.aspect_ratio.option__10_11"
+            },
+            {
+              "value": "4-5",
+              "label": "t:common.aspect_ratio.option__4_5"
+            },
+            {
+              "value": "2-3",
+              "label": "t:common.aspect_ratio.option__2_3"
+            },
+            {
+              "value": "1-2",
+              "label": "t:common.aspect_ratio.option__1_2"
+            }
+          ],
+          "default": "10-11",
+          "visible_if": "{{ block.settings.image != blank }}"
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "t:sections.popups.shared.image_position.label",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:sections.popups.shared.image_position.option__left"
+            },
+            {
+              "value": "right",
+              "label": "t:sections.popups.shared.image_position.option__right"
+            },
+            {
+              "value": "background",
+              "label": "t:sections.popups.shared.image_position.opiton__background"
+            }
+          ],
+          "default": "left",
+          "visible_if": "{{ block.settings.image != blank }}"
+        },
+        {
+          "type": "range",
+          "id": "image_overlay_opacity",
+          "label": "t:common.image_overlay_opacity.label",
+          "info": "t:common.image_overlay_opacity.info",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 0,
+          "visible_if": "{{ block.settings.image != blank and block.settings.image_position == \"background\" }}"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "t:common.heading.label",
+          "default": "Join our newsletter"
+        },
+        {
+          "type": "select",
+          "id": "text_size",
+          "label": "t:common.heading_size.label",
+          "options": [
+            {
+              "value": "3",
+              "label": "t:common.text_size.option_h4"
+            },
+            {
+              "value": "4",
+              "label": "t:common.text_size.option_h3"
+            },
+            {
+              "value": "5",
+              "label": "t:common.text_size.option_h2"
+            },
+            {
+              "value": "6",
+              "label": "t:common.text_size.option_h1"
+            }
+          ],
+          "default": "5",
+          "visible_if": "{{ block.settings.heading != blank }}"
+        },
+        {
+          "type": "checkbox",
+          "id": "text_uppercase",
+          "label": "t:common.heading_uppercase.label",
+          "default": false,
+          "visible_if": "{{ block.settings.heading != blank }}"
+        },
+        {
+          "type": "richtext",
+          "id": "subheading_text",
+          "label": "t:common.text.label",
+          "default": "<p>Get weekly access to our best deals!</p>"
+        },
+        {
+          "type": "select",
+          "id": "subheading_text_size",
+          "label": "t:common.text_size.label",
+          "options": [
+            {
+              "value": "1",
+              "label": "t:common.text_size.option_body_small"
+            },
+            {
+              "value": "2",
+              "label": "t:common.text_size.option_body"
+            },
+            {
+              "value": "3",
+              "label": "t:common.text_size.option_h4"
+            }
+          ],
+          "default": "2",
+          "visible_if": "{{ block.settings.subheading_text != blank }}"
+        }
+      ]
+    },
+    {
+      "type": "age_verification",
+      "name": "t:sections.popups.blocks.age_verification.name",
+      "settings": [
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "t:sections.all.colors.label",
+          "default": "scheme-1"
+        },
+        {
+          "type": "range",
+          "id": "min_age",
+          "label": "t:sections.popups.blocks.age_verification.settings.min_age.label",
+          "min": 16,
+          "max": 21,
+          "step": 1,
+          "default": 18
+        },
+        {
+          "type": "url",
+          "id": "exit_url",
+          "label": "t:sections.popups.blocks.age_verification.settings.exit_url.label",
+          "info": "t:sections.popups.blocks.age_verification.settings.exit_url.info"
+        },
+        {
+          "type": "header",
+          "content": "t:common.header__content.content"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:common.image.label"
+        },
+        {
+          "type": "select",
+          "id": "media_aspect_ratio",
+          "label": "t:sections.main-product.settings.media_aspect.label",
+          "options": [
+            {
+              "value": "default",
+              "label": "t:common.aspect_ratio.option__default"
+            },
+            {
+              "value": "3-2",
+              "label": "t:common.aspect_ratio.option__3_2"
+            },
+            {
+              "value": "5-4",
+              "label": "t:common.aspect_ratio.option__5_4"
+            },
+            {
+              "value": "11-10",
+              "label": "t:common.aspect_ratio.option__11_10"
+            },
+            {
+              "value": "1-1",
+              "label": "t:common.aspect_ratio.option__1_1"
+            },
+            {
+              "value": "10-11",
+              "label": "t:common.aspect_ratio.option__10_11"
+            },
+            {
+              "value": "4-5",
+              "label": "t:common.aspect_ratio.option__4_5"
+            },
+            {
+              "value": "2-3",
+              "label": "t:common.aspect_ratio.option__2_3"
+            },
+            {
+              "value": "1-2",
+              "label": "t:common.aspect_ratio.option__1_2"
+            }
+          ],
+          "default": "10-11",
+          "visible_if": "{{ block.settings.image != blank }}"
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "t:sections.popups.shared.image_position.label",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:sections.popups.shared.image_position.option__left"
+            },
+            {
+              "value": "right",
+              "label": "t:sections.popups.shared.image_position.option__right"
+            },
+            {
+              "value": "background",
+              "label": "t:sections.popups.shared.image_position.opiton__background"
+            }
+          ],
+          "default": "left",
+          "visible_if": "{{ block.settings.image != blank }}"
+        },
+        {
+          "type": "range",
+          "id": "image_overlay_opacity",
+          "label": "t:common.image_overlay_opacity.label",
+          "info": "t:common.image_overlay_opacity.info",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 0,
+          "visible_if": "{{ block.settings.image != blank and block.settings.image_position == \"background\" }}"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "t:common.heading.label",
+          "default": "Welcome"
+        },
+        {
+          "type": "select",
+          "id": "text_size",
+          "label": "t:common.heading_size.label",
+          "options": [
+            {
+              "value": "3",
+              "label": "t:common.text_size.option_h4"
+            },
+            {
+              "value": "4",
+              "label": "t:common.text_size.option_h3"
+            },
+            {
+              "value": "5",
+              "label": "t:common.text_size.option_h2"
+            },
+            {
+              "value": "6",
+              "label": "t:common.text_size.option_h1"
+            }
+          ],
+          "default": "5",
+          "visible_if": "{{ block.settings.heading != blank }}"
+        },
+        {
+          "type": "checkbox",
+          "id": "text_uppercase",
+          "label": "t:common.heading_uppercase.label",
+          "default": false,
+          "visible_if": "{{ block.settings.heading != blank }}"
+        },
+        {
+          "type": "richtext",
+          "id": "subheading_text",
+          "label": "t:common.text.label",
+          "default": "<p>Please verify your age to enter.</p>"
+        },
+        {
+          "type": "select",
+          "id": "subheading_text_size",
+          "label": "t:common.text_size.label",
+          "options": [
+            {
+              "value": "1",
+              "label": "t:common.text_size.option_body_small"
+            },
+            {
+              "value": "2",
+              "label": "t:common.text_size.option_body"
+            },
+            {
+              "value": "3",
+              "label": "t:common.text_size.option_h4"
+            }
+          ],
+          "default": "2",
+          "visible_if": "{{ block.settings.subheading_text != blank }}"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

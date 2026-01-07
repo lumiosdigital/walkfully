@@ -1,0 +1,33 @@
+{%- liquid
+  assign media_url = media | image_url
+
+  capture image_wrapper_class
+    echo 'product-media-gallery__media'
+
+    if media_layout_mobile == 'swiper' or media_layout_desktop == 'swiper'
+      echo ' swiper-slide'
+    endif
+
+    if has_thumbs and forloop.first != true
+      echo ' hidden'
+    endif
+  endcapture
+
+  capture wrapper_attributes
+    echo 'data-media-id="[[ID]]"' | replace: '[[ID]]', media.id
+    echo 'class="[[wc]]"' | replace: '[[wc]]', image_wrapper_class
+  endcapture
+-%}
+
+<div
+  {{ wrapper_attributes }}
+>
+  {% render 'image',
+    image: media,
+    sizes: gallery_image_sizes,
+    aspect_ratio: media_aspect_ratio,
+    prioritize: forloop.first,
+    no_radius: no_radius,
+    include_placeholder: true
+  %}
+</div>

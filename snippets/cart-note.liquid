@@ -1,0 +1,38 @@
+<component-cart-note
+  class="cart-note fs--1 {{ wrapper_class }}"
+  data-edit-note-text="{{- 'sections.cart.edit_cart_note' | t -}}"
+  data-add-note-text="{{- 'sections.cart.show_cart_note' | t -}}"
+>
+  <button
+    type="button"
+    class="cart-note__button"
+    aria-controls="cart-note-{{ id }}"
+    aria-expanded="false"
+    data-trigger-button
+  >
+    <div class="cart-note__button-text cart-note__button-text--open">
+      {%- render 'theme-icon', icon: 'plus', size: '1em' -%}
+      <span data-update-text>
+        {% if cart.note == blank %}
+          {{- 'sections.cart.show_cart_note' | t -}}
+        {% else %}
+          {{- 'sections.cart.edit_cart_note' | t -}}
+        {% endif %}
+      </span>
+    </div>
+    <div class="cart-note__button-text cart-note__button-text--close">
+      {%- render 'theme-icon', icon: 'minus', size: '1em' -%}
+      <span>{{- 'sections.cart.hide_cart_note' | t -}}</span>
+    </div>
+  </button>
+  <div class="cart-note__field-wrapper field" id="cart-note-{{ id }}" data-content-field>
+    <label for="cart-note" class="fs--1">{{ 'sections.cart.note' | t }}</label>
+    <textarea
+      data-input
+      class="text-area field__input"
+      name="note"
+      id="cart-note"
+      placeholder="{{ 'sections.cart.note_placeholder' | t }}"
+    >{{ cart.note }}</textarea>
+  </div>
+</component-cart-note>

@@ -1,0 +1,277 @@
+<section-facet-grid
+  class="
+    facet-grid
+    {% if section.settings.image_bounds == 'extended' %}
+      facet-grid--bleed-edge
+    {% endif %}
+    {% render 'section-classes', settings: section.settings -%}
+  "
+>
+  <div class="grid{% if section.settings.grid_gap == 'none' %} grid--gap-0{% endif %}">
+    <div class="grid__content">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</section-facet-grid>
+
+{% schema %}
+{
+  "name": "t:sections.facet_grid.name",
+  "class": "facet-grid-section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer",
+      "custom.floating"
+    ]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "image_bounds",
+      "label": "t:common.image_bounds.label__grid",
+      "options": [
+        {
+          "value": "contained",
+          "label": "t:common.image_bounds.option__contained"
+        },
+        {
+          "value": "extended",
+          "label": "t:common.image_bounds.option__extended"
+        }
+      ],
+      "default": "contained"
+    },
+    {
+      "type": "select",
+      "id": "grid_gap",
+      "label": "t:sections.facet_grid.settings.gap_space",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:common.sizing.none"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        }
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_spacing_and_border.content"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "label": "t:common.top_spacing.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:common.sizing.none"
+        },
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "label": "t:common.bottom_spacing.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:common.sizing.none"
+        },
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:common.show_bottom_border.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_animations.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "t:common.enable_animations.label",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_grid-item"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.facet_grid.presets.name",
+      "category": "t:categories.storytelling",
+      "blocks": [
+        {
+          "type": "_grid-item",
+          "settings": {
+            "color_scheme": "scheme-2",
+            "item_span": "8",
+            "custom_height": 300,
+            "mobile_item_span": "6",
+            "mobile_custom_height": 250,
+            "item_height": "custom",
+            "mobile_item_height": "custom",
+            "image_overlay_opacity": 5,
+            "alignment": "top_left",
+            "mobile_alignment": "top_left",
+            "content_width": 320
+          },
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "heading": "Style That Speaks",
+                "text_size": "4",
+                "text_uppercase": false
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "<p>Express while making a statement.</p>",
+                "text_size": "1"
+              }
+            },
+            {
+              "type": "buttons",
+              "blocks": [
+                {
+                  "type": "_button",
+                  "settings": {
+                    "button_text": "Learn more",
+                    "button_size": "compact",
+                    "button_style": "secondary"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "_grid-item",
+          "settings": {
+            "color_scheme": "scheme-3",
+            "item_span": "4",
+            "custom_height": 400,
+            "mobile_item_span": "6",
+            "mobile_custom_height": 300,
+            "image_overlay_opacity": 25,
+            "alignment": "bottom_right",
+            "mobile_alignment": "bottom_right",
+            "content_width": 700
+          },
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "heading": "Essentials, Redefined",
+                "text_size": "3",
+                "text_uppercase": false
+              }
+            }
+          ]
+        },
+        {
+          "type": "_grid-item",
+          "settings": {
+            "color_scheme": "scheme-2",
+            "item_span": "12",
+            "item_height": "custom",
+            "mobile_item_height": "custom",
+            "custom_height": 350,
+            "mobile_item_span": "12",
+            "mobile_custom_height": 300,
+            "image_overlay_opacity": 25,
+            "alignment": "center_left",
+            "mobile_alignment": "center_left",
+            "content_width": 700
+          },
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "heading": "Trends You’ll Love",
+                "text_size": "6",
+                "text_uppercase": false
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "<p><em>Fresh looks, timeless appeal—find your perfect fit.</em></p>",
+                "text_size": "3"
+              }
+            },
+            {
+              "type": "buttons",
+              "blocks": [
+                {
+                  "type": "_button",
+                  "settings": {
+                    "button_text": "Shop now",
+                    "button_size": "standard",
+                    "button_style": "primary"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

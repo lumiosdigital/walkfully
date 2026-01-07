@@ -1,0 +1,73 @@
+{%- liquid
+  case image_span
+    when 12
+      if image_bounds == 'extended'
+        render 'image-sizes', desktop_x_wide_width: 0.966, desktop_wide_width: 0.9630434783, desktop_width: 0.9715378151, tablet_width: 0.9691375, width: 1
+      else
+        render 'image-sizes', desktop_x_wide_width: 0.9033404407, desktop_wide_width: 0.9215384615, desktop_width: 0.9361333333, tablet_width: 0.9447222222, width: 0.9629960578
+      endif
+
+    when 11
+      if image_bounds == 'extended'
+        render 'image-sizes', desktop_x_wide_width: 0.8751785714, desktop_wide_width: 0.8801916667, desktop_width: 0.8901621622, tablet_width: 0.89362878, width: 1
+      else
+        render 'image-sizes', desktop_x_wide_width: 0.8466222222, desktop_wide_width: 0.8478913043, desktop_width: 0.8602857143, tablet_width: 0.867625, width: 0.9629960578
+      endif
+
+    when 10
+      if image_bounds == 'extended'
+        render 'image-sizes', desktop_x_wide_width: 0.7989285714, desktop_wide_width: 0.805, desktop_width: 0.8101203704, tablet_width: 0.8131368421, width: 1
+      else
+        render 'image-sizes', desktop_x_wide_width: 0.7503571429, desktop_wide_width: 0.7657692308, desktop_width: 0.779, tablet_width: 0.7868631579, width: 0.9629960578
+      endif
+
+    when 9
+      if image_bounds == 'extended'
+        render 'image-sizes', desktop_x_wide_width: 0.7226785714, desktop_wide_width: 0.7271153846, desktop_width: 0.7310363636, tablet_width: 0.7331546392, width: 1
+      else
+        render 'image-sizes', desktop_x_wide_width: 0.6741071429, desktop_wide_width: 0.6878846154, desktop_width: 0.7034491525, tablet_width: 0.7073814433, width: 0.9629960578
+      endif
+
+    when 8
+      if image_bounds == 'extended'
+        render 'image-sizes', desktop_x_wide_width: 0.6464285714, desktop_wide_width: 0.6492307692, desktop_width: 0.6515727273, tablet_width: 0.6519222222, width: 1
+      else
+        render 'image-sizes', desktop_x_wide_width: 0.5978571429, desktop_wide_width: 0.61, desktop_width: 0.6209818182, tablet_width: 0.6242888889, width: 0.9629960578
+      endif
+
+    when 7
+      if image_bounds == 'extended'
+        render 'image-sizes', desktop_x_wide_width: 0.5701785714, desktop_wide_width: 0.5713461538, desktop_width: 0.5720363636, tablet_width: 0.5718222222, width: 1
+      else
+        render 'image-sizes', desktop_x_wide_width: 0.5216071429, desktop_wide_width: 0.5321153846, desktop_width: 0.5415272727, tablet_width: 0.5441888889, width: 0.9629960578
+      endif
+
+    when 6
+      if image_bounds == 'extended'
+        render 'image-sizes', desktop_x_wide_width: 0.4939285714, desktop_wide_width: 0.4934615385, desktop_width: 0.4926636364, tablet_width: 0.4917111111, width: 1
+      else
+        render 'image-sizes', desktop_x_wide_width: 0.4453571429, desktop_wide_width: 0.4542307692, desktop_width: 0.4620636364, tablet_width: 0.4640666667, width: 0.9629960578
+      endif
+
+    when 5
+      if image_bounds == 'extended'
+        render 'image-sizes', desktop_x_wide_width: 0.4176785714, desktop_wide_width: 0.4155769231, desktop_width: 0.4132090909, tablet_width: 0.4116111111, width: 1
+      else
+        render 'image-sizes', desktop_x_wide_width: 0.3691071429, desktop_wide_width: 0.3763461538, desktop_width: 0.3826181818, tablet_width: 0.3839666667, width: 0.9629960578
+      endif
+
+    when 4
+      if image_bounds == 'extended'
+        render 'image-sizes', desktop_x_wide_width: 0.3414285714, desktop_wide_width: 0.3376982294, desktop_width: 0.3337545455, tablet_width: 0.3314888889, width: 1
+      else
+        render 'image-sizes', desktop_x_wide_width: 0.2928571429, desktop_wide_width: 0.2984615385, desktop_width: 0.3031545455, tablet_width: 0.3038555556, width: 0.9629960578
+      endif
+
+    when 3
+      if image_bounds == 'extended'
+        render 'image-sizes', desktop_x_wide_width: 0.2651785714, desktop_wide_width: 0.2598076923, desktop_width: 0.2543, tablet_width: 0.2513888889, width: 1
+      else
+        render 'image-sizes', desktop_x_wide_width: 0.2166071429, desktop_wide_width: 0.2205769231, desktop_width: 0.2237, tablet_width: 0.2237555556, width: 0.9629960578
+      endif
+  endcase
+-%}

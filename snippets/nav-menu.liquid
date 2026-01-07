@@ -1,0 +1,171 @@
+<ul class="nav-menu fs-{{ nav_text_size | minus: 2 }} reset">
+  {%- for link in links -%}
+    <li class="nav-menu__item">
+      {%- liquid
+        assign forloop_index_string = forloop.index | append: ''
+        assign link_loop_index = forloop.index
+      -%}
+      {%- if mega_menu_positions contains forloop_index_string -%}
+        {%- liquid
+          for block in section.blocks
+            if link_loop_index == block.settings.position
+              assign block = block
+              break
+            endif
+          endfor
+        -%}
+        {% render 'mega-menu',
+          id: 'header',
+          forloop: forloop,
+          link: link,
+          submenu_icon: submenu_icon,
+          block: block,
+          nav_trigger: nav_trigger
+        %}
+      {%- elsif link.links != blank -%}
+        <component-nav-menu class="nav-menu__dropdown-container">
+          {% if nav_trigger == 'icon' and link.url != '#' %}
+            <div class="fancy-link">
+              <a
+                href="{{ link.url }}"
+                class="{% if link.current %}active{% endif %}"
+                {% if link.current %}
+                  aria-current="page"
+                {% endif %}
+              >
+                {{ link.title | escape }}
+              </a>
+            </div>
+            <button
+              class="nav-menu__submenu-trigger nav-menu__submenu-trigger--tier-1"
+              type="button"
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-controls="nav-menu-{{ id }}-{{ forloop.index }}"
+              aria-label="{{ 'accessibility.more_pages' | t: parent: link.title }}"
+              id="nav-button-{{ id }}-{{ forloop.index }}"
+            >
+              {% render 'theme-icon', icon: submenu_icon, size: '1em' %}
+            </button>
+          {% else %}
+            <button
+              class="nav-menu__submenu-trigger nav-menu__submenu-trigger--tier-1"
+              type="button"
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-controls="nav-menu-{{ id }}-{{ forloop.index }}"
+              aria-label="{{ 'accessibility.more_pages' | t: parent: link.title }}"
+              id="nav-button-{{ id }}-{{ forloop.index }}"
+            >
+              {{- link.title | escape -}}
+              {% render 'theme-icon', icon: submenu_icon, size: '1em' %}
+            </button>
+          {% endif %}
+          <ul
+            id="nav-menu-{{ id }}-{{ forloop.index }}"
+            class="nav-menu__submenu color-{{ settings.header_menus_color_scheme }}{% if nav_text_size == '3' %} fs-0{% else %} fs-{{ nav_text_size | minus: 2 }}{% endif %}"
+            role="menu"
+            aria-labelledby="nav-button-{{ id }}-{{ forloop.index }}"
+          >
+            {%- for childlink in link.links -%}
+              <li>
+                {%- if childlink.links != blank -%}
+                  {% if nav_trigger == 'icon' and childlink.url != '#' %}
+                    <div class="fancy-link">
+                      <a
+                        href="{{ childlink.url }}"
+                        class="{% if childlink.current %}active{% endif %}"
+                        {% if childlink.current %}
+                          aria-current="page"
+                        {% endif %}
+                      >
+                        {{ childlink.title | escape }}
+                      </a>
+                    </div>
+                    <button
+                      class="nav-menu__submenu-trigger nav-menu__submenu-trigger--tier-2"
+                      type="button"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-controls="nav-menu-{{ id }}-{{ childlink.title | handle }}-{{ forloop.index }}"
+                      aria-label="{{ 'accessibility.more_pages' | t: parent: childlink.title }}"
+                      id="nav-button-{{ id }}-{{ childlink.title | handle }}-{{ forloop.index }}"
+                    >
+                      {% render 'theme-icon', icon: submenu_icon, size: '1em' %}
+                    </button>
+                  {% else %}
+                    <button
+                      class="nav-menu__submenu-trigger nav-menu__submenu-trigger--tier-2  nav-menu__submenu-trigger--has-title"
+                      type="button"
+                      aria-expanded="false"
+                      aria-controls="nav-menu-{{ id }}-{{ childlink.title | handle }}-{{ forloop.index }}"
+                      aria-haspopup="true"
+                      aria-label="{{ 'accessibility.more_pages' | t: parent: childlink.title }}"
+                      id="nav-button-{{ id }}-{{ childlink.title | handle }}-{{ forloop.index }}"
+                    >
+                      {{- childlink.title | escape -}}
+                      {% render 'theme-icon', icon: submenu_icon, size: '1em' %}
+                    </button>
+                  {% endif %}
+                  <ul
+                    id="nav-menu-{{ id }}-{{ childlink.title | handle }}-{{ forloop.index }}"
+                    class="nav-menu__submenu nav-menu__submenu--tier-2"
+                    role="menu"
+                    aria-labelledby="nav-button-{{ id }}-{{ childlink.title | handle }}-{{ forloop.index }}"
+                  >
+                    {%- for grandchildlink in childlink.links -%}
+                      <li>
+                        <div class="fancy-link">
+                          <a
+                            href="{{ grandchildlink.url }}"
+                            class="{% if grandchildlink.current %}active{% endif %}"
+                            {% if grandchildlink.current %}
+                              aria-current="page"
+                            {% endif %}
+                          >
+                            {{ grandchildlink.title | escape }}
+                          </a>
+                        </div>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- else -%}
+                  <div class="fancy-link">
+                    <a
+                      href="{{ childlink.url }}"
+                      class="header__menu-item{% if childlink.current %} active{% endif %}"
+                      {% if childlink.current %}
+                        aria-current="page"
+                      {% endif %}
+                    >
+                      {{ childlink.title | escape }}
+                    </a>
+                  </div>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        </component-nav-menu>
+      {%- else -%}
+        <div class="fancy-link">
+          <a
+            href="{{ link.url }}"
+            class="
+              header__menu-item list-menu__item
+              {%- if link.current %}
+                active
+              {% endif %}
+            "
+            {% if link.current %}
+              aria-current="page"
+            {% endif %}
+          >
+            <span>
+              {{- link.title | escape -}}
+            </span>
+          </a>
+        </div>
+      {%- endif -%}
+    </li>
+  {%- endfor -%}
+</ul>

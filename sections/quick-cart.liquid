@@ -1,0 +1,151 @@
+{% if section.settings.enable_quick_cart %}
+  {%- capture content -%}
+    <section-quick-cart
+      data-section-id="{{ section.id }}"
+      data-cart-item-count="{{ cart.item_count }}"
+      class="quick-cart__container"
+    >
+      <div class="quick-cart__error fs--1" data-quick-cart-error>
+        <div class="quick-cart__error-product" data-quick-cart-error-product></div>
+        <small class="quick-cart__error-description" data-quick-cart-error-description></small>
+      </div>
+      <form
+        action="{{ routes.cart_url }}"
+        method="post"
+        novalidate
+        id="quick-cart-form"
+        class="quick-cart__form"
+      >
+        <ul class="quick-cart__items-list reset" data-update-items>
+          {% if settings.enable_free_shipping_bar and section.settings.free_shipping_bar_position == 'top' %}
+            <li>
+            {% render 'free-shipping-bar', wrapper_class: 'quick-cart__free-shipping-bar', isolate_update: false %}
+            </li>
+          {% endif %}
+          {% for item in cart.items %}
+            {% render 'cart-item', item: item, wrapper_class: 'quick-cart__item' %}
+          {% else %}
+            <h4>{{ 'sections.cart.empty' | t }}</h4>
+          {% endfor %}
+        </ul>
+      </form>
+    </section-quick-cart>
+  {%- endcapture -%}
+
+  {%- capture footer_content -%}
+    <div class="quick-cart__footer" data-quick-cart-footer data-cart-item-count="{{ cart.item_count }}">
+
+      {% if settings.enable_free_shipping_bar and section.settings.free_shipping_bar_position == 'bottom' %}
+        {% render 'free-shipping-bar', wrapper_class: 'quick-cart__free-shipping-bar', isolate_update: true %}
+      {% endif %}
+
+      <div class="quick-cart__footer-content">
+        {% if settings.enable_cart_note %}
+          {% render 'cart-note', wrapper_class: 'quick-cart__cart-note', id: 'quick-cart' %}
+        {% endif %}
+
+        <ul
+          class="quick-cart__order-discounts-list {% if cart.cart_level_discount_applications.size == 0 %}hidden{% endif %}"
+          data-update-discounts
+        >
+            {%- for discount in cart.cart_level_discount_applications -%}
+              <li class="quick-cart__order-discounts-list-item fs--1">
+                {%- render 'theme-icon', icon: 'tag', size: '1em' -%}
+                {{ discount.title | escape }}
+                (-{{ discount.total_allocated_amount | money }})
+              </li>
+            {%- endfor -%}
+          </ul>
+
+        <div class="quick-cart__total fs--1" data-update-total>
+          <span>{{ 'sections.cart.total' | t }}</span>
+          <span>{{ cart.total_price | money_with_currency }}</span>
+        </div>
+      </div>
+
+      <button
+        class="quick-cart__footer-btn quick-cart__footer-btn--has-items btn btn--primary btn--full-width btn--height-standard"
+        type="submit"
+        form="quick-cart-form"
+        name="checkout"
+      >
+        {{ 'sections.cart.checkout' | t }}
+      </button>
+
+      {%- if additional_checkout_buttons and section.settings.show_dynamic_checkout -%}
+        <div class="quick-cart__dynamic-checkout-buttons">
+          {{ content_for_additional_checkout_buttons }}
+        </div>
+      {%- endif -%}
+
+      <button
+        class="quick-cart__footer-btn quick-cart__footer-btn--no-items btn btn--primary btn--full-width btn--height-standard"
+        type="button"
+        data-close-overlay
+      >
+        {{ 'general.continue_shopping' | t }}
+      </button>
+
+    </div>
+  {%- endcapture -%}
+
+  {% assign panel_header = 'sections.cart.title' | t %}
+  {% assign panel_description = 'accessibility.panel_cart' | t %}
+
+  {% render 'panel',
+    class: 'quick-cart',
+    direction: 'right',
+    sub_id: 'quickCart',
+    open_on_editor_select: true,
+    heading: panel_header,
+    content: content,
+    footer: footer_content,
+    description: panel_description
+  %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:sections.quick-cart.name",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_quick_cart",
+      "label": "t:sections.quick-cart.settings.enable_quick_cart.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "t:sections.main-product.blocks.buy_buttons.settings.show_dynamic_checkout.label",
+      "info": "t:sections.main-product.blocks.buy_buttons.settings.show_dynamic_checkout.info",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__content.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:common.paragraph__cart_note.content"
+    },
+    {
+      "type": "select",
+      "id": "free_shipping_bar_position",
+      "label": "t:common.free_shipping_bar_position.label",
+      "info": "t:common.free_shipping_bar_position.info",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:common.free_shipping_bar_position.option__above_cart_items"
+        },
+        {
+          "value": "bottom",
+          "label": "t:common.free_shipping_bar_position.option__above_cart_total"
+        }
+      ],
+      "default": "top"
+    }
+  ]
+}
+{% endschema %}

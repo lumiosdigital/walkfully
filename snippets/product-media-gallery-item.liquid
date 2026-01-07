@@ -1,0 +1,88 @@
+{%- liquid
+  assign media_url = media | image_url
+  assign selected_product_has_media = true
+
+  if featured_media.id == blank
+    assign selected_product_has_media = false
+    assign is_first = forloop.first
+  endif
+
+  capture image_wrapper_class
+    echo 'product-media-gallery__media'
+    echo ' product-media-gallery__media--[[mt]]' | replace: '[[mt]]', media.media_type
+
+    if media_layout_mobile == 'swiper' or media_layout_desktop == 'swiper'
+      echo ' swiper-slide'
+    endif
+
+    if media.media_type == 'video'
+      echo ' product-media-gallery__media--video-aspect-' | append: media_aspect_ratio
+    endif
+
+    if selected_product_has_media
+      if has_thumbs and media.id != featured_media.id
+        echo ' hidden'
+      endif
+    else
+      if has_thumbs and is_first != true
+        echo ' hidden'
+      endif
+    endif
+  endcapture
+
+  capture media_tag
+    if enable_lightbox and media.media_type != 'video'
+      echo 'a'
+    else
+      echo 'div'
+    endif
+  endcapture
+
+  capture wrapper_attributes
+    echo 'data-media-id="[[ID]]"' | replace: '[[ID]]', media.id
+    echo 'class="[[wc]]"' | replace: '[[wc]]', image_wrapper_class
+    echo 'data-pswp-type="[[mt]]"' | replace: '[[mt]]', media.media_type
+
+    if enable_lightbox
+      echo 'href="[[mu]]"' | replace: '[[mu]]', media_url
+      echo 'data-pswp-width="[[mw]]"' | replace: '[[mw]]', media.width
+      echo 'data-pswp-height="[[mh]]"' | replace: '[[mh]]', media.height
+      echo 'target="_blank"'
+    endif
+  endcapture
+-%}
+
+<{{ media_tag }}
+  {{ wrapper_attributes }}
+>
+  {% if media.media_type != 'video' %}
+    {% render 'image',
+      image: media,
+      sizes: gallery_image_sizes,
+      aspect_ratio: media_aspect_ratio,
+      prioritize: is_first,
+      no_radius: no_radius
+    %}
+  {% else %}
+    <div class="product-media-gallery__video-overlay"></div>
+    {{
+      media
+      | video_tag:
+        image_size: '2000x',
+        autoplay: auto_play_videos,
+        loop: enable_video_looping,
+        controls: true,
+        muted: true
+    }}
+  {% endif %}
+
+  {%- if media.media_type == 'model' and is_quick_add != true -%}
+    <span class="product-media-gallery__badge" aria-hidden="true">
+      {%- render 'icon-3d-model' -%}
+    </span>
+  {%- elsif media.media_type == 'external_video' and is_quick_add != true -%}
+    <span class="product-media-gallery__badge" aria-hidden="true">
+      {%- render 'icon-play' -%}
+    </span>
+  {%- endif -%}
+</{{ media_tag }}>

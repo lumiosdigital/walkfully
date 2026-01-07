@@ -1,0 +1,232 @@
+<div
+  class="split-hero__side{% if block.settings.mobile_image != blank %} split-hero__side--has-mobile-image{% endif %} color-{{ block.settings.color_scheme }}"
+>
+  <div class="split-hero__image-wrapper">
+    {% capture image_sizes %}
+        {% render 'image-sizes', tablet_width: 0.5,  width: 1 %}
+      {% endcapture %}
+
+    {% if block.settings.desktop_image != blank %}
+      {% render 'image',
+        image: block.settings.desktop_image,
+        sizes: image_sizes,
+        no_radius: true,
+        wrapper_class: 'split-hero__image split-hero__image--desktop'
+      %}
+    {% else %}
+      {%- liquid
+        assign svg_product = 'product-apparel-2'
+
+        if block.id contains 'left-hero'
+          assign svg_product = 'product-apparel-3'
+        endif
+      -%}
+      <div class="image no-radius split-hero__image split-hero__image--desktop">
+        {{ svg_product | placeholder_svg_tag: 'placeholder-svg' }}
+      </div>
+    {% endif %}
+
+    {% if block.settings.mobile_image != blank %}
+      {% render 'image',
+        image: block.settings.mobile_image,
+        no_radius: true,
+        sizes: image_sizes,
+        wrapper_class: 'split-hero__image split-hero__image--mobile'
+      %}
+    {% endif %}
+  </div>
+  <div
+    class="split-hero__overlay overlay"
+    style="--overlay-opacity: {{ block.settings.image_overlay_opacity | divided_by: 100.0 }}"
+  ></div>
+
+  <div
+    class="split-hero__overlay-content overlay-content overlay-content--horizontal-align-left overlay-content--vertical-align-bottom overlay-content--vertical-align-mobile-bottom"
+  >
+    {% if block.settings.url != blank %}
+      <a
+        href="{{ block.settings.url }}"
+        class="split-hero__overlay-link"
+        aria-label="{{ block.settings.url }}"
+      ></a>
+    {% endif %}
+    <div class="split-hero__overlay-content-container overlay-content__container">
+      {% if block.settings.heading != blank %}
+        <h2 class="rte {% render 'text-control-classes', settings: block.settings %}{% if section.settings.enable_animations %} animate animate--slide-in{% endif %}">
+          {{ block.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if block.settings.button_text != blank and block.settings.url != blank %}
+        <div class="split-hero__overlay-content-button-container{% if section.settings.enable_animations %} animate animate--slide-in{% endif %}">
+          {% render 'button',
+            button_text: block.settings.button_text,
+            button_link: block.settings.url,
+            button_style: block.settings.button_style,
+            button_size: block.settings.button_size
+          %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:blocks.left_hero.name",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-3"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "t:common.desktop_image.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "t:common.mobile_image.label",
+      "info": "t:common.mobile_image.info"
+    },
+    {
+      "type": "range",
+      "id": "image_overlay_opacity",
+      "label": "t:common.image_overlay_opacity.label",
+      "info": "t:common.image_overlay_opacity.info",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__content.content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:common.heading.label",
+      "default": "Gear Up for What’s Next"
+    },
+    {
+      "type": "select",
+      "id": "text_font",
+      "label": "t:common.heading_font.label",
+      "options": [
+        {
+          "value": "ff-h",
+          "label": "t:common.text_font.option__heading"
+        },
+        {
+          "value": "ff-b",
+          "label": "t:common.text_font.option__body"
+        }
+      ],
+      "default": "ff-b",
+      "visible_if": "{{ block.settings.heading != blank }}"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "t:common.heading_size.label",
+      "options": [
+        {
+          "value": "2",
+          "label": "t:common.text_size.option_body"
+        },
+        {
+          "value": "3",
+          "label": "t:common.text_size.option_h4"
+        },
+        {
+          "value": "4",
+          "label": "t:common.text_size.option_h3"
+        },
+        {
+          "value": "5",
+          "label": "t:common.text_size.option_h2"
+        }
+      ],
+      "default": "4",
+      "visible_if": "{{ block.settings.heading != blank }}"
+    },
+    {
+      "type": "url",
+      "id": "url",
+      "label": "t:sections.split-hero.settings.side_link.label",
+      "info": "t:sections.split-hero.settings.side_link.info"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "t:common.button_text.label",
+      "default": "Shop now",
+      "visible_if": "{{ block.settings.url != blank }}"
+    },
+    {
+      "type": "select",
+      "id": "button_size",
+      "label": "t:common.button_size.label",
+      "options": [
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        }
+      ],
+      "default": "standard",
+      "visible_if": "{{ block.settings.button_text != blank and block.settings.url != blank }}"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:common.button_style.label",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:common.button_style.option__primary"
+        },
+        {
+          "value": "secondary",
+          "label": "t:common.button_style.option__secondary"
+        },
+        {
+          "value": "accent-primary",
+          "label": "t:common.button_style.option__accent_primary"
+        },
+        {
+          "value": "accent-secondary",
+          "label": "t:common.button_style.option__accent_secondary"
+        },
+        {
+          "value": "accent-text-link",
+          "label": "t:common.button_style.option__accent_text"
+        },
+        {
+          "value": "text-link",
+          "label": "t:common.button_style.option__text"
+        }
+      ],
+      "default": "text-link",
+      "visible_if": "{{ block.settings.button_text != blank and block.settings.url != blank }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.left_hero.name"
+    }
+  ]
+}
+{% endschema %}

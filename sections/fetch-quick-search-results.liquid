@@ -1,0 +1,132 @@
+{%- liquid
+  assign total_results = predictive_search.resources.products.size | plus: predictive_search.resources.queries.size | plus: predictive_search.resources.collections.size | plus: predictive_search.resources.pages.size | plus: predictive_search.resources.articles.size
+  assign has_search_sidebar = false
+
+  if predictive_search.resources.collections.size > 0 or predictive_search.resources.pages.size > 0 or predictive_search.resources.articles.size > 0
+    assign has_search_sidebar = true
+  endif
+-%}
+
+<div class="quick-search__results grid grid--inner-grid">
+  {% if predictive_search.performed %}
+    {% if total_results > 0 %}
+      {% if predictive_search.resources.queries.size > 0 -%}
+        <div class="quick-search__suggestions grid__content">
+          <div class="quick-search__suggestions-inner grid__item--span-12">
+            <h4 class="quick-search__header">
+              {{
+                'templates.search.results_suggestions_with_count'
+                | t: count: predictive_search.resources.queries.size
+              }}
+            </h4>
+
+            <ul class="quick-search__suggestions-list reset">
+              {%- for query in predictive_search.resources.queries -%}
+                <li class="quick-search__suggestions-list-item fancy-link">
+                  <a href="{{ query.url }}" class="fancy-link">
+                    {{ query.styled_text }}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+      {%- endif %}
+
+      <div class="quick-search__results-container{% if has_search_sidebar %} quick-search__results-container--has-sidebar{% endif %} grid__content">
+        {% if predictive_search.resources.products.size > 0 -%}
+          <div class="quick-search__products {% if has_search_sidebar %} grid__item--span-12 grid__item--span-9-tablet{% else %} grid__item--span-12{% endif %}">
+            <h4 class="quick-search__header">
+              {{ 'templates.search.results_products_with_count' | t: count: predictive_search.resources.products.size }}
+            </h4>
+
+            <ul class="quick-search__products-container reset">
+              {% for prod in predictive_search.resources.products -%}
+                <li class="quick-search__product">
+                  {% render 'product-card',
+                    prod: prod,
+                    show_price_override: settings.quick_search_show_price,
+                    show_vendor_override: settings.quick_search_show_vendor,
+                    shimmer_disabled: true
+                  %}
+                </li>
+              {%- endfor %}
+            </ul>
+          </div>
+        {%- else -%}
+          <div class="quick-search__products{% if has_search_sidebar %} grid__item--span-12 grid__item--span-9-tablet{% else %} grid__item--span-12{% endif %}">
+            <h4 class="quick-search__header">
+              {{ 'templates.search.results_products_with_count' | t: count: predictive_search.resources.products.size }}
+            </h4>
+
+            <div class="quick-search__no-products">{{ 'templates.search.no_products' | t }}</div>
+          </div>
+        {%- endif -%}
+
+        {% if has_search_sidebar %}
+          <div class="quick-search__sidebar grid__item--span-12 grid__item--span-3-tablet">
+            {% if predictive_search.resources.collections.size > 0 -%}
+              <div class="quick-search__sidebar-item">
+                <h4 class="quick-search__header">
+                  {{
+                    'templates.search.results_collections_with_count'
+                    | t: count: predictive_search.resources.collections.size
+                  }}
+                </h4>
+
+                <ul class="quick-search__sidebar-list reset">
+                  {% for collection in predictive_search.resources.collections -%}
+                    <li class="quick-search__sidebar-list-item fancy-link">
+                      <a href="{{ collection.url }}">{{ collection.title }}</a>
+                    </li>
+                  {%- endfor %}
+                </ul>
+              </div>
+            {%- endif %}
+
+            {% if predictive_search.resources.pages.size > 0 -%}
+              <div class="quick-search__sidebar-item">
+                <h4 class="quick-search__header">
+                  {{ 'templates.search.results_pages_with_count' | t: count: predictive_search.resources.pages.size }}
+                </h4>
+
+                <ul class="quick-search__sidebar-list reset">
+                  {% for page in predictive_search.resources.pages -%}
+                    <li class="quick-search__sidebar-list-item fancy-link">
+                      <a href="{{ page.url }}">{{ page.title }}</a>
+                    </li>
+                  {%- endfor %}
+                </ul>
+              </div>
+            {%- endif %}
+
+            {% if predictive_search.resources.articles.size > 0 -%}
+              <div class="quick-search__sidebar-item">
+                <h4 class="quick-search__header">
+                  {{
+                    'templates.search.results_articles_with_count'
+                    | t: count: predictive_search.resources.articles.size
+                  }}
+                </h4>
+
+                <ul class="quick-search__sidebar-list reset">
+                  {% for article in predictive_search.resources.articles -%}
+                    <li class="quick-search__sidebar-list-item fancy-link">
+                      <a href="{{ article.url }}">{{ article.title }}</a>
+                    </li>
+                  {%- endfor %}
+                </ul>
+              </div>
+            {%- endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="quick-search__no-results grid__item--span-12">
+        <h4>{{ 'templates.search.no_results' | t: terms: predictive_search.terms }}</h4>
+
+        <div class="quick-search__no-results-text">{{ 'templates.search.no_results_suggestion' | t }}</div>
+      </div>
+    {% endif %}
+  {% endif %}
+</div>

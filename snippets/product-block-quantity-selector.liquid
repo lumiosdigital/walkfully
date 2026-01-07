@@ -1,0 +1,19 @@
+<div
+  class="
+    product__block
+    {%- render 'product-block-classes', block: block -%}
+  "
+  data-update-quantity
+  data-product-quantity-selector
+  {{ block.shopify_attributes }}
+>
+  <div class="product__quantity">
+    {% render 'quantity-selector',
+      prod: prod,
+      block: block,
+      product_form_id: product_form_id,
+      id: id,
+      sync_id: 'widget-quantity-selector'
+    %}
+  </div>
+</div>

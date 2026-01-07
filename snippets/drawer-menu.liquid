@@ -1,0 +1,400 @@
+{%- liquid
+  assign show_footer = false
+
+  if shop.customer_accounts_enabled or localization.available_countries or localization.available_languages
+    assign show_footer = true
+  endif
+
+  assign has_social_icons = true
+  if settings.social_facebook_link == blank and settings.social_instagram_link == blank and settings.social_youtube_link == blank and settings.social_tiktok_link == blank and settings.social_twitter_link == blank and settings.social_pinterest_link == blank and settings.social_snapchat_link == blank and settings.social_tumblr_link == blank and settings.social_vimeo_link == blank
+    assign has_social_icons = false
+  endif
+-%}
+
+{%- capture content -%}
+  <component-drawer-menu>
+    <component-panel-swipe data-id="drawer-menu">
+      <div class="panel-swipe__panel active" data-panel data-panel-level="0">
+        <div class="panel-swipe__content active">
+        <nav class="drawer-menu__navigation">
+          <ul class="drawer-menu__menu reset">
+            {%- for link in section.settings.menu.links -%}
+              {% assign forloop_index_string = forloop.index | append: '' %}
+              <li>
+                {%- if link.links != blank or mega_menu_positions contains forloop_index_string -%}
+                  <button
+                    type="button"
+                    class="panel-swipe__list-item panel-swipe__button-with-text-and-icon"
+                    data-panel-swipe-trigger
+                    data-panel-target="1"
+                    data-target-id="{{ link.handle | escape }}-{{ forloop.index }}"
+                    aria-controls="{{ link.handle | escape }}-{{ forloop.index }}"
+                    aria-expanded="false"
+                    id="button-{{ link.handle | escape }}-{{ forloop.index }}"
+                  >
+                    {{ link.title | escape }}
+                    {% render 'theme-icon', icon: 'chevron-right', size: '1em' %}
+                  </button>
+                {%- else -%}
+                  <div class="panel-swipe__list-item fancy-link">
+                    <a
+                      href="{{ link.url }}"
+                      class="{% if link.current %}active{% endif %}"
+                      {% if link.current %}
+                        aria-current="page"
+                      {% endif %}
+                    >
+                      {{ link.title | escape }}
+                    </a>
+                  </div>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        </nav>
+
+        {%- if show_footer -%}
+          <div class="drawer-menu__footer">
+            <ul class="drawer-menu__menu reset">
+              {%- if localization.available_countries and localization.available_countries.size > 1 -%}
+                <li>
+                  <div class="drawer-menu__localization">
+                      <button
+                        type="button"
+                        class="panel-swipe__list-item panel-swipe__button-with-text-and-icon"
+                        data-panel-swipe-trigger
+                        data-panel-target="1"
+                        data-target-id="localization-country"
+                        aria-label="{{ 'localization.country_label' | t }}"
+                        aria-controls="drawer-localization-country"
+                        aria-expanded="false"
+                        id="button-drawer-localization-country"
+                      >
+                        <span>{{ localization.country | truncate: 24, '...' }}<span class="o-7"> | {{ localization.country.currency.iso_code }}
+                        {{localization.country.currency.symbol -}}</span></span>
+                        {% render 'theme-icon', icon: 'chevron-right', size: '1em' %}
+                      </button>
+                    </div>
+                  </li>
+                    {% endif %}
+
+
+                {%- if localization.available_languages and localization.available_languages.size > 1 -%}
+                  <li>
+                    <div class="drawer-menu__localization">
+                      <button
+                        type="button"
+                        class="panel-swipe__list-item panel-swipe__button-with-text-and-icon"
+                        data-panel-swipe-trigger
+                        data-panel-target="1"
+                        data-target-id="localization-language"
+                        aria-label="{{ 'localization.language_label' | t }}"
+                        aria-controls="drawer-localization-language"
+                        aria-expanded="false"
+                        id="button-drawer-localization-language"
+                      >
+                        {{ localization.language.endonym_name | capitalize }}
+                        {% render 'theme-icon', icon: 'chevron-right', size: '1em' %}
+                      </button>
+                    </div>
+                  </li>
+                {%- endif -%}
+
+                {%- if shop.customer_accounts_enabled -%}
+                  <li>
+                    <div class="panel-swipe__list-item fancy-link">
+                    <a
+                      href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
+                    >
+                      {%- liquid
+                        if customer
+                          echo 'customer.account_fallback' | t
+                        else
+                          echo 'customer.log_in' | t
+                        endif
+                      -%}
+                    </a>
+                    {% render 'theme-icon', icon: 'user', size: '1em' %}
+                  </div>
+                  </li>
+                {%- endif -%}
+
+                {%- if has_social_icons and section.settings.show_social_icons_in_drawer_menu -%}
+                  <li>
+                    <div class="panel-swipe__list-item">
+                      {% render 'social-icons-list', icon_size: '1.30em' %}
+                    </div>
+                  </li>
+                {%- endif -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+      <div class="panel-swipe__panel" data-panel data-panel-level="1">
+        {%- for link in section.settings.menu.links -%}
+          {%- liquid
+            assign forloop_index_string = forloop.index | append: ''
+            assign link_loop_index = forloop.index
+          -%}
+
+          {%- if link.links != blank or mega_menu_positions contains forloop_index_string -%}
+            <div
+              class="panel-swipe__content drawer-menu__content"
+              data-id="{{ link.handle | escape }}-{{ forloop.index }}"
+              id="{{ link.handle | escape }}-{{ forloop.index }}"
+              aria-labelledby="button-{{ link.handle | escape }}-{{ forloop.index }}"
+            >
+              <div class="panel-swipe__header">
+                <button
+                  type="button"
+                  aria-label="{{ 'accessibility.go_back' | t }}"
+                  class="panel-swipe__back-button panel-swipe__button-with-text-and-icon"
+                  data-previous-panel-trigger
+                  data-previous-trigger-focus="{{ link.handle | escape }}-{{ forloop.index }}"
+                  data-previous-panel-level="0"
+                >
+                  <span class="fs--1 tt-u">{{ link.title | escape }}</span>
+                  {% render 'theme-icon', icon: 'chevron-left', size: '1em' %}
+                </button>
+              </div>
+
+              {% if mega_menu_positions contains forloop_index_string  %}
+                {%- liquid
+                  for block in section.blocks
+                    if link_loop_index == block.settings.position
+                      assign block = block
+                      break
+                    endif
+                  endfor
+                -%}
+
+                {% if block != blank %}
+                  {% if block.settings.image_1 != blank or block.settings.image_2 != blank %}
+                    {% capture image_sizes %}
+                      {%- liquid
+                        if block.settings.image_1 != blank and block.settings.image_2 != blank
+                          echo '170px'
+                          else
+                          echo '360px'
+                        endif
+                      -%}
+                    {% endcapture %}
+
+
+                    <div class="mega-menu__promo-content">
+                      {% if block.settings.image_1 != blank %}
+                        {% render 'mega-menu-promo-item',
+                          color_scheme: block.settings.promotion_color_scheme,
+                          aspect_ratio: block.settings.aspect_ratio,
+                          url: block.settings.image_link_1,
+                          image: block.settings.image_1,
+                          sizes: image_sizes,
+                          overlay_opacity: block.settings.image_1_overlay_opacity,
+                          promo_text: block.settings.promo_text_1,
+                          promo_text_font: block.settings.promo_1_text_font,
+                          promo_text_font_size: block.settings.promo_1_text_size
+                        %}
+                      {% endif %}
+                      {% if block.settings.image_2 != blank %}
+                        {% render 'mega-menu-promo-item',
+                          color_scheme: block.settings.promotion_color_scheme,
+                          aspect_ratio: block.settings.aspect_ratio,
+                          url: block.settings.image_link_2,
+                          image: block.settings.image_2,
+                          sizes: image_sizes,
+                          overlay_opacity: block.settings.image_2_overlay_opacity,
+                          promo_text: block.settings.promo_text_2,
+                          promo_text_font: block.settings.promo_2_text_font,
+                          promo_text_font_size: block.settings.promo_2_text_size
+                        %}
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                {% endif %}
+              {% endif %}
+
+              {% if link.links.size > 0 %}
+                <ul class="drawer-menu__menu reset">
+                  {%- for childlink in link.links -%}
+                    <li>
+                      {%- if childlink.links != blank -%}
+                        <button
+                          type="button"
+                          class="panel-swipe__list-item panel-swipe__button-with-text-and-icon"
+                          data-panel-swipe-trigger
+                          data-panel-target="2"
+                          data-target-id="{{ link.handle | escape }}-{{ childlink.handle | escape }}-{{ forloop.index }}"
+                          aria-controls="{{ link.handle | escape }}-{{ childlink.handle | escape }}-{{ forloop.index }}"
+                          aria-expanded="false"
+                          id="button-{{ link.handle | escape }}-{{ childlink.handle | escape }}-{{ forloop.index }}"
+                        >
+                          {{ childlink.title | escape }}
+                          {% render 'theme-icon', icon: 'chevron-right', size: '1em' %}
+                        </button>
+                      {%- else -%}
+                        <div class="panel-swipe__list-item fancy-link">
+                          <a
+                            href="{{ childlink.url }}"
+                            class="{% if childlink.current %}active{% endif %}"
+                            {% if childlink.current %}
+                              aria-current="page"
+                            {% endif %}
+                          >
+                            {{ childlink.title | escape }}
+                          </a>
+                        </div>
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {% endif %}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- if localization.available_countries and localization.available_countries.size > 1 -%}
+
+        <div
+          class="panel-swipe__content drawer-menu__content"
+          data-id="localization-country"
+          id="drawer-localization-country"
+          aria-labelledby="button-drawer-localization-country"
+        >
+          <div class="panel-swipe__header">
+            <button
+              type="button"
+              aria-label="{{ 'accessibility.go_back' | t }}"
+              class="panel-swipe__back-button panel-swipe__button-with-text-and-icon"
+              data-previous-panel-trigger
+              data-previous-trigger-focus="localization-country"
+              data-previous-panel-level="0"
+            >
+              <span class="fs--1 tt-u">{{ 'localization.country_label' | t }}</span>
+              {% render 'theme-icon', icon: 'chevron-left', size: '1em' %}
+            </button>
+          </div>
+
+          {%- render 'country-localization', formId: 'drawer-menu-country-localization' -%}
+        </div>
+      {%- endif -%}
+
+        {%- if localization.available_languages and localization.available_languages.size > 1 -%}
+
+        <div
+          class="panel-swipe__content drawer-menu__content"
+          data-id="localization-language"
+          id="drawer-localization-language"
+          aria-labelledby="button-drawer-localization-language"
+        >
+          <div class="panel-swipe__header">
+            <button
+              type="button"
+              aria-label="{{ 'accessibility.go_back' | t }}"
+              class="panel-swipe__back-button panel-swipe__button-with-text-and-icon"
+              data-previous-panel-trigger
+              data-previous-trigger-focus="localization-language"
+              data-previous-panel-level="0"
+            >
+              <span class="fs--1 tt-u">{{ 'localization.language_label' | t }}</span>
+              {% render 'theme-icon', icon: 'chevron-left', size: '1em' %}
+            </button>
+          </div>
+
+          {%- render 'language-localization', formId: 'drawer-menu-language-localization' -%}
+        </div>
+      {%- endif -%}
+      </div>
+
+      <div class="panel-swipe__panel" data-panel data-panel-level="2">
+        {%- for link in section.settings.menu.links -%}
+          {%- if link.links != blank -%}
+            {%- for childlink in link.links -%}
+              {%- if childlink.links != blank -%}
+                <div
+                  class="panel-swipe__content drawer-menu__content"
+                  data-id="{{ link.handle | escape }}-{{ childlink.handle | escape }}-{{ forloop.index }}"
+                  id="{{ link.handle | escape }}-{{ childlink.handle | escape }}-{{ forloop.index }}"
+                  aria-labelledby="button-{{ link.handle | escape }}-{{ childlink.handle | escape }}-{{ forloop.index }}"
+                >
+                  <div class="panel-swipe__header">
+                    <button
+                      type="button"
+                      aria-label="{{ 'accessibility.go_back' | t }}"
+                      class="panel-swipe__back-button panel-swipe__button-with-text-and-icon"
+                      data-previous-panel-trigger
+                      data-previous-trigger-focus="{{ link.handle | escape }}-{{ childlink.handle | escape }}-{{ forloop.index }}"
+                      data-previous-panel-level="1"
+                    >
+                      <span class="fs--1 tt-u">{{ childlink.title | escape }}</span>
+                      {% render 'theme-icon', icon: 'chevron-left', size: '1em' %}
+                    </button>
+                  </div>
+
+                  <ul class="drawer-menu__menu reset">
+                    {%- for grandchildlink in childlink.links -%}
+                      <li>
+                        <div class="panel-swipe__list-item fancy-link">
+                          <a
+                            href="{{ grandchildlink.url }}"
+                            class="{% if grandchildlink.current %}active{% endif %}"
+                            {% if grandchildlink.current %}
+                              aria-current="page"
+                            {% endif %}
+                          >
+                            {{ grandchildlink.title | escape }}
+                          </a>
+                        </div>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </component-panel-swipe>
+  </component-drawer-menu>
+{%- endcapture -%}
+
+{% capture heading %}
+  {% if settings.logo != blank %}
+    <div class="drawer-menu__logo-wrapper" style="
+      --max-width: {{ settings.logo_width }}px;
+      --max-width-mobile: {{ settings.logo_width_mobile }}px;
+      "
+    >
+      {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
+      {%- assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio -%}
+      {% capture sizes %}(min-width: 750px) {{ settings.logo_width }}px, 50vw{% endcapture %}
+      {% capture widths %}{{ settings.logo_width }}, {{ settings.logo_width | times: 1.5 | round }}, {{ settings.logo_width | times: 2 }}{% endcapture %}
+      {{
+        settings.logo
+        | image_url: width: 600
+        | image_tag:
+          widths: widths,
+          height: logo_height,
+          width: settings.logo_width,
+          alt: logo_alt,
+          sizes: sizes,
+          preload: true
+      }}
+    </div>
+  {% else %}
+    {{ shop.name }}
+  {% endif %}
+{% endcapture %}
+
+{% assign panel_description = 'accessibility.panel_drawer_menu' | t %}
+
+{% render 'panel',
+  scheme: settings.header_mobile_color_scheme,
+  class: 'drawer-menu',
+  direction: 'left',
+  sub_id: 'drawerMenu',
+  heading: heading,
+  content: content,
+  description: panel_description
+%}

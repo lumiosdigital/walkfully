@@ -1,0 +1,100 @@
+{%- liquid
+  assign has_content = false
+  assign alignment = settings.prelude_alignment
+
+  if settings.prelude_heading != blank or settings.prelude_text != blank or settings.prelude_button_text != blank or cta != blank
+    assign has_content = true
+  endif
+
+  assign wrapper_class = 'prelude'
+
+  if wrapper_classes != blank
+    assign wrapper_class = wrapper_class | append: ' ' | append: wrapper_classes
+  endif
+
+  if cta != blank
+    capture cta_element
+      echo '<div class="prelude__cta fancy-link">'
+      echo cta
+      echo '</div>'
+    endcapture
+  endif
+-%}
+
+{%- capture wrapper_class -%}
+  prelude
+  prelude--align-{{ alignment }}
+  {%- if wrapper_classes != blank -%}
+    {{ wrapper_classes }}
+  {%- endif -%}
+{%- endcapture -%}
+
+{% if has_content %}
+  <div class="{{ wrapper_class }}">
+    {% if alignment == 'right' %}
+      {{ cta_element }}
+    {% endif %}
+
+    <div class="prelude__content">
+      {%- if settings.prelude_heading != blank -%}
+        <h2
+          class="
+            prelude__heading
+            rhythm-heading
+            rhythm-heading-size-{{ settings.prelude_heading_text_size }}
+            {% render 'text-control-classes', settings: settings, prefix: 'prelude_heading' %}
+            {% if animate %}
+              animate
+              animate--slide-in
+            {% endif %}
+          "
+        >
+          {{ settings.prelude_heading }}
+        </h2>
+      {%- endif -%}
+      {%- if settings.prelude_text != blank -%}
+        <div
+          class="
+            rhythm-text
+            rte
+            {% render 'text-control-classes', settings: settings, prefix: 'prelude' %}
+            {% if animate %}
+              animate
+              animate--slide-in
+            {% endif %}
+          "
+        >
+          {{ settings.prelude_text }}
+        </div>
+      {%- endif -%}
+
+      {%- if settings.prelude_button_text != blank -%}
+        <div
+          class="
+            prelude__button
+            rhythm-buttons
+            {% if animate %}
+              animate
+              animate--slide-in
+            {% endif %}
+          "
+        >
+          {% render 'button',
+            button_text: settings.prelude_button_text,
+            button_link: settings.prelude_button_link,
+            button_style: settings.prelude_button_style,
+            button_size: settings.prelude_button_size
+          %}
+        </div>
+      {%- endif -%}
+
+      {% if alignment == 'center' %}
+        {{ cta_element }}
+      {% endif %}
+    </div>
+
+    {% if alignment == 'left' %}
+      {{ cta_element }}
+    {% endif %}
+  </div>
+{% endif %}

@@ -1,0 +1,22 @@
+{% if value contains '5' %}
+  <div class="product-compare__value-circle-wrapper">
+    {%- liquid
+      assign rating = value | split: '_' | first
+      assign rating_remainder = 5 | minus: rating
+    -%}
+    {% for i in (1..rating) %}
+      <div class="product-compare__value-circle"></div>
+    {% endfor %}
+
+    {% if rating_remainder > 0 %}
+      {% for i in (1..rating_remainder) %}
+        <div class="product-compare__value-circle product-compare__value-circle--remainder"></div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+{% elsif value == 'true' %}
+  {% render 'theme-icon', icon: 'check', size: '1em', stroke_override: '2' %}
+{% elsif value == 'false' %}
+  {% render 'theme-icon', icon: 'x', size: '1em', stroke_override: '2' %}
+{% endif %}

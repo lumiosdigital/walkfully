@@ -1,0 +1,52 @@
+{% render 'product-blocks-combiner', block: block, index: index, type: 'opening' %}
+
+{% assign star_size_em = block.settings.star_size | append: 'em' %}
+<div
+  class="
+    product__block
+    {%- render 'product-block-classes', block: block -%}
+    {% if prod.metafields.reviews.rating.value == blank and is_featured != false and prod != blank %}
+      hidden
+    {% endif %}
+  "
+  {{ block.shopify_attributes }}
+>
+  <div
+    class="
+      product__rating
+      {% render 'text-control-classes', settings: block.settings %}
+    "
+  >
+    {%- liquid
+      case block.settings.star_color
+        when 'text'
+          assign star_color = null
+        when 'accent'
+          assign star_color = settings.accent
+        when 'custom'
+          assign star_color = block.settings.star_color_custom
+      endcase
+    -%}
+    {% if is_featured and prod == blank %}
+      {% render 'star-rating',
+        size: star_size_em,
+        type: block.settings.rating_display_type,
+        show_rating_total: block.settings.show_rating_total,
+        star_color: star_color,
+        max_rating: 5,
+        star_rating: 5,
+        total_reviews: 25
+      %}
+    {% else %}
+      {% render 'star-rating',
+        prod: prod,
+        size: star_size_em,
+        type: block.settings.rating_display_type,
+        show_rating_total: block.settings.show_rating_total,
+        star_color: star_color
+      %}
+    {% endif %}
+  </div>
+</div>
+
+{% render 'product-blocks-combiner', block: block, index: index, type: 'closing' %}

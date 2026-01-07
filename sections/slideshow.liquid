@@ -1,0 +1,181 @@
+<section-slideshow
+  class="
+    slideshow
+    {% if section.settings.auto_rotate %}
+      slideshow--auto-rotate
+    {% endif %}
+    swiper
+    slideshow--height-{{ section.settings.section_height }}
+  "
+  style="
+    --custom-mobile-height: {{ section.settings.height_mobile }}vh;
+    --custom-desktop-height: {{ section.settings.height_desktop }}vh;
+  "
+  {% if section.settings.auto_rotate %}
+    data-rotate-speed="{{ section.settings.rotate_speed | times: 1000 }}"
+  {% endif %}
+  data-slide-count="{{ section.blocks.size }}"
+  data-transition-style="{{ section.settings.transition_style }}"
+  {% if section.settings.enable_animations and section.blocks.size != 1 %}
+    data-animate-on-slide-change
+  {% elsif section.settings.enable_animations and section.blocks.size == 1 %}
+    data-animate-elements-on-scroll
+    data-animate-delay="125"
+  {% endif %}
+>
+  <div class="swiper-wrapper">
+    {% content_for 'blocks' %}
+  </div>
+  <div class="slideshow__pagination">
+    <div class="swiper-pagination"></div>
+  </div>
+</section-slideshow>
+
+{% schema %}
+{
+  "name": "t:sections.slideshow.name",
+  "class": "slideshow-section can-tuck-under-header",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer",
+      "custom.floating"
+    ]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "auto_rotate",
+      "label": "t:sections.slideshow.settings.auto_rotate.label",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "rotate_speed",
+      "label": "t:sections.slideshow.settings.rotate_speed.label",
+      "min": 6,
+      "max": 14,
+      "step": 1,
+      "default": 10,
+      "unit": "s",
+      "visible_if": "{{ section.settings.auto_rotate }}"
+    },
+    {
+      "type": "select",
+      "id": "transition_style",
+      "label": "t:sections.slideshow.settings.transition_style.label",
+      "options": [
+        {
+          "value": "slide",
+          "label": "t:sections.slideshow.settings.transition_style.option__slide"
+        },
+        {
+          "value": "fade",
+          "label": "t:sections.slideshow.settings.transition_style.option__fade"
+        }
+      ],
+      "default": "slide"
+    },
+    {
+      "type": "header",
+      "content": "t:common.section_height.heading__section_height.content"
+    },
+    {
+      "type": "select",
+      "id": "section_height",
+      "label": "t:common.section_height.section_height.label",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:common.section_height.section_height.option__slide"
+        },
+        {
+          "value": "custom",
+          "label": "t:common.section_height.section_height.option__custom"
+        }
+      ],
+      "default": "custom"
+    },
+    {
+      "type": "range",
+      "id": "height_desktop",
+      "label": "t:common.section_height.custom_height_desktop.label",
+      "min": 50,
+      "max": 120,
+      "step": 1,
+      "unit": "vh",
+      "default": 100,
+      "visible_if": "{{ section.settings.section_height == \"custom\" }}"
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "label": "t:common.section_height.custom_height_mobile.label",
+      "min": 50,
+      "max": 120,
+      "step": 1,
+      "unit": "vh",
+      "default": 100,
+      "visible_if": "{{ section.settings.section_height == \"custom\" }}"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_animations.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "t:common.enable_animations_slider.label",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_slide"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.slideshow.presets.name",
+      "category": "t:categories.banners",
+      "blocks": [
+        {
+          "type": "_slide",
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "heading": "Promote your brand"
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>"
+              }
+            }
+          ]
+        },
+        {
+          "type": "_slide",
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "heading": "Promote your brand"
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,30 @@
+<button
+  class="
+    hotspot
+    {% if should_use_mobile_coordinates %}
+      hotspot--uses-mobile-coordinates
+    {% endif %}
+    {% if animate %}
+      animate
+      animate--slide-in
+    {% endif %}
+  "
+  style="
+    --x-position: {{ 100 | minus: block.settings.hotspot_location_x }}%;
+    --y-position: {{ block.settings.hotspot_location_y }}%;
+    --x-position-mobile: {{ 100 | minus: block.settings.hotspot_location_x_mobile }}%;
+    --y-position-mobile: {{ block.settings.hotspot_location_y_mobile }}%;
+    --delay: {{ forloop.index0 | times: 0.65 }}s;
+  "
+  data-hotspot
+  data-index="{{ forloop.index0 }}"
+  {{ block.shopify_attributes }}
+  aria-haspopup="dialog"
+  aria-expanded="false"
+  id="hotspot-{{ forloop.index0 }}-{{ section.id }}"
+  aria-label="{{ 'accessibility.show_hotspot_content' | t: number: forloop.index }}"
+>
+  <div class="hotspot__inner hotspot__inner--1"></div>
+  <div class="hotspot__inner hotspot__inner--2"></div>
+  <div class="hotspot__inner hotspot__inner--3"></div>
+</button>

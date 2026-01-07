@@ -1,0 +1,47 @@
+<component-panel
+  class="
+    panel
+    panel--direction-{{ direction }}
+    {% if footer != blank %} panel--has-footer{% endif %}
+    {% if scheme != blank %}
+      color-{{ scheme }}
+    {% else %}
+      color-{{ settings.floating_color_scheme }}
+    {% endif %}
+  "
+  data-sub-id="{{ sub_id }}"
+  {% if open_on_editor_select %}
+    data-open-on-editor-select="true"
+  {% endif %}
+>
+  <div class="panel__overlay" data-close-overlay></div>
+
+  <div
+    class="panel__inner{% if class != blank %} {{ class }}{% endif %}"
+    data-scroll-lock-ignore
+    aria-modal="true"
+    role="dialog"
+    aria-labelledby="{{ sub_id | append: '-heading' }}"
+    aria-describedby="{{ sub_id | append: '-description' }}"
+  >
+    <div class="panel__header ff-h fs-2{% if class != blank %} {{ class }}__header{% endif %}">
+      <div id="{{ sub_id | append: '-heading' }}">{{ heading }}</div>
+      <div class="panel__header-close-wrapper">
+        <button type="button" class="btn-icon" data-close-overlay aria-label="{{ 'accessibility.close' | t }}">
+          {% render 'theme-icon', icon: 'x', size: '0.6em' %}
+        </button>
+      </div>
+      <p class="panel__description" id="{{ sub_id | append: '-description' }}">{{ description }}</p>
+    </div>
+
+    <div class="panel__content{% if class != blank %} {{ class }}__content{% endif %}">
+      {{ content }}
+    </div>
+
+    {% if footer != blank %}
+      <div class="panel__footer{% if class != blank %} {{ class }}__footer{% endif %}">
+        {{ footer }}
+      </div>
+    {% endif %}
+  </div>
+</component-panel>

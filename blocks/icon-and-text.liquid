@@ -1,0 +1,340 @@
+{%- liquid
+  assign horizontal_alignment = section.settings.alignment | split: '_' | last
+  assign horizontal_alignment_mobile = section.settings.mobile_alignment | split: '_' | last
+  assign mobile_align = horizontal_alignment_mobile | default: 'left'
+-%}
+
+<div
+  class="
+    block-icon-and-text
+    block-icon-and-text--align-{{ horizontal_alignment }}
+    block-icon-and-text--mobile-align-{{ mobile_align }}
+    block-icon-and-text--icon-position-{{ block.settings.icon_position }}
+    section-block
+    {% if section.settings.enable_animations %}
+      animate
+      animate--slide-in
+    {% endif %}
+  "
+  style="--icon-size: {{ block.settings.icon_size }}px"
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.icon != 'none' %}
+    <div class="block-icon-and-text__icon">
+      {% render 'theme-icon', icon: block.settings.icon %}
+    </div>
+  {% endif %}
+
+  <div
+    class="
+      block-icon-and-text
+      block-icon-and-text__text
+      rte
+      {% render 'text-control-classes', settings: block.settings %}
+    "
+  >
+    {{ block.settings.text }}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:blocks.icon_and_text.name",
+  "class": "rhythm-icon-and-text",
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon_position",
+      "label": "t:blocks.icon_and_text.settings.icon_position.label",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:blocks.icon_and_text.settings.icon_position.option__left"
+        },
+        {
+          "value": "above",
+          "label": "t:blocks.icon_and_text.settings.icon_position.option__above"
+        },
+        {
+          "value": "right",
+          "label": "t:blocks.icon_and_text.settings.icon_position.option__right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "t:common.icon.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:common.icon.icon__none"
+        },
+        {
+          "value": "anchor",
+          "label": "t:common.icon.icon__anchor"
+        },
+        {
+          "value": "award",
+          "label": "t:common.icon.icon__award"
+        },
+        {
+          "value": "bell",
+          "label": "t:common.icon.icon__bell"
+        },
+        {
+          "value": "book",
+          "label": "t:common.icon.icon__book"
+        },
+        {
+          "value": "box",
+          "label": "t:common.icon.icon__box"
+        },
+        {
+          "value": "briefcase",
+          "label": "t:common.icon.icon__briefcase"
+        },
+        {
+          "value": "calendar",
+          "label": "t:common.icon.icon__calendar"
+        },
+        {
+          "value": "camera",
+          "label": "t:common.icon.icon__camera"
+        },
+        {
+          "value": "check",
+          "label": "t:common.icon.icon__check"
+        },
+        {
+          "value": "check-circle",
+          "label": "t:common.icon.icon__check_circle"
+        },
+        {
+          "value": "check-square",
+          "label": "t:common.icon.icon__check_square"
+        },
+        {
+          "value": "clipboard",
+          "label": "t:common.icon.icon__clipboard"
+        },
+        {
+          "value": "clock",
+          "label": "t:common.icon.icon__clock"
+        },
+        {
+          "value": "coffee",
+          "label": "t:common.icon.icon__coffee"
+        },
+        {
+          "value": "droplet",
+          "label": "t:common.icon.icon__droplet"
+        },
+        {
+          "value": "eye",
+          "label": "t:common.icon.icon__eye"
+        },
+        {
+          "value": "file",
+          "label": "t:common.icon.icon__file"
+        },
+        {
+          "value": "file-text",
+          "label": "t:common.icon.icon__file_text"
+        },
+        {
+          "value": "flag",
+          "label": "t:common.icon.icon__flag"
+        },
+        {
+          "value": "gear",
+          "label": "t:common.icon.icon__gear"
+        },
+        {
+          "value": "gift",
+          "label": "t:common.icon.icon__gift"
+        },
+        {
+          "value": "headphones",
+          "label": "t:common.icon.icon__headphones"
+        },
+        {
+          "value": "heart",
+          "label": "t:common.icon.icon__heart"
+        },
+        {
+          "value": "help",
+          "label": "t:common.icon.icon__help"
+        },
+        {
+          "value": "home",
+          "label": "t:common.icon.icon__home"
+        },
+        {
+          "value": "info",
+          "label": "t:common.icon.icon__info"
+        },
+        {
+          "value": "key",
+          "label": "t:common.icon.icon__key"
+        },
+        {
+          "value": "mail",
+          "label": "t:common.icon.icon__mail"
+        },
+        {
+          "value": "map-pin",
+          "label": "t:common.icon.icon__map_pin"
+        },
+        {
+          "value": "map",
+          "label": "t:common.icon.icon__map"
+        },
+        {
+          "value": "message-circle",
+          "label": "t:common.icon.icon__message_circle"
+        },
+        {
+          "value": "message-square",
+          "label": "t:common.icon.icon__message_square"
+        },
+        {
+          "value": "microphone",
+          "label": "t:common.icon.icon__microphone"
+        },
+        {
+          "value": "moon",
+          "label": "t:common.icon.icon__moon"
+        },
+        {
+          "value": "music-note",
+          "label": "t:common.icon.icon__music_note"
+        },
+        {
+          "value": "package",
+          "label": "t:common.icon.icon__package"
+        },
+        {
+          "value": "paper-airplane",
+          "label": "t:common.icon.icon__paper_airplane"
+        },
+        {
+          "value": "paper-clip",
+          "label": "t:common.icon.icon__paper_clip"
+        },
+        {
+          "value": "phone",
+          "label": "t:common.icon.icon__phone"
+        },
+        {
+          "value": "pocket",
+          "label": "t:common.icon.icon__pocket"
+        },
+        {
+          "value": "scissors",
+          "label": "t:common.icon.icon__scissors"
+        },
+        {
+          "value": "search",
+          "label": "t:common.icon.icon__magnifying_glass"
+        },
+        {
+          "value": "shopping-bag",
+          "label": "t:common.icon.icon__shopping_bag"
+        },
+        {
+          "value": "shopping-cart",
+          "label": "t:common.icon.icon__shopping_cart"
+        },
+        {
+          "value": "smile",
+          "label": "t:common.icon.icon__smile"
+        },
+        {
+          "value": "star-full",
+          "label": "t:common.icon.icon__star"
+        },
+        {
+          "value": "sun",
+          "label": "t:common.icon.icon__sun"
+        },
+        {
+          "value": "tag",
+          "label": "t:common.icon.icon__tag"
+        },
+        {
+          "value": "target",
+          "label": "t:common.icon.icon__target"
+        },
+        {
+          "value": "thumbs-up",
+          "label": "t:common.icon.icon__thumbs_up"
+        },
+        {
+          "value": "truck",
+          "label": "t:common.icon.icon__truck"
+        },
+        {
+          "value": "umbrella",
+          "label": "t:common.icon.icon__umbrella"
+        },
+        {
+          "value": "unlock",
+          "label": "t:common.icon.icon__unlock"
+        },
+        {
+          "value": "watch",
+          "label": "t:common.icon.icon__watch"
+        },
+        {
+          "value": "wind",
+          "label": "t:common.icon.icon__wind"
+        }
+      ],
+      "default": "scissors"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "t:blocks.icon_and_text.settings.icon_size.label",
+      "min": 20,
+      "max": 300,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:common.text.label",
+      "default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "t:common.text_size.label",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:common.text_size.option_body_small"
+        },
+        {
+          "value": "2",
+          "label": "t:common.text_size.option_body"
+        },
+        {
+          "value": "3",
+          "label": "t:common.text_size.option_h4"
+        }
+      ],
+      "default": "2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.icon_and_text.name"
+    }
+  ]
+}
+{% endschema %}

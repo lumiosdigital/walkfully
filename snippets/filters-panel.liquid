@@ -1,0 +1,25 @@
+{%- capture content -%}
+  {% render 'filters-form', results: results, has_active_filters: has_active_filters %}
+{%- endcapture -%}
+
+{%- capture footer_content -%}
+  <div class="filters__footer">
+    <button class="filters__reset btn btn--full-width" type="button" data-filter-reset-button{% unless has_active_filters %} disabled{% endunless %}>{{ 'products.filters.reset' | t }}</button>
+    <button class="filters__see-results btn btn--secondary btn--full-width" type="button" data-close-overlay data-close-filters>
+      {{ 'products.filters.see_results' | t }}
+    </button>
+  </div>
+{%- endcapture -%}
+
+{% assign panel_header = 'products.filters.filter' | t %}
+{% assign panel_description = 'accessibility.panel_filters' | t %}
+
+{% render 'panel',
+  direction: 'left',
+  sub_id: 'filtersPanel',
+  heading: panel_header,
+  content: content,
+  footer: footer_content,
+  footer_class: 'filters__footer',
+  description: panel_description
+%}

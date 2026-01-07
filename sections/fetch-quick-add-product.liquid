@@ -1,0 +1,77 @@
+<section-product
+  class="
+    product
+    product-quick-add
+    grid
+    grid--inner-grid
+  "
+  data-section="{{ section.id }}"
+  data-id="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+  data-product-url="{{ product.url }}"
+  data-product-handle="{{ product.handle }}"
+  data-media-layout-desktop="thumbs"
+  data-media-layout-mobile="thumbs"
+  data-should-update-url="false"
+>
+  <div class="grid__content">
+    <div class="product__media-gallery grid__item--span-12 grid__item--span-6-mobile-landscape">
+      {% render 'product-media-gallery',
+        prod: product,
+        media_aspect_ratio: '10-11',
+        media_thumb_size: '4',
+        media_thumb_aspect_ratio: '10-11',
+        enable_lightbox: false,
+        enable_video_looping: false,
+        media_layout_desktop: 'thumbs',
+        media_layout_mobile: 'thumbs',
+        is_quick_add: true
+      %}
+    </div>
+
+    <div class="product__details grid__item--span-12 grid__item--span-6-mobile-landscape">
+      <div class="product__details-content" data-product-url="{{ product.url }}">
+        {%- assign product_form_id = 'product-form-quick-add-' | append: product.id -%}
+
+        {%- render 'product-block-title', block: block, prod: product, index: forloop.index0, show_as_link: true -%}
+
+        {%- render 'product-block-price', block: block, prod: product -%}
+
+        {% render 'product-block-variant-picker',
+          prod: product,
+          id: 'product-variant-options',
+          product_form_id: product_form_id
+        %}
+
+        {%- render 'product-block-buy-buttons',
+          block: block,
+          prod: product,
+          product_form_id: product_form_id,
+          has_quantity_selector: false,
+          show_quick_buy_widget: false,
+          show_pickup_availability: false,
+          id: id
+        -%}
+
+        <div class="fancy-link product__view-details-wrapper">
+          <a href="{{ product.url }}" class="product__view-details fs--1">{{ 'products.product.view_product' | t }}</a>
+          {% render 'theme-icon', icon: 'arrow-right', size: '1em' %}
+        </div>
+      </div>
+    </div>
+
+    {%- if media_position == 'right' -%}
+      {{ media_content }}
+    {%- endif -%}
+  </div>
+
+  {%- if first_3d_model -%}
+    <script type="application/json" id="ProductJSON-{{ product.id }}">
+      {{ product.media | where: 'media_type', 'model' | json }}
+    </script>
+  {%- endif -%}
+
+  <script type="application/ld+json">
+    {{ product | structured_data }}
+  </script>
+</section-product>

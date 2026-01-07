@@ -1,0 +1,39 @@
+<div
+  class="
+    {{- class_name }}
+    footer-item
+    grid__item--span-12
+    grid__item--span-{{ column_span }}-tablet
+    {%- if alignment != blank %}
+      ta-{{ alignment }}
+      f
+      fd-column
+      fa-{{ alignment }}
+    {% endif -%}
+    {%- if vertical_alignment != blank %}
+      fj-{{ vertical_alignment }}
+    {% endif -%}
+    {%- if top_spacing != blank %}
+      footer-item--spacing-top-{{ top_spacing }}
+    {% endif -%}
+    {%- if bottom_spacing != blank %}
+      footer-item--spacing-bottom-{{ bottom_spacing }}
+    {% endif -%}
+  "
+  {% if image_max_width != blank %}
+    style="--image-max-width: {{ image_max_width }}px"
+  {% endif %}
+  {{ block.shopify_attributes }}
+>
+  {%- if heading != blank -%}
+    <h3 class="footer-item__heading {% render 'text-control-classes', settings: block.settings, prefix: 'heading' %}">
+      {{ heading }}
+    </h3>
+  {%- endif -%}
+
+  {%- if content != blank -%}
+    <div class="footer-item__content {% render 'text-control-classes', settings: block.settings %}{% if content_is_rte %} rte{% endif %}">
+      {{ content }}
+    </div>
+  {%- endif -%}
+</div>

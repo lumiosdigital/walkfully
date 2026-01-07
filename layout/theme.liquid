@@ -1,0 +1,133 @@
+<!doctype html>
+<html
+  class="elements-border-radius--{{ settings.interactive_border_radius }} price--sale-price-{{ settings.sale_price_color }}"
+  lang="{{ request.locale.iso_code }}"
+>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LWGYN6ZBZS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LWGYN6ZBZS');
+</script>
+
+{%- comment -%} Google Fonts: Work Sans + Bodoni Moda {%- endcomment -%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    {%- unless settings.body_font.system? -%}
+      <link rel="preload" as="font" href="{{ settings.body_font | font_url }}" type="font/woff2" crossorigin>
+    {%- endunless -%}
+
+    {%- unless settings.header_font.system? -%}
+      <link rel="preload" as="font" href="{{ settings.header_font | font_url }}" type="font/woff2" crossorigin>
+    {%- endunless -%}
+
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
+
+    {% render 'meta-tags' %}
+
+    <script type="importmap">
+      {
+        "imports": {
+          "vendor": "{{ 'vendor.min.js' | asset_url }}",
+          "theme": "{{ 'theme.js' | asset_url }}"
+        }
+      }
+    </script>
+
+    <script type="module" src="{{ 'vendor.min.js' | asset_url }}"></script>
+    <script type="module" src="{{ 'theme.js' | asset_url }}"></script>
+
+    {%- if template contains 'addresses' -%}
+      <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer></script>
+    {%- endif -%}
+
+    {{ content_for_header }}
+
+    {% render 'theme-settings' %}
+    {% render 'theme-typography' %}
+    {% render 'theme-fluid' %}
+    {% render 'theme-colors' %}
+
+    {% style %}
+      .pswp.pswp--custom-styling {
+        --theme-pswp-bg: {{ settings.color_schemes[settings.lightbox_color_scheme.id].settings.background.red }}, {{ settings.color_schemes[settings.lightbox_color_scheme.id].settings.background.green }}, {{ settings.color_schemes[settings.lightbox_color_scheme.id].settings.background.blue }};
+        --theme-pswp-icon-color: {{ settings.color_schemes[settings.lightbox_color_scheme.id].settings.text.red }}, {{ settings.color_schemes[settings.lightbox_color_scheme.id].settings.text.green }}, {{ settings.color_schemes[settings.lightbox_color_scheme.id].settings.text.blue }};
+        --themepswp-icon-color-secondary: {{ settings.color_schemes[settings.lightbox_color_scheme.id].settings.text.red }}, {{ settings.color_schemes[settings.lightbox_color_scheme.id].settings.text.green }}, {{ settings.color_schemes[settings.lightbox_color_scheme.id].settings.text.blue }};;
+      }
+    {% endstyle %}
+
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
+    {{ 'vendor.css' | asset_url | stylesheet_tag }}
+
+    <style>
+  :root{
+    --font-sans: "Work Sans", sans-serif;
+    --font-serif: "Bodoni Moda", serif;
+  }
+  /* Body = Alte Grotesk → Work Sans */
+  html, body {
+    font-family: var(--font-sans);
+    font-weight: 400;
+  }
+  /* Headings = Sozzani → Bodoni Moda */
+  h1, h2, h3, h4, h5, h6,
+  .heading-serif {
+    font-family: var(--font-serif);
+    font-weight: 600; /* tweak per design */
+    line-height: 1.1;
+  }
+  /* Optional helpers */
+  .font-sans { font-family: var(--font-sans) !important; }
+  .font-serif { font-family: var(--font-serif) !important; }
+</style>
+
+  </head>
+
+  <body>
+    <a class="skip-to-content-link visually-hidden" href="#main">
+      {{ 'accessibility.skip_to_text' | t }}
+    </a>
+
+    {% sections 'header-group' %}
+    {% sections 'floating-group' %}
+
+    <main class="main" role="main" id="main">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    {% render 'modal' %}
+    {% render 'modal-full-content' %}
+
+    {% if localization.available_countries or localization.available_languages %}
+      {% render 'localization-panels' %}
+    {% endif %}
+
+    {% render 'theme-strings' %}
+  </body>
+</html>

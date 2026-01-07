@@ -1,0 +1,402 @@
+{%- liquid
+  assign vertical_alignment = section.settings.alignment | split: '_' | first
+  assign horizontal_alignment = section.settings.alignment | split: '_' | last
+  assign vertical_alignment_mobile = section.settings.mobile_alignment | split: '_' | first
+  assign horizontal_alignment_mobile = section.settings.mobile_alignment | split: '_' | last
+-%}
+<section-video-hero
+  class="
+    video-hero
+    video-hero--height-{{ section.settings.section_height }}
+    color-{{ section.settings.color_scheme }}
+    {% render 'section-classes', settings: section.settings -%}
+    {% if section.settings.video != null and section.settings.mobile_video != null %}
+      video-hero--has-mobile-video
+    {% endif %}
+    {% if section.settings.video_url != null and section.settings.video == null %}
+      video-hero--has-iframe-video
+    {% endif %}
+  "
+  style="
+    --custom-mobile-height: {{ section.settings.height_mobile }}vh;
+    --custom-desktop-height: {{ section.settings.height_desktop }}vh;
+  "
+  data-section-id="{{ section.id }}"
+  {% if section.settings.video != blank %}
+    data-has-local-video="true"
+  {% endif %}
+  {% if section.settings.enable_animations %}
+    data-animate-elements-on-scroll
+    data-animate-delay="125"
+  {% endif %}
+>
+  <div class="video-hero__video-wrapper">
+    {% if section.settings.video_url != null
+      or section.settings.video != null
+      or section.settings.mobile_video != null
+    %}
+      <component-delayed-video data-parent-wrapper=".video-hero__video-wrapper">
+        <template>
+          {% if section.settings.video_url != null and section.settings.video == null %}
+            {%- if section.settings.video_url.type == 'youtube' -%}
+              <iframe
+                src="https://www.youtube.com/embed/{{ section.settings.video_url.id }}?enablejsapi=1&showinfo=0&modestbranding=1&autoplay=1&playsinline=1&loop=1&mute=1&controls=0&disablekb=1&playlist={{ section.settings.video_url.id }}"
+                class="js-youtube"
+                data-type="youtube"
+                allow="autoplay; encrypted-media"
+                allowfullscreen
+                frameBorder="0"
+                width="640"
+                height="360"
+              ></iframe>
+            {%- else -%}
+              <iframe
+                src="https://player.vimeo.com/video/{{ section.settings.video_url.id }}?autoplay=1&background=1&controls=0&loop=1&playlist={{ section.settings.video_url.id }}"
+                class="js-vimeo"
+                data-type="vimeo"
+                allow="autoplay; encrypted-media"
+                allowfullscreen
+                frameBorder="0"
+                width="640"
+                height="360"
+              ></iframe>
+            {%- endif -%}
+          {% else %}
+            {{
+              section.settings.video
+              | video_tag: image_size: '100vw', autoplay: true, loop: true, controls: false, muted: true
+            }}
+            {% if section.settings.mobile_video != null %}
+              {{
+                section.settings.mobile_video
+                | video_tag: image_size: '100vw', autoplay: true, loop: true, controls: false, muted: true
+              }}
+            {% endif %}
+          {% endif %}
+        </template>
+      </component-delayed-video>
+    {% endif %}
+  </div>
+
+  <div
+    class="video-hero__overlay overlay"
+    style="--overlay-opacity: {{ section.settings.video_overlay_opacity | divided_by: 100.0 }}"
+  ></div>
+
+  <div
+    class="
+      video-hero__overlay-content
+      overlay-content
+      overlay-content--horizontal-align-{{ horizontal_alignment }}
+      overlay-content--vertical-align-{{ vertical_alignment }}
+      overlay-content--horizontal-align-mobile-{{ horizontal_alignment_mobile }}
+      overlay-content--vertical-align-mobile-{{ vertical_alignment_mobile }}
+      {% if section.settings.show_content_background %}
+        overlay-content--show-background
+        color-{{ section.settings.content_color_scheme }}
+      {% endif %}
+      {% if section.settings.section_height == 'custom' %} custom-section-height{% endif %}
+    "
+    style="--overlay-content-width: {{ section.settings.content_width }}px;"
+  >
+    <div
+      class="
+        video-hero__overlay-content-container
+        overlay-content__container
+        {% if section.settings.enable_animations %}
+          animate
+          animate--slide-in
+        {% endif %}
+      "
+      {% if section.settings.show_gradient and section.settings.show_content_background %}
+        style="background: var(--gradient-background);"
+      {% endif %}
+    >
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+  {% if section.settings.background_image != blank and section.settings.video != null %}
+    {% render 'image',
+      image: section.settings.background_image,
+      sizes: '100vw',
+      wrapper_class: 'video-hero__image',
+      no_radius: true
+    %}
+  {% endif %}
+
+  {% if section.settings.video != null %}
+    <div class="video-hero__play-button">
+      {%- render 'icon-play' -%}
+    </div>
+  {% endif %}
+</section-video-hero>
+
+{% schema %}
+{
+  "name": "t:sections.video-hero.name",
+  "class": "video-hero-section can-tuck-under-header",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer",
+      "custom.floating"
+    ]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-3"
+    },
+    {
+      "type": "header",
+      "content": "t:common.section_height.heading__section_height.content"
+    },
+    {
+      "type": "select",
+      "id": "section_height",
+      "label": "t:common.section_height.section_height.label",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:common.section_height.section_height.option__video"
+        },
+        {
+          "value": "custom",
+          "label": "t:common.section_height.section_height.option__custom"
+        }
+      ],
+      "info": "t:common.section_height.section_height.info_video",
+      "default": "default"
+    },
+    {
+      "type": "range",
+      "id": "height_desktop",
+      "label": "t:common.section_height.custom_height_desktop.label",
+      "min": 50,
+      "max": 120,
+      "step": 1,
+      "unit": "vh",
+      "default": 100,
+      "visible_if": "{{ section.settings.section_height == \"custom\" }}"
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "label": "t:common.section_height.custom_height_mobile.label",
+      "min": 50,
+      "max": 120,
+      "step": 1,
+      "unit": "vh",
+      "default": 100,
+      "visible_if": "{{ section.settings.section_height == \"custom\" }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.video-hero.settings.header__hero_video.content"
+    },
+    {
+      "type": "range",
+      "id": "video_overlay_opacity",
+      "label": "t:common.video_overlay_opacity.label",
+      "info": "t:common.video_overlay_opacity.info",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 25
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:common.video.label"
+    },
+    {
+      "type": "video",
+      "id": "mobile_video",
+      "label": "t:common.mobile_video.label"
+    },
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "label": "t:common.video_url.label",
+      "accept": [
+        "youtube",
+        "vimeo"
+      ],
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "t:common.video_poster_image.label",
+      "info": "t:common.video_poster_image.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.image-hero.settings.header__hero_content.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_content_background",
+      "label": "t:common.show_content_background.label",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "content_color_scheme",
+      "label": "t:common.content_color_scheme.label",
+      "default": "scheme-1",
+      "visible_if": "{{ section.settings.show_content_background }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_gradient",
+      "label": "t:common.show_gradient.label",
+      "info": "t:common.show_gradient.info",
+      "default": false,
+      "visible_if": "{{ section.settings.show_content_background }}"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:common.absolute_alignment.label",
+      "options": [
+        {
+          "value": "top_left",
+          "label": "t:common.absolute_alignment.option__top_left"
+        },
+        {
+          "value": "top_center",
+          "label": "t:common.absolute_alignment.option__top_center"
+        },
+        {
+          "value": "top_right",
+          "label": "t:common.absolute_alignment.option__top_right"
+        },
+        {
+          "value": "center_left",
+          "label": "t:common.absolute_alignment.option__center_left"
+        },
+        {
+          "value": "center_center",
+          "label": "t:common.absolute_alignment.option__center_center"
+        },
+        {
+          "value": "center_right",
+          "label": "t:common.absolute_alignment.option__center_right"
+        },
+        {
+          "value": "bottom_left",
+          "label": "t:common.absolute_alignment.option__bottom_left"
+        },
+        {
+          "value": "bottom_center",
+          "label": "t:common.absolute_alignment.option__bottom_center"
+        },
+        {
+          "value": "bottom_right",
+          "label": "t:common.absolute_alignment.option__bottom_right"
+        }
+      ],
+      "default": "center_center"
+    },
+    {
+      "type": "select",
+      "id": "mobile_alignment",
+      "label": "t:common.absolute_alignment.label_mobile",
+      "options": [
+        {
+          "value": "top_left",
+          "label": "t:common.absolute_alignment.option__top_left"
+        },
+        {
+          "value": "top_center",
+          "label": "t:common.absolute_alignment.option__top_center"
+        },
+        {
+          "value": "top_right",
+          "label": "t:common.absolute_alignment.option__top_right"
+        },
+        {
+          "value": "center_left",
+          "label": "t:common.absolute_alignment.option__center_left"
+        },
+        {
+          "value": "center_center",
+          "label": "t:common.absolute_alignment.option__center_center"
+        },
+        {
+          "value": "center_right",
+          "label": "t:common.absolute_alignment.option__center_right"
+        },
+        {
+          "value": "bottom_left",
+          "label": "t:common.absolute_alignment.option__bottom_left"
+        },
+        {
+          "value": "bottom_center",
+          "label": "t:common.absolute_alignment.option__bottom_center"
+        },
+        {
+          "value": "bottom_right",
+          "label": "t:common.absolute_alignment.option__bottom_right"
+        }
+      ],
+      "default": "center_center"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "t:common.content_width.label",
+      "min": 500,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 700
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_animations.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "t:common.enable_animations.label",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "@theme"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.video-hero.presets.name",
+      "category": "t:categories.banners",
+      "blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "buttons",
+          "blocks": [
+            {
+              "type": "_button"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

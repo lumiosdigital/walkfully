@@ -1,0 +1,280 @@
+{%- liquid
+  assign feature_image = settings.account_image
+  assign aspect_ratio = settings.account_image_aspect_ratio
+
+  if section.settings.featured_image != blank
+    assign feature_image = section.settings.featured_image
+    assign aspect_ratio = section.settings.featured_image_aspect_ratio
+  endif
+
+  assign has_image = false
+  if feature_image != blank
+    assign has_image = true
+  endif
+-%}
+
+<div
+  class="
+    customer-login
+    grid
+    color-{{ section.settings.color_scheme }}
+    {% render 'section-classes', settings: section.settings -%}
+  "
+>
+  <div class="grid__content grid__content--plus-row-gap">
+    {% if has_image %}
+      <div class="grid__item--span-12 grid__item--span-6-tablet">
+    {% else %}
+      <div class="grid__item--span-12 content-container">
+        <div class="content-narrower">
+    {% endif %}
+
+    <div class="customer-login__form-wrapper">
+      <h1 class="fs-3 ta-center">
+        {{ 'customer.activate_account.title' | t }}
+      </h1>
+      <p class="ta-center mt-2xs">
+        {{ 'customer.activate_account.subtext' | t }}
+      </p>
+
+      {%- form 'activate_customer_password' -%}
+        {%- if form.errors -%}
+          <div class="form__message form__message--error fs--1" role="alert">
+            <h3 class="form__message-heading fs-0 ff-b" tabindex="-1" autofocus>
+              {% render 'theme-icon', icon: 'alert-circle', size: '1em' %}
+              {{ 'templates.contact.form.error_heading' | t }}
+            </h3>
+            <ul class="form__message__error-list">
+              {%- for field in form.errors -%}
+                <li>
+                  {%- if field == 'form' -%}
+                    {{ form.errors.messages[field] }}
+                  {%- else -%}
+                    <a href="#{{ field }}">
+                      {{ form.errors.translated_fields[field] | capitalize }}
+                      {{ form.errors.messages[field] }}
+                    </a>
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        <div class="field">
+          <label for="password" class="fs--1">
+            {{ 'customer.activate_account.password' | t }}
+          </label>
+          <input
+            type="password"
+            name="customer[password]"
+            id="password"
+            autocomplete="new-password"
+            placeholder="{{ 'customer.activate_account.password' | t }}"
+            {% if form.errors contains 'password' %}
+              aria-invalid="true"
+              aria-describedby="password-error"
+            {% endif %}
+          >
+
+          {%- if form.errors contains 'password' -%}
+            <div id="password-error" class="form__field-message fs--1">
+              {% render 'theme-icon', icon: 'alert-circle', size: '1em' %}
+              <span>
+                {{ form.errors.translated_fields.password | capitalize }}
+                {{ form.errors.messages.password }}.
+              </span>
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="field">
+          <label for="password_confirmation" class="fs--1">
+            {{ 'customer.activate_account.password_confirm' | t }}
+          </label>
+          <input
+            type="password"
+            name="customer[password_confirmation]"
+            id="password_confirmation"
+            autocomplete="new-password"
+            placeholder="{{ 'customer.activate_account.password_confirm' | t }}"
+            {% if form.errors contains 'password' %}
+              aria-invalid="true"
+              aria-describedby="password_confirmation-error"
+            {% endif %}
+          >
+
+          {%- if form.errors contains 'password_confirmation' -%}
+            <div id="password_confirmation-error" class="form__field-message fs--1">
+              {% render 'theme-icon', icon: 'alert-circle', size: '1em' %}
+              <span>
+                {{ form.errors.translated_fields.password_confirmation | capitalize }}
+                {{ form.errors.messages.password_confirmation }}
+              </span>
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="customer-login__submit-button-wrapper">
+          <button class="customer-login__submit-button btn btn--primary">
+            {{ 'customer.activate_account.submit' | t }}
+          </button>
+          <button name="decline" class="customer-login__submit-button btn btn--secondary">
+            {{ 'customer.activate_account.cancel' | t }}
+          </button>
+        </div>
+      {%- endform -%}
+    </div>
+
+    {% if has_image %}
+      {% capture image_sizes %}
+        {% render 'image-sizes', desktop_x_wide_width: 0.4453571429, desktop_wide_width: 0.4542307692, desktop_width: 0.4620636364, tablet_width: 0.4640666667, width: 0.9629960578 %}
+      {% endcapture %}
+      </div>
+      <div class="grid__item--span-12 grid__item--span-6-tablet customer-login__featured-image">
+        {% render 'image', image: feature_image, sizes: image_sizes, aspect_ratio: aspect_ratio %}
+      </div>
+    {% else %}
+      </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-activate-account.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__account_feature_image.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:common.paragraph__account_feature_image.content"
+    },
+    {
+      "type": "image_picker",
+      "id": "featured_image",
+      "label": "t:common.image.label"
+    },
+    {
+      "type": "select",
+      "id": "featured_image_aspect_ratio",
+      "label": "t:common.aspect_ratio.label",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:common.aspect_ratio.option__default"
+        },
+        {
+          "value": "3-2",
+          "label": "t:common.aspect_ratio.option__3_2"
+        },
+        {
+          "value": "5-4",
+          "label": "t:common.aspect_ratio.option__5_4"
+        },
+        {
+          "value": "11-10",
+          "label": "t:common.aspect_ratio.option__11_10"
+        },
+        {
+          "value": "1-1",
+          "label": "t:common.aspect_ratio.option__1_1"
+        },
+        {
+          "value": "10-11",
+          "label": "t:common.aspect_ratio.option__10_11"
+        },
+        {
+          "value": "4-5",
+          "label": "t:common.aspect_ratio.option__4_5"
+        },
+        {
+          "value": "2-3",
+          "label": "t:common.aspect_ratio.option__2_3"
+        },
+        {
+          "value": "1-2",
+          "label": "t:common.aspect_ratio.option__1_2"
+        }
+      ],
+      "default": "10-11"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_spacing_and_border.content"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "label": "t:common.top_spacing.label",
+      "options": [
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "2x-large"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "label": "t:common.bottom_spacing.label",
+      "options": [
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "2x-large"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:common.show_bottom_border.label",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

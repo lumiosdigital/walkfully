@@ -1,0 +1,88 @@
+{%- liquid
+  assign currencies = localization.available_countries | map: 'currency' | map: 'iso_code' | uniq
+
+  assign show_country_search = false
+  if localization.available_countries.size > 20
+    assign show_country_search = true
+  endif
+
+  assign show_currencies = false
+  if currencies.size > 1
+    assign show_currencies = true
+  endif
+%}
+
+<component-disclosure-form>
+  {%- form 'localization', id: formId, class: 'localization-form' -%}
+    <div class="disclosure">
+      <div class="disclosure__wash">
+        {% render 'loader', type: 'spinner', size: '1.5em' %}
+      </div>
+      {% if show_country_search %}
+        <div class="disclosure__search">
+          <label
+            class="disclosure__search-label"
+            for="country-search"
+            aria-label="{{ 'accessibility.open_search' | t }}"
+          >
+            {%- render 'theme-icon', icon: 'search', size: '1em' -%}
+          </label>
+          <input
+            class="disclosure__search-input"
+            name="country-search"
+            value=""
+            placeholder="{{ 'localization.search' | t }}"
+            autocorrect="off"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            data-disclosure-search
+          >
+
+          <button
+            type="reset"
+            class="btn-icon disclosure__search-reset-button"
+            aria-label="{{ 'templates.search.reset' | t }}"
+            data-disclosure-search-reset
+          >
+            {% render 'theme-icon', icon: 'x', size: '1em' %}
+          </button>
+        </div>
+      {% endif %}
+
+      <fieldset>
+        <legend class="visually-hidden">{{ 'accessibility.availabile_currencies' | t }}</legend>
+
+        <ul class="disclosure__list disclosure__list--countries">
+          {%- for country in localization.available_countries -%}
+            <li class="disclosure__list-item">
+              <input
+                type="checkbox"
+                class="disclosure__input-checkbox"
+                name="country_code"
+                value="{{ country.iso_code }}"
+                id="{{formId}}-{{ country.iso_code }}"
+                {% if country.iso_code == localization.country.iso_code %}
+                  checked
+                  disabled
+                {% endif %}
+              >
+              <label for="{{formId}}-{{ country.iso_code }}" class="disclosure__label">
+                <span class="disclosure__label-text">
+                  {{- country.name }}
+                </span>
+
+                {% if show_currencies %}
+                  <span class="disclosure__label-text-secondary fs--1">
+                    {{ country.currency.iso_code }}
+                    {{ country.currency.symbol -}}
+                  </span>
+                {% endif %}
+              </label>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </fieldset>
+    </div>
+  {%- endform -%}
+</component-disclosure-form>

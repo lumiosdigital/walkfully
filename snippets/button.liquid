@@ -1,0 +1,51 @@
+{%- liquid
+  capture class
+    echo 'btn '
+    echo 'btn--' | append: button_style
+
+    if button_size == 'compact' or button_size == 'standard'
+      if settings.button_uppercase
+        echo ' fs--1-upcase'
+      else
+        echo ' fs--1'
+      endif
+    else
+      if settings.button_uppercase
+        echo ' fs-0-upcase'
+      else
+        echo ' fs-0'
+      endif
+    endif
+
+    if button_size == 'compact'
+      echo ' btn--small'
+    endif
+  endcapture
+-%}
+
+{%- capture tag -%}
+  {%- if button_link != blank %}a{% else %}button{% endif -%}
+{%- endcapture -%}
+
+{% capture attributes %}
+  {% if button_link != blank %}
+    href="{{ button_link }}"
+  {% else %}
+    type="button"
+    disabled="true"
+  {% endif %}
+  {% if include_shopify_block_attributes %}
+    {{ block.shopify_attributes }}
+  {% endif %}
+{% endcapture %}
+
+{% if button_text != blank %}
+  <{{ tag }}
+    class="{{ class }}"
+    {{ attributes }}
+  >
+    <span>
+      {{ button_text }}
+    </span>
+  </{{ tag }}>
+{% endif %}

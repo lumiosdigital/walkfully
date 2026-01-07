@@ -1,0 +1,41 @@
+{%- liquid
+  if desktop_x_wide_width != blank
+    assign desktop_x_wide_width_size = 'calc(100vw * [[w]])' | replace: '[[w]]', desktop_x_wide_width
+    echo '(min-width: 87.5em) '
+    echo desktop_x_wide_width_size
+    echo ', '
+  endif
+
+  if desktop_wide_width != blank
+    assign desktop_wide_width_size = 'calc(100vw * [[w]])' | replace: '[[w]]', desktop_wide_width
+    echo '(min-width: 75em) '
+    echo desktop_wide_width_size
+    echo ', '
+  endif
+
+  if desktop_width != blank
+    assign desktop_width_size = 'calc(100vw * [[w]])' | replace: '[[w]]', desktop_width
+    echo '(min-width: 64em) '
+    echo desktop_width_size
+    echo ', '
+  endif
+
+  if tablet_width != blank
+    assign tablet_width_size = 'calc(100vw * [[w]])' | replace: '[[w]]', tablet_width
+    echo '(min-width: 48em) '
+    echo tablet_width_size
+    echo ', '
+  endif
+
+  if mobile_tablet_width != blank
+    assign mobile_tablet_size = 'calc(100vw * [[w]])' | replace: '[[w]]', mobile_tablet
+    echo '(min-width: 32em) '
+    echo mobile_tablet_size
+    echo ', '
+  endif
+
+  if width != blank
+    assign mobile_size = 'calc(100vw * [[w]])' | replace: '[[w]]', width
+    echo mobile_size
+  endif
+-%}

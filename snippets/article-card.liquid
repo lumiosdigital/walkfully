@@ -1,0 +1,109 @@
+{% liquid
+  assign split_article_url = article.url | split: '/' | slice: 1, 2
+  assign blog_url = split_article_url | join: '/'
+  assign title_in_image = false
+
+  if blog != blank
+    assign blog_url = blog.url
+  endif
+%}
+
+{% capture article_tags %}
+  {%- if show_tags and article.tags.size > 0 -%}
+    <div class="article-card__tags">
+      {% for tag in article.tags %}
+        <a href="{{ blog_url }}/tagged/{{ tag | handleize }}" class="article-card__tag fs--1">
+          {{ tag }}
+        </a>
+      {% endfor %}
+    </div>
+  {%- endif -%}
+{% endcapture %}
+<div
+  class="
+    article-card
+    {% if featured %}
+      article-card--featured
+      article-card--featured-style-{{ highlight_style }}
+    {% endif %}
+    {{ classes }}
+    {% if animate %}
+      animate
+      animate--slide-in
+    {% endif %}
+  "
+  {% if attributes != blank %}
+    {{ attributes }}
+  {% endif %}
+>
+  {%- if article -%}
+    <div class="article-card__image-wrapper">
+      {% if article.image %}
+        {% render 'image',
+          wrapper_class: 'article-card__image',
+          image: article.image,
+          sizes: sizes,
+          aspect_ratio: aspect_ratio
+        %}
+      {% else %}
+        <div class="article-card__image--faux" style="--aspect-ratio: {{ aspect_ratio | replace: '-', '/' }}"></div>
+        {%- liquid
+          unless featured
+            assign title_in_image = true
+          endunless
+        -%}
+      {% endif %}
+
+      <div class="article-card__image-floating">
+        <a href="{{ article.url }}" tabindex="-1" class="article-card__image-link" aria-label="{{ article.title }}"></a>
+
+        {{ article_tags }}
+
+        {% comment %} Used in search results {% endcomment %}
+        {% if show_article_tag %}
+          <div>
+            <span class="main-search__badge fs--1 ff-b">{{ 'templates.search.article_tag' | t }}</span>
+          </div>
+        {% endif %}
+
+        {% if featured %}
+          {% render 'article-details',
+            article: article,
+            featured: true,
+            show_date: show_date,
+            show_author: show_author,
+            show_excerpt: show_excerpt
+          %}
+        {% elsif title_in_image %}
+          <div class="article-card__details">
+            <h3 class="article-card__heading {% if featured %}fs-2{% else %}fs-1{% endif %} fancy-link">
+              {% if article %}
+                <a href="{{ article.url }}">
+                  {{ article.title | truncate: 50 | escape }}
+                </a>
+              {% else %}
+                {{ 'sections.featured_blog.onboarding_title' | t }}
+              {% endif %}
+            </h3>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% else %}
+    {% render 'image',
+      wrapper_class: 'article-card__image',
+      include_placeholder: true,
+      aspect_ratio: aspect_ratio,
+      placeholder_tag: placeholder_tag
+    %}
+  {%- endif -%}
+
+  {% render 'article-details',
+    article: article,
+    featured: false,
+    show_date: show_date,
+    show_author: show_author,
+    show_excerpt: show_excerpt,
+    hide_title: title_in_image
+  %}
+</div>

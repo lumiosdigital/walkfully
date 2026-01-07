@@ -1,0 +1,67 @@
+{%- liquid
+  assign horizontal_alignment = section.settings.alignment | split: '_' | last
+  assign horizontal_alignment_mobile = section.settings.mobile_alignment | split: '_' | last
+  assign mobile_align = horizontal_alignment_mobile | default: 'left'
+-%}
+
+<div
+  class="
+    block-text
+    block-text--align-{{ horizontal_alignment }}
+    block-text--mobile-align-{{ mobile_align }}
+    rte
+    {% render 'text-control-classes', settings: block.settings %}
+    {% if section.settings.enable_animations %}
+      animate
+      animate--slide-in
+    {% endif %}
+  "
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.text %}
+    {{ block.settings.text }}
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "t:blocks.text.name",
+  "class": "rhythm-text",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:common.text.label",
+      "default": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "t:common.text_size.label",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:common.text_size.option_body_small"
+        },
+        {
+          "value": "2",
+          "label": "t:common.text_size.option_body"
+        },
+        {
+          "value": "3",
+          "label": "t:common.text_size.option_h4"
+        }
+      ],
+      "default": "2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.text.name",
+      "settings": {
+        "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>"
+      }
+    }
+  ]
+}
+{% endschema %}

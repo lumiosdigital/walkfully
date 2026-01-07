@@ -1,0 +1,256 @@
+{%- liquid
+  capture wrapper_tag
+    if cart == empty
+      echo 'div'
+    else
+      echo 'form'
+    endif
+  endcapture
+
+  capture wrapper_attributes
+    if cart != empty
+      echo 'action="' | append: routes.cart_url | append: '"'
+      echo 'method="post"'
+      echo 'id="cart"'
+    endif
+  endcapture
+-%}
+
+<section-cart
+  class="
+    main-cart
+    color-{{ section.settings.color_scheme }}
+    {% render 'section-classes', settings: section.settings -%}
+  "
+  data-cart-item-count="{{ cart.item_count }}"
+  data-section-id="{{ section.id }}"
+>
+  <{{ wrapper_tag }} {{ wrapper_attributes }} class="grid">
+    <div class="grid__content">
+      <div class="main-cart__title-wrapper grid__item--span-12">
+        <h1 class="main-cart__title main-cart__title--not-empty fs-4">{{ 'sections.cart.title' | t }}</h1>
+        <h1 class="main-cart__title--empty fs-4">{{ 'sections.cart.empty' | t }}</h1>
+        {%- if shop.customer_accounts_enabled and customer == null -%}
+          <div class="main-cart__login-wrapper fs--1">
+            <div class="main-cart__login-title">{{ 'sections.cart.login.title' | t }}</div>
+            <p class="main-cart__login-paragraph">
+              {{ 'sections.cart.login.paragraph_html' | t: link: routes.account_login_url }}
+            </p>
+          </div>
+        {%- endif -%}
+
+        <a href="{{ routes.all_products_collection_url }}" class="main-cart__continue-shopping btn btn--primary">
+          {{ 'general.continue_shopping' | t }}
+        </a>
+      </div>
+      <ul
+        class="main-cart__items-list grid__item--span-12 grid__item--span-7-tablet grid__item--span-8-desktop"
+        data-update-items
+      >
+        {% if settings.enable_free_shipping_bar and section.settings.free_shipping_bar_position == 'left' %}
+          <li>
+            {% render 'free-shipping-bar', wrapper_class: 'main-cart__free-shipping-bar', isolate_update: false %}
+          </li>
+        {% endif %}
+
+        {% for item in cart.items %}
+          {% render 'cart-item', item: item, wrapper_class: 'main-cart__item' %}
+        {% endfor %}
+      </ul>
+      <div
+        class="main-cart__sidebar grid__item--span-12 grid__item--span-5-tablet grid__item--span-4-desktop grid__item--shift-both-below-tablet"
+      >
+        <div class="main-cart__sidebar-content">
+          {% if settings.enable_free_shipping_bar and section.settings.free_shipping_bar_position == 'right' %}
+            {% render 'free-shipping-bar', wrapper_class: 'main-cart__free-shipping-bar', isolate_update: true %}
+          {% endif %}
+
+          {% if settings.enable_cart_note %}
+            {% render 'cart-note', wrapper_class: 'main-cart__cart-note', id: 'cart-template' %}
+          {% endif %}
+
+          {%- if cart.cart_level_discount_applications.size > 0 -%}
+            <ul
+              class="main-cart__order-discounts-list"
+              data-update-discounts
+            >
+              {%- for discount in cart.cart_level_discount_applications -%}
+                <li class="main-cart__order-discounts-list-item fs--1">
+                  {%- render 'theme-icon', icon: 'tag', size: '1em' -%}
+                  {{ discount.title | escape }}
+                  (-{{ discount.total_allocated_amount | money }})
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+
+          <div class="main-cart__sidebar-total fs-1" data-update-total>
+            <span class="totals__total">{{ 'sections.cart.total' | t }}</span>
+            {{ cart.total_price | money_with_currency }}
+          </div>
+
+          <div class="main-cart__sidebar-tax-note fs--1 rte" data-update-tax-note>
+            {%- if cart.duties_included and cart.taxes_included -%}
+              {%- if shop.shipping_policy.body == blank -%}
+                {{ 'sections.cart.duties_and_taxes_included_shipping_at_checkout_without_policy' | t }}
+              {%- else -%}
+                {{
+                  'sections.cart.duties_and_taxes_included_shipping_at_checkout_with_policy_html'
+                  | t: link: shop.shipping_policy.url
+                }}
+              {%- endif -%}
+            {%- elsif cart.duties_included == false and cart.taxes_included -%}
+              {%- if shop.shipping_policy.body == blank -%}
+                {{ 'sections.cart.taxes_included_shipping_at_checkout_without_policy' | t }}
+              {%- else -%}
+                {{
+                  'sections.cart.taxes_included_shipping_at_checkout_with_policy_html'
+                  | t: link: shop.shipping_policy.url
+                }}
+              {%- endif -%}
+            {%- elsif cart.duties_included and cart.taxes_included == false -%}
+              {%- if shop.shipping_policy.body == blank -%}
+                {{ 'sections.cart.duties_included_taxes_at_checkout_shipping_at_checkout_without_policy' | t }}
+              {%- else -%}
+                {{
+                  'sections.cart.duties_included_taxes_at_checkout_shipping_at_checkout_with_policy_html'
+                  | t: link: shop.shipping_policy.url
+                }}
+              {%- endif -%}
+            {%- elsif cart.duties_included == false and cart.taxes_included == false -%}
+              {%- if shop.shipping_policy.body == blank -%}
+                {{ 'sections.cart.taxes_at_checkout_shipping_at_checkout_without_policy' | t }}
+              {%- else -%}
+                {{
+                  'sections.cart.taxes_at_checkout_shipping_at_checkout_with_policy_html'
+                  | t: link: shop.shipping_policy.url
+                }}
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+
+          <div class="cart__ctas" {{ block.shopify_attributes }}>
+            <button
+              class="btn btn--primary btn--full-width btn--height-standard"
+              name="checkout"
+            >
+              {{ 'sections.cart.checkout' | t }}
+            </button>
+          </div>
+
+          {%- if additional_checkout_buttons -%}
+            <div class="cart__dynamic-checkout-buttons">
+              {{ content_for_additional_checkout_buttons }}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </{{ wrapper_tag }}>
+</section-cart>
+
+{% schema %}
+{
+  "name": "t:sections.main-cart.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__content.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:common.paragraph__cart_note.content"
+    },
+    {
+      "type": "select",
+      "id": "free_shipping_bar_position",
+      "label": "t:common.free_shipping_bar_position.label",
+      "info": "t:common.free_shipping_bar_position.info",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:common.free_shipping_bar_position.option__above_cart_items"
+        },
+        {
+          "value": "right",
+          "label": "t:common.free_shipping_bar_position.option__above_cart_total"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_spacing_and_border.content"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "label": "t:common.top_spacing.label",
+      "options": [
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "x-large"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "label": "t:common.bottom_spacing.label",
+      "options": [
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "x-large"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:common.show_bottom_border.label",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

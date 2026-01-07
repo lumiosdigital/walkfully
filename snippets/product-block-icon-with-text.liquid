@@ -1,0 +1,17 @@
+<div
+  class="
+    product__block
+    {%- render 'product-block-classes', block: block -%}
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="product__icon-with-text {% render 'text-control-classes', settings: block.settings %}">
+    {% render 'theme-icon', icon: block.settings.icon, size: '1.35em' %}
+
+    <div class="product__icon-with-text-content">
+      <div class="product__text rte">
+        {{ block.settings.text }}
+      </div>
+    </div>
+  </div>
+</div>

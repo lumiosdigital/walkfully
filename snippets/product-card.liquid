@@ -1,0 +1,269 @@
+{%- liquid
+  assign wrapper_class = 'product-card'
+  assign wrapper_class = wrapper_class | append: ' product-card--sale-badge-' | append: settings.sale_badge_color_style
+  assign should_show_secondary = true
+
+  if disable_secondary == true
+    assign should_show_secondary = false
+  endif
+
+  if layout_horizontal == true
+    assign wrapper_class = wrapper_class | append: ' product-card--layout-horizontal'
+  endif
+
+  if settings.show_secondary_on_hover and prod.media.size > 1 and should_show_secondary
+    assign wrapper_class = wrapper_class | append: ' product-card--show-secondary'
+  endif
+
+  if wrapper_classes != blank
+    assign wrapper_class = wrapper_class | append: ' ' | append: wrapper_classes
+  endif
+
+  if animate
+    assign wrapper_class = wrapper_class | append: ' animate animate--slide-in'
+  endif
+
+  assign show_price = true
+
+  if show_price_override != null
+    assign show_price = show_price_override
+  endif
+
+  assign show_quick_buy_button = true
+
+  if disable_quick_buy or settings.enable_quick_buy == false
+    assign show_quick_buy_button = false
+  endif
+
+  assign overlay_icon_size = '1.5em'
+
+  if override_overlay_icon_size != blank
+    assign overlay_icon_size = override_overlay_icon_size
+  endif
+
+  assign show_vendor = settings.product_card_show_vendor
+
+  if show_vendor_override != null
+    assign show_vendor = show_vendor_override
+  endif
+
+  assign prod_on_sale = false
+
+  assign compare_at_price = prod.compare_at_price
+  assign price = prod.price
+
+  if compare_at_price > price
+    assign prod_on_sale = true
+  endif
+
+  assign show_sale_badge = false
+  assign show_sold_out_badge = false
+
+  if settings.show_sale_badge and prod_on_sale
+    assign show_sale_badge = true
+  endif
+
+  if settings.show_sold_out_badge and prod.available == false
+    assign show_sold_out_badge = true
+  endif
+
+  assign show_sale_and_position_left = false
+  assign show_sold_out_and_position_left = false
+  assign show_sale_and_position_right = false
+  assign show_sold_out_and_position_right = false
+  assign show_sale_and_position_inline = false
+  assign show_sold_out_and_position_inline = false
+
+  if show_sale_badge and settings.sale_badge_position == 'left'
+    assign show_sale_and_position_left = true
+  elsif show_sale_badge and settings.sale_badge_position == 'right'
+    assign show_sale_and_position_right = true
+  elsif show_sale_badge and settings.sale_badge_position == 'inline'
+    assign show_sale_and_position_inline = true
+  endif
+
+  if show_sold_out_badge and settings.sold_out_badge_position == 'left'
+    assign show_sold_out_and_position_left = true
+  elsif show_sold_out_badge and settings.sold_out_badge_position == 'right'
+    assign show_sold_out_and_position_right = true
+  elsif show_sold_out_badge and settings.sold_out_badge_position == 'inline'
+    assign show_sold_out_and_position_inline = true
+  endif
+
+  assign should_disable_shimmer = false
+  if shimmer_disabled
+    assign should_disable_shimmer = true
+  endif
+-%}
+
+{% capture sale_badge %}
+  <span class="product-card__badge product-card__badge--sale fs--1 ff-{{ settings.badge_font }}">
+    {{- 'products.product.on_sale' | t -}}
+  </span>
+{% endcapture %}
+
+{% capture sold_out_badge %}
+  <span class="product-card__badge product-card__badge--sold-out fs--1 ff-{{ settings.badge_font }}">
+    {{- 'products.product.sold_out' | t -}}
+  </span>
+{% endcapture %}
+
+<div class="{{ wrapper_class }}" {{ attributes }}>
+  <div class="product-card__inner{% if animate_isolate %} animate animate--slide-in{% endif %}">
+    <div class="product-card__image-wrapper">
+      {% render 'image',
+        wrapper_class: 'product-card__image product-card__image--primary',
+        image: prod.featured_media,
+        shimmer_disabled: should_disable_shimmer,
+        sizes: sizes,
+        aspect_ratio: settings.product_card_aspect_ratio,
+        include_placeholder: true,
+        placeholder_tag: placeholder_tag
+      %}
+
+      {% if settings.show_secondary_on_hover and should_show_secondary %}
+        {% render 'image',
+          wrapper_class: 'product-card__image product-card__image--secondary',
+          image: prod.media[1],
+          sizes: sizes,
+          aspect_ratio: settings.product_card_aspect_ratio,
+          shimmer_disabled: should_disable_shimmer
+        %}
+      {% endif %}
+
+      {% if prod and prod.available == false %}
+        <div class="product-card__unavailable-wash"></div>
+      {% endif %}
+
+      {% unless disable_badges %}
+        {% if show_sale_and_position_left or show_sold_out_and_position_left %}
+          <div class="product-card__badges-floating-left">
+            {% if show_sale_and_position_left %}
+              {{ sale_badge }}
+            {% endif %}
+
+            {% if show_sold_out_and_position_left %}
+              {{ sold_out_badge }}
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if show_sale_and_position_right or show_sold_out_and_position_right %}
+          <div class="product-card__badges-floating-right">
+            {% if show_sale_and_position_right %}
+              {{ sale_badge }}
+            {% endif %}
+
+            {% if show_sold_out_and_position_right %}
+              {{ sold_out_badge }}
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endunless %}
+
+      {% if prod != blank -%}
+        <a href="{{ prod.url }}" class="product-card__image-link" aria-label="{{ prod.title }}" tabindex="-1"></a>
+      {% endif %}
+
+      <div class="product-card__overlay">
+        {% if show_quick_buy_button %}
+          <div class="product-card__overlay-ctas">
+            <button
+              type="button"
+              class="quick-buy-button"
+              data-product-id="{{ prod.id }}"
+              data-product-handle="{{ prod.handle }}"
+              data-product-title="{{ prod.title }}"
+              {% if prod.available %}
+                {% if prod.has_only_default_variant %}
+                  data-add-product
+                {% else %}
+                  data-add-product-with-variant
+                {% endif %}
+              {% else %}
+                disabled
+              {% endif %}
+              aria-label="{{ 'accessibility.open_quick_buy' | t: product: prod.title }}"
+            >
+              {% render 'theme-icon', icon: 'shopping-bag', size: overlay_icon_size %}
+            </button>
+
+            {% if prod.has_only_default_variant and prod.available %}
+              {%- form 'product', prod, novalidate: 'novalidate' -%}
+                <input
+                  type="hidden"
+                  name="id"
+                  value="{{ prod.selected_or_first_available_variant.id }}"
+                >
+              {%- endform -%}
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="product-card__details">
+      {% unless disable_badges %}
+        {% if show_sale_and_position_inline or show_sold_out_and_position_inline %}
+          <div class="product-card__details-badges">
+            {% if show_sale_and_position_inline %}
+              {{ sale_badge }}
+            {% endif %}
+
+            {% if show_sold_out_and_position_inline %}
+              {{ sold_out_badge }}
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endunless %}
+
+      {%- if prod.metafields.reviews.rating.value != blank
+        and settings.show_product_rating
+        and disable_rating != true
+      -%}
+        <div class="product-card__star-rating{% unless layout_horizontal %} fs--1{% endunless %}">
+          {%- liquid
+            case settings.star_color
+              when 'text'
+                assign star_color = null
+              when 'accent'
+                assign star_color = settings.accent
+              when 'custom'
+                assign star_color = settings.star_color_custom
+            endcase
+          -%}
+          {% render 'star-rating',
+            prod: prod,
+            size: '1em',
+            type: settings.rating_display_type,
+            show_rating_total: settings.show_rating_total,
+            star_color: star_color
+          %}
+        </div>
+      {%- endif -%}
+
+      {% if prod != blank -%}
+        {% if show_vendor and prod.vendor -%}
+          <div class="product-card__vendor{% unless layout_horizontal %} fs--1{% endunless %}">
+            {{ prod.vendor }}
+          </div>
+        {%- endif %}
+
+        <div class="product-card__title ff-h{% if layout_horizontal %} fs-1{% endif %}">
+          <a href="{{ prod.url }}">{{ prod.title }}</a>
+        </div>
+
+        {% if show_price %}
+          <div class="product-card__price{% unless layout_horizontal %} fs--1{% endunless %}">
+            {% render 'price', prod: prod %}
+          </div>
+        {%- endif %}
+      {%- else -%}
+        <div class="product-card__title ff-h">
+          {{ 'onboarding.product_title' | t }}
+        </div>
+        <div class="product-card__price fs--1">{{ 9999 | money }}</div>
+      {% endif %}
+    </div>
+  </div>
+</div>

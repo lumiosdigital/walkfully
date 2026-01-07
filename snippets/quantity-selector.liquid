@@ -1,0 +1,51 @@
+{% # theme-check-disable %}
+{%- assign cart_count = cart | item_count_for_variant: prod.selected_or_first_available_variant.id -%}
+{% # theme-check-enable %}
+<component-quantity
+  class="quantity"
+  {% if sync_id != blank %}
+    data-sync-id="{{ sync_id }}"
+  {% endif %}
+>
+  {% unless hide_label %}
+    <label class="quantity__label fs--1" for="quantity-{{ id }}">
+      {{ 'products.product.quantity.label' | t }}
+      {% if cart_count != 0 %}
+        <span class="quantity__cart-count">
+          {{- 'products.product.quantity.in_cart_html' | t: quantity: cart_count -}}
+        </span>
+      {% endif %}
+    </label>
+  {% endunless %}
+  <button
+    class="quantity__button"
+    name="minus"
+    type="button"
+    aria-label="{{ 'products.product.quantity.decrease' | t: product: prod.title | escape }}"
+  >
+    {% render 'theme-icon', icon: 'minus', size: '1em' %}
+  </button>
+  <input
+    id="quantity-{{ id }}"
+    class="quantity__input"
+    type="number"
+    name="quantity"
+    min="{{ prod.selected_or_first_available_variant.quantity_rule.min | default: 1 }}"
+    {% if prod.selected_or_first_available_variant.quantity_rule.max != null %}
+      max="{{ prod.selected_or_first_available_variant.quantity_rule.max }}"
+    {% endif %}
+    step="{{ prod.selected_or_first_available_variant.quantity_rule.increment | default: 1 }}"
+    value="{{ prod.selected_or_first_available_variant.quantity_rule.min | default: 1 }}"
+    {% if product_form_id != blank %}
+      form="{{ product_form_id }}"
+    {% endif %}
+  >
+  <button
+    class="quantity__button"
+    name="plus"
+    type="button"
+    aria-label="{{ 'products.product.quantity.increase' | t: product: prod.title | escape }}"
+  >
+    {% render 'theme-icon', icon: 'plus', size: '1em' %}
+  </button>
+</component-quantity>

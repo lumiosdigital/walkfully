@@ -1,0 +1,149 @@
+{%- capture country_language_content -%}
+  <component-panel-swipe>
+    <div class="panel-swipe__panel active" data-panel data-panel-level="0">
+      <div class="panel-swipe__content active">
+      <ul class="panel-swipe__list reset">
+        {%- if localization.available_countries and localization.available_countries.size > 1 -%}
+          <li>
+            <button
+              type="button"
+              class="panel-swipe__list-item panel-swipe__button-with-text-and-icon"
+              data-panel-swipe-trigger
+              data-panel-target="1"
+              data-target-id="localization-country"
+              aria-label="{{ 'localization.country_label' | t }}"
+              aria-controls="localization-country"
+              aria-expanded="false"
+              id="button-localization-country"
+            >
+              <span>{{ localization.country | truncate: 24, '...' }}<span class="o-7"> | {{ localization.country.currency.iso_code }}
+              {{localization.country.currency.symbol -}}</span></span>
+              {% render 'theme-icon', icon: 'chevron-right', size: '1em' %}
+            </button>
+          </li>
+        {% endif %}
+
+        {%- if localization.available_languages and localization.available_languages.size > 1 -%}
+          <li>
+            <button
+              type="button"
+              class="panel-swipe__list-item panel-swipe__button-with-text-and-icon"
+              data-panel-swipe-trigger
+              data-panel-target="1"
+              data-target-id="localization-language"
+              aria-label="{{ 'localization.language_label' | t }}"
+              aria-controls="localization-language"
+              aria-expanded="false"
+              id="button-localization-language"
+            >
+              {{ localization.language.endonym_name | capitalize }}
+              {% render 'theme-icon', icon: 'chevron-right', size: '1em' %}
+            </button>
+          </li>
+        {%- endif -%}
+        </ul>
+      </div>
+    </div>
+
+    <div class="panel-swipe__panel" data-panel data-panel-level="1">
+    {%- if localization.available_countries and localization.available_countries.size > 1 -%}
+
+      <div
+        class="panel-swipe__content"
+        data-id="localization-country"
+        id="localization-country"
+        aria-labelledby="button-localization-language"
+      >
+        <div class="panel-swipe__header">
+          <button
+            type="button"
+            aria-label="{{ 'accessibility.go_back' | t }}"
+            class="panel-swipe__back-button panel-swipe__button-with-text-and-icon"
+            data-previous-panel-trigger
+            data-previous-trigger-focus="localization-country"
+            data-previous-panel-level="0"
+          >
+            <span class="fs--1 tt-u">{{ 'localization.country_label' | t }}</span>
+            {% render 'theme-icon', icon: 'chevron-left', size: '1em' %}
+          </button>
+        </div>
+
+        {%- render 'country-localization', formId: 'panel-country-localization' -%}
+      </div>
+    {%- endif -%}
+
+      {%- if localization.available_languages and localization.available_languages.size > 1 -%}
+
+      <div
+        class="panel-swipe__content"
+        data-id="localization-language"
+        id="localization-language"
+        aria-labelledby="button-localization-language"
+      >
+        <div class="panel-swipe__header">
+          <button
+            type="button"
+            aria-label="{{ 'accessibility.go_back' | t }}"
+            class="panel-swipe__back-button panel-swipe__button-with-text-and-icon"
+            data-previous-panel-trigger
+            data-previous-trigger-focus="localization-language"
+            data-previous-panel-level="0"
+          >
+            <span class="fs--1 tt-u">{{ 'localization.language_label' | t }}</span>
+            {% render 'theme-icon', icon: 'chevron-left', size: '1em' %}
+          </button>
+        </div>
+
+        {%- render 'language-localization', formId: 'panel-language-localization' -%}
+      </div>
+    {%- endif -%}
+    </div>
+  </component-panel-swipe>
+{%- endcapture -%}
+
+{% capture country_content %}
+  {%- render 'country-localization', formId: 'panel-country-singular-localization' -%}
+{% endcapture %}
+
+{% capture language_content %}
+  {%- render 'language-localization', formId: 'panel-language-singular-localization' -%}
+{% endcapture %}
+
+{% if localization.available_countries.size > 1 && localization.available_languages.size > 1 %}
+  {% assign panel_header = 'localization.language_country_label' | t %}
+  {% assign panel_description = 'accessibility.panel_language_currency' | t %}
+
+  {% render 'panel',
+    direction: 'right',
+    sub_id: 'localizationCountryLanguagePanel',
+    heading: panel_header,
+    content: country_language_content,
+    description: panel_description
+  %}
+{% endif %}
+
+{% if localization.available_countries.size > 1 %}
+  {% assign panel_header = 'localization.country_label' | t %}
+  {% assign panel_description = 'accessibility.panel_currency' | t %}
+
+  {% render 'panel',
+    direction: 'right',
+    sub_id: 'localizationCountryPanel',
+    heading: panel_header,
+    content: country_content,
+    description: panel_description
+  %}
+{% endif %}
+
+{% if localization.available_languages.size > 1 %}
+  {% assign panel_header = 'localization.language_label' | t %}
+  {% assign panel_description = 'accessibility.panel_language' | t %}
+
+  {% render 'panel',
+    direction: 'right',
+    sub_id: 'localizationLanguagePanel',
+    heading: panel_header,
+    content: language_content,
+    description: panel_description
+  %}
+{% endif %}

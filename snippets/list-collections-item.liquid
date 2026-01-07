@@ -1,0 +1,88 @@
+{%- liquid
+  assign show_view_all = false
+  assign grid_columns = 12
+  assign mobile_columns_span = grid_columns | divided_by: mobile_columns
+
+  assign tablet_columns = desktop_columns
+  assign tablet_columns_span = grid_columns | divided_by: tablet_columns
+
+  assign desktop_columns_span = grid_columns | divided_by: desktop_columns
+
+  if tablet_columns > 2
+    assign tablet_columns = tablet_columns | minus: 1
+    assign tablet_columns_span = grid_columns | divided_by: tablet_columns
+  endif
+-%}
+
+{% capture image_sizes %}
+  {% render 'image-sizes-results-grid', mobile_columns: mobile_columns, desktop_columns: desktop_columns %}
+{% endcapture %}
+
+{%- capture product_classes -%}
+  grid__item--span-{{ mobile_columns_span }}
+  grid__item--span-{{  tablet_columns_span }}-tablet
+  grid__item--span-{{  desktop_columns_span }}-desktop
+
+  {% if product_display_mode == 'slider' %}
+    swiper-slide
+  {% endif %}
+{%- endcapture -%}
+
+{%- capture placeholder_product_list -%}
+  {% for i in (1..max_products) -%}
+    {%- capture placeholder_name -%}product-{% cycle "1", "2", "3", "4", "5" %}{%- endcapture -%}
+    {% render 'product-card',
+      wrapper_classes: product_classes,
+      placeholder_tag: placeholder_name, animate: animate
+    %}
+  {%- endfor %}
+{%- endcapture -%}
+
+{%- capture product_items -%}
+  {% for featured_product in collection.products limit: max_products %}
+    {% render 'product-card', prod: featured_product, sizes: image_sizes, wrapper_classes: product_classes, animate: animate %}
+  {% else %}
+    {{ placeholder_product_list }}
+  {% endfor %}
+{%- endcapture -%}
+
+{% capture view_all_button %}
+    <a href="{{ collection.url }}">{{ 'templates.list_collections.view_collection' | t }}</a>
+  {% endcapture %}
+
+<div
+  class="list-collections__item grid__item--span-12"
+  {% if animate %}
+    data-animate-elements-on-scroll
+    data-animate-delay="125"
+  {% endif %}
+>
+  <div class="grid grid--inner-grid">
+    <div class="grid__content grid__content--plus-row-gap grid--inner">
+      <div class="grid__item--span-12">
+        <div class="prelude__content">
+          <h2 class="prelude__heading rhythm-heading rhythm-heading-size-2 fs-2{% if animate %} animate animate--slide-in{% endif %}">
+            {{ collection.title }}
+          </h2>
+
+          <div class="prelude__cta fancy-link{% if animate %} animate animate--slide-in{% endif %}">
+            {{ view_all_button }}
+          </div>
+        </div>
+      </div>
+
+      {% if section.settings.product_display_mode == 'slider' %}
+        {% render 'slider',
+          classes: 'grid__content grid__item--span-12',
+          full_width: true,
+          items: product_items,
+          mobile_columns: mobile_columns,
+          tablet_columns: tablet_columns,
+          desktop_columns: desktop_columns
+        %}
+      {% else %}
+        {{ product_items }}
+      {% endif %}
+    </div>
+  </div>
+</div>

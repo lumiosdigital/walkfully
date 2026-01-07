@@ -1,0 +1,101 @@
+{%- liquid
+  assign horizontal_alignment = section.settings.alignment | split: '_' | last
+  assign horizontal_alignment_mobile = section.settings.mobile_alignment | split: '_' | last
+
+  assign mobile_align = horizontal_alignment_mobile | default: 'left'
+-%}
+
+<div
+  class="
+    block-heading
+    block-heading--align-{{ horizontal_alignment }}
+    block-heading--mobile-align-{{ mobile_align }}
+    rhythm-heading-size-{{ block.settings.text_size }}
+    section-block
+    {% if section.settings.enable_animations %}
+      animate
+      animate--slide-in
+    {% endif %}
+  "
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.heading %}
+    <h2
+      class="
+        rte
+        {% render 'text-control-classes', settings: block.settings %}
+      "
+    >
+      {{ block.settings.heading }}
+    </h2>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "t:blocks.heading.name",
+  "class": "rhythm-heading",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:common.heading.label",
+      "default": "Promote your brand"
+    },
+    {
+      "type": "select",
+      "id": "text_font",
+      "label": "t:common.heading_font.label",
+      "options": [
+        {
+          "value": "ff-h",
+          "label": "t:common.text_font.option__heading"
+        },
+        {
+          "value": "ff-b",
+          "label": "t:common.text_font.option__body"
+        }
+      ],
+      "default": "ff-h"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "t:common.heading_size.label",
+      "options": [
+        {
+          "value": "3",
+          "label": "t:common.text_size.option_h4"
+        },
+        {
+          "value": "4",
+          "label": "t:common.text_size.option_h3"
+        },
+        {
+          "value": "5",
+          "label": "t:common.text_size.option_h2"
+        },
+        {
+          "value": "6",
+          "label": "t:common.text_size.option_h1"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "checkbox",
+      "id": "text_uppercase",
+      "label": "t:common.heading_uppercase.label",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.heading.name",
+      "settings": {
+        "heading": "Promote your brand"
+      }
+    }
+  ]
+}
+{% endschema %}

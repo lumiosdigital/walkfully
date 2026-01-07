@@ -1,0 +1,71 @@
+{%- liquid
+  assign height = image.width | divided_by: image.aspect_ratio | round
+  assign widths = '200, 320, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 1000, 1100, 1200, 1300, 1400, 1800, 2136, 2400, 3600, 7680'
+  assign priority = 'auto'
+
+  if prioritize == true
+    assign priority = 'high'
+  endif
+
+  assign wrapper_classes = 'image'
+
+  if no_radius
+    assign wrapper_classes = wrapper_classes | append: ' no-radius'
+  endif
+
+  unless shimmer_disabled
+    assign wrapper_classes = wrapper_classes | append: ' shimmer'
+  endunless
+
+  if wrapper_class != blank
+    assign wrapper_classes = wrapper_classes | append: ' ' | append: wrapper_class
+  endif
+
+  assign placeholder_name = 'product-1'
+  assign placeholder_aspect = placeholder_aspect | default: aspect_ratio
+  assign placeholder_class = 'placeholder' | append: ' placeholder--aspect-' | append: placeholder_aspect
+
+  if placeholder_tag != blank
+    assign placeholder_name = placeholder_tag
+  endif
+-%}
+{%- if image -%}
+  <div
+    {% if attributes != blank %}
+      {{ attributes }}
+    {% endif %}
+    class="{{ wrapper_classes }}{% if aspect_ratio != blank %} image--aspect-{{ aspect_ratio }}{% endif %}"
+    {%- if no_radius or css_vars != blank -%}
+      style="
+        {%- if no_radius -%}
+          --media-border-radius: 0;
+        {%- endif -%}
+        {%- if css_vars != blank -%}
+          {{- css_vars -}}
+        {%- endif -%}
+      "
+    {% endif %}
+  >
+    {{
+      image
+      | image_url: width: image.width
+      | image_tag:
+        height: height,
+        sizes: sizes,
+        widths: widths,
+        fetchpriority: priority,
+        onload: 'this.parentNode.classList.remove("shimmer")'
+    }}
+  </div>
+{%- elsif include_placeholder -%}
+  <div
+    class="{{ wrapper_classes }} image--placeholder"
+    {% if no_radius %}
+      style="--media-border-radius: 0;"
+    {% endif %}
+  >
+    <div class="{{ placeholder_class }}">
+      {{ placeholder_name | placeholder_svg_tag: 'placeholder-svg' }}
+    </div>
+  </div>
+{%- endif -%}

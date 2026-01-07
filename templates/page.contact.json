@@ -1,0 +1,117 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "image_hero_p6QHiM": {
+      "type": "image-hero",
+      "blocks": {
+        "heading_RLMy6d": {
+          "type": "heading",
+          "settings": {
+            "heading": "Contact Us",
+            "text_font": "ff-h",
+            "text_size": "6",
+            "text_uppercase": false
+          },
+          "blocks": {}
+        },
+        "text_KddeDg": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>",
+            "text_size": "2"
+          },
+          "blocks": {}
+        },
+        "buttons_QL7Kex": {
+          "type": "buttons",
+          "disabled": true,
+          "settings": {},
+          "blocks": {
+            "button_AVqCyG": {
+              "type": "_button",
+              "settings": {
+                "button_text": "Button label",
+                "button_link": "",
+                "button_size": "standard",
+                "button_style": "primary"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "button_AVqCyG"
+          ]
+        }
+      },
+      "block_order": [
+        "heading_RLMy6d",
+        "text_KddeDg",
+        "buttons_QL7Kex"
+      ],
+      "name": "t:sections.image-hero.presets.name",
+      "settings": {
+        "color_scheme": "",
+        "section_height": "custom",
+        "height_desktop": 50,
+        "height_mobile": 80,
+        "image_overlay_opacity": 25,
+        "desktop_image": "shopify://shop_images/pexels-italoguimas-34209907.jpg",
+        "show_content_background": false,
+        "content_color_scheme": "",
+        "show_gradient": false,
+        "alignment": "center_center",
+        "mobile_alignment": "center_center",
+        "content_width": 700,
+        "enable_animations": true
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "color_scheme": "",
+        "title_alignemnt": "left",
+        "section_spacing_top": "large",
+        "section_spacing_bottom": "large",
+        "show_bottom_border": false,
+        "enable_animations": true
+      }
+    },
+    "form": {
+      "type": "contact-form",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "content_width": "custom",
+        "custom_content_width": 720,
+        "prelude_alignment": "left",
+        "prelude_heading": "We'd love to hear from you.",
+        "prelude_heading_text_font": "ff-h",
+        "prelude_heading_text_size": "4",
+        "prelude_heading_text_uppercase": false,
+        "prelude_text": "<p>Movement begins with one step. Sometimes, that step is reaching out.</p>",
+        "prelude_text_size": "2",
+        "name_field_layout": "full",
+        "show_telephone": false,
+        "telephone_field_layout": "inline",
+        "section_spacing_top": "large",
+        "section_spacing_bottom": "large",
+        "show_bottom_border": false,
+        "enable_animations": true
+      }
+    }
+  },
+  "order": [
+    "image_hero_p6QHiM",
+    "main",
+    "form"
+  ]
+}

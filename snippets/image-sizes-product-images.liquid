@@ -1,0 +1,93 @@
+{%- liquid
+  if image_bounds == 'extended'
+    if layout_mobile == 'swiper'
+      assign mobile_width = 0.9517444444
+    elsif layout_mobile == 'thumbs'
+      assign mobile_width = 1
+    endif
+  elsif image_bounds == 'contained'
+    if layout_mobile == 'swiper'
+      assign mobile_width = 0.9057
+    elsif layout_mobile == 'thumbs'
+      assign mobile_width = 0.95006
+    endif
+  endif
+
+  case media_width
+    when '8'
+      if image_bounds == 'extended'
+        if layout_desktop == 'swiper' or layout_desktop == 'thumbs' or is_first_image
+          assign desktop_x_wide_width = 0.61
+          assign desktop_wide_width = 0.6230769231
+          assign desktop_width = 0.6356636364
+        elsif layout_desktop == '2_column'
+          assign desktop_x_wide_width = 0.30045
+          assign desktop_wide_width = 0.3066384615
+          assign desktop_width = 0.3120909091
+        endif
+      elsif image_bounds == 'contained'
+        if layout_desktop == 'swiper' or layout_desktop == 'thumbs' or is_first_image
+          assign desktop_x_wide_width = 0.5614285714
+          assign desktop_wide_width = 0.5838461538
+          assign desktop_width = 0.6050636364
+        elsif layout_desktop == '2_column'
+          assign desktop_x_wide_width = 0.2761642857
+          assign desktop_wide_width = 0.2870230769
+          assign desktop_width = 0.2967909091
+        endif
+      endif
+
+    when '7'
+      if image_bounds == 'extended'
+        if layout_desktop == 'swiper' or layout_desktop == 'thumbs' or is_first_image
+          assign desktop_x_wide_width = 0.53375
+          assign desktop_wide_width = 0.5451923077
+          assign desktop_width = 0.5562
+        elsif layout_desktop == '2_column'
+          assign desktop_x_wide_width = 0.2623214286
+          assign desktop_wide_width = 0.2676923077
+          assign desktop_width = 0.2723545455
+        endif
+      elsif image_bounds == 'contained'
+        if layout_desktop == 'swiper' or layout_desktop == 'thumbs' or is_first_image
+          assign desktop_x_wide_width = 0.4851785714
+          assign desktop_wide_width = 0.5059615385
+          assign desktop_width = 0.5256
+        elsif layout_desktop == '2_column'
+          assign desktop_x_wide_width = 0.2380357143
+          assign desktop_wide_width = 0.2480769231
+          assign desktop_width = 0.2570636364
+        endif
+      endif
+
+    when '6'
+      if image_bounds == 'extended'
+        if layout_desktop == 'swiper' or layout_desktop == 'thumbs' or is_first_image
+          assign desktop_x_wide_width = 0.4575
+          assign desktop_wide_width = 0.4673076923
+          assign desktop_width = 0.4767454545
+        elsif layout_desktop == '2_column'
+          assign desktop_x_wide_width = 0.2242
+          assign desktop_wide_width = 0.2287538462
+          assign desktop_width = 0.2326363636
+        endif
+      elsif image_bounds == 'contained'
+        if layout_desktop == 'swiper' or layout_desktop == 'thumbs' or is_first_image
+          assign desktop_x_wide_width = 0.4089285714
+          assign desktop_wide_width = 0.4280769231
+          assign desktop_width = 0.4461545455
+        elsif layout_desktop == '2_column'
+          assign desktop_x_wide_width = 0.1999142857
+          assign desktop_wide_width = 0.2091384615
+          assign desktop_width = 0.2173363636
+        endif
+      endif
+  endcase
+-%}
+
+{% render 'image-sizes',
+  desktop_x_wide_width: desktop_x_wide_width,
+  desktop_wide_width: desktop_wide_width,
+  desktop_width: desktop_width,
+  width: mobile_width
+%}

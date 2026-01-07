@@ -1,0 +1,24 @@
+<input
+  data-product-url="{{ value.product_url }}"
+  data-option-id="{{ value.id }}"
+  type="radio"
+  id="{{ option_name | handle }}-{{ value.name | escape }}-{{ id }}"
+  name="options[{{ option.name | escape }}]-{{ id }}"
+  value="{{ value.name | escape }}"
+  {% if product_form_id != blank %}
+    form="{{ product_form_id }}"
+  {% endif %}
+  class="chip__input visually-hidden"
+  {% if value.selected %}
+    checked
+  {% endif %}
+>
+<label
+  for="{{ option_name | handle }}-{{ value.name | escape }}-{{ id }}"
+  title="{{ value | escape }}"
+  class="chip__label"
+>
+  <span class="chip__chip fs--1">
+    {{- value.name -}}
+  </span>
+</label>

@@ -1,0 +1,32 @@
+{%- liquid
+  assign next_block = index | plus: 1
+  assign prev_block = index | minus: 1
+-%}
+{% case type %}
+  {% when 'opening' %}
+    {% if section.blocks[next_block].settings.combine_above and block.settings.combine_above != true %}
+      <div
+        class="
+          product__blocks-combined product__blocks-combined--layout-{{ section.blocks[next_block].settings.combine_above_layout }}
+          {%- if section.blocks[next_block].settings.block_spacing_top != blank %}
+            product__blocks-combined--spacing-top-{{ section.blocks[next_block].settings.block_spacing_top }}
+          {%- endif -%}
+          {%- if section.blocks[next_block].settings.block_spacing_bottom != blank %}
+            product__blocks-combined--spacing-bottom-{{ section.blocks[next_block].settings.block_spacing_bottom }}
+          {%- endif -%}
+          {%- if section.blocks[next_block].settings.show_bottom_border -%}
+            product__blocks-combined--has-border
+          {%- endif %}
+        "
+        style="--gap: var(--space-{{ section.blocks[next_block].settings.combine_above_spacing }});"
+      >
+    {% endif %}
+
+  {% when 'closing' %}
+    {% if block.settings.combine_above
+      and section.blocks[prev_block].settings.combine_above != true
+      and prev_block != -1
+    %}
+      </div>
+    {% endif %}
+{% endcase %}

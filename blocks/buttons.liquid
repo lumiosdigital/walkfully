@@ -1,0 +1,50 @@
+{%- liquid
+  assign horizontal_alignment = section.settings.alignment | split: '_' | last
+  assign horizontal_alignment_mobile = section.settings.mobile_alignment | split: '_' | last
+  assign mobile_align = horizontal_alignment_mobile | default: 'left'
+-%}
+
+<div
+  class="
+    block-buttons
+    block-buttons--align-{{ horizontal_alignment }}
+    block-buttons--mobile-align-{{ mobile_align }}
+    {% if section.settings.enable_animations %}
+      animate
+      animate--slide-in
+    {% endif %}
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="block-buttons__buttons">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:blocks.buttons.name",
+  "class": "rhythm-buttons",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:blocks.buttons.settings.paragraph__buttons.content"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_button"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.buttons.name",
+      "blocks": [
+        {
+          "type": "_button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
