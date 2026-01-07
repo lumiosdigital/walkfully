@@ -87,23 +87,30 @@
     <style>
   :root{
     --font-sans: "Work Sans", sans-serif;
-    --font-serif: "Bodoni Moda", serif;
+    --font-heading: "Alte Haas Grotesk", sans-serif;
+    --font-accent: "Crimson Pro", serif;
   }
-  /* Body = Alte Grotesk → Work Sans */
+  /* Body = Work Sans */
   html, body {
     font-family: var(--font-sans);
     font-weight: 400;
   }
-  /* Headings = Sozzani → Bodoni Moda */
+  /* Headings = Alte Haas Grotesk */
   h1, h2, h3, h4, h5, h6,
-  .heading-serif {
-    font-family: var(--font-serif);
-    font-weight: 600; /* tweak per design */
+  .heading {
+    font-family: var(--font-heading);
+    font-weight: 700;
     line-height: 1.1;
+    text-transform: uppercase;
   }
   /* Optional helpers */
   .font-sans { font-family: var(--font-sans) !important; }
-  .font-serif { font-family: var(--font-serif) !important; }
+  .font-heading { font-family: var(--font-heading) !important; }
+  .font-accent {
+    font-family: var(--font-accent) !important;
+    font-style: italic;
+    text-transform: none;
+  }
 </style>
 
   </head>
