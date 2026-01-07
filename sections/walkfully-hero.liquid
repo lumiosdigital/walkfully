@@ -330,6 +330,25 @@
     color: var(--Deep-Night, #21262F);
   }
 
+  /* Header Icons - Alignment */
+  .btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-icon svg {
+    display: block;
+  }
+
+  /* Header Icons - Color change on hover */
+  .header:not(.header--is-transparent) .btn-icon svg path,
+  .header.header--transparent:hover .btn-icon svg path,
+  .header.header--transparent:focus-within .btn-icon svg path {
+    stroke: #21262F;
+    fill: #21262F;
+  }
+
   /* Header Subscribe Button Styles */
   .header__subscribe-button {
     display: none;
