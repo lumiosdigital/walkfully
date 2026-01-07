@@ -1,0 +1,36 @@
+<component-disclosure-form>
+  {%- form 'localization', id: formId, class: 'localization-form' -%}
+    <div class="disclosure">
+      <div class="disclosure__wash">
+        {% render 'loader', type: 'spinner', size: '1.5em' %}
+      </div>
+
+      <fieldset>
+        <legend class="visually-hidden">{{ 'accessibility.availabile_languages' | t }}</legend>
+
+        <ul class="disclosure__list disclosure__list--languages">
+          {%- for language in localization.available_languages -%}
+            <li class="disclosure__list-item">
+              <input
+                type="checkbox"
+                class="disclosure__input-checkbox"
+                name="locale_code"
+                value="{{ language.iso_code }}"
+                id="{{formId}}-{{ language.iso_code }}"
+                {% if language.iso_code == localization.language.iso_code %}
+                  checked
+                  disabled
+                {% endif %}
+              >
+              <label for="{{formId}}-{{ language.iso_code }}" class="disclosure__label">
+                <span class="disclosure__label-text">
+                  {{ language.endonym_name | capitalize }}
+                </span>
+              </label>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </fieldset>
+    </div>
+  {%- endform -%}
+</component-disclosure-form>

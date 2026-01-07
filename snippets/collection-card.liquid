@@ -1,0 +1,60 @@
+{%- liquid
+  assign featured_collection = block.settings.collection
+  assign collection_image = featured_collection.featured_image | default: featured_collection.products.first.featured_image
+  assign featured_collection_title = block.settings.title | default: featured_collection.title
+
+  if block.settings.collection_image != blank
+    assign collection_image = block.settings.collection_image
+  endif
+
+  capture tag
+    if featured_collection != blank
+      echo 'a'
+    else
+      echo 'div'
+    endif
+  endcapture
+
+  capture attributes
+    if featured_collection != blank
+      echo 'href="' | append: featured_collection.url | append: '"'
+    endif
+  endcapture
+-%}
+<{{ tag }}
+  {{ attributes }}
+  class="
+    collection-card
+    {% if wrapper_classes != blank %}
+      {{ wrapper_classes }}
+    {% endif %}
+    {% if animate %}
+      animate
+      animate--slide-in
+    {% endif %}
+  "
+>
+  {%
+    render 'image' with
+    image: collection_image,
+    wrapper_class: 'collection-card__image',
+    aspect_ratio: settings.collection_card_aspect_ratio,
+    placeholder_tag: placeholder_name,
+    include_placeholder: true,
+    sizes: sizes,
+  %}
+  <div class="collection-card__details ff-h">
+    <div class="collection-card__details-title">
+      {% if featured_collection_title != blank %}
+        {{ featured_collection_title }}
+      {% else %}
+        {{ 'onboarding.collection_title' | t }}
+      {% endif %}
+    </div>
+    {% if featured_collection != blank %}
+      <div class="collection-card__icon-wrapper">
+        {% render 'theme-icon', icon: 'arrow-right', size: '1.1em' %}
+      </div>
+    {% endif %}
+  </div>
+</{{ tag }}>

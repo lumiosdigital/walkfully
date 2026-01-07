@@ -1,0 +1,39 @@
+<div class="article-card__details{% if featured %} article-card__details--featured{% endif %}">
+  {%- if show_date or show_author -%}
+    <div class="article-card__info {% if featured %}fs-0{% else %}fs--1{% endif %}">
+      {%- if show_author -%}
+        <span>{{ article.author }}</span>
+      {%- endif -%}
+      {%- if show_author and show_date and featured -%}
+        <span>|</span>
+      {%- endif -%}
+      {%- if show_date -%}
+        <span>{{ article.published_at | time_tag: format: 'date' }}</span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+  {% unless hide_title %}
+    <h3 class="article-card__heading {% if featured %}fs-2{% else %}fs-1{% endif %} fancy-link">
+      {% if article %}
+        <a href="{{ article.url }}">
+          {{ article.title | escape }}
+        </a>
+      {% else %}
+        {{ 'sections.featured_blog.onboarding_title' | t }}
+      {% endif %}
+    </h3>
+  {% endunless %}
+  {%- if show_excerpt -%}
+    <p class="article-card__excerpt {% if featured %}fs-0{% else %}fs--1{% endif %}">
+      {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
+        {%- if article.excerpt.size > 0 -%}
+          {{ article.excerpt | strip_html | truncatewords: 20 }}
+        {%- else -%}
+          {{ article.content | strip_html | truncatewords: 20 }}
+        {%- endif -%}
+      {%- else -%}
+        {{ 'sections.featured_blog.onboarding_content' | t }}
+      {%- endif -%}
+    </p>
+  {%- endif -%}
+</div>

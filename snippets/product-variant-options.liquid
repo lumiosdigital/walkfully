@@ -1,0 +1,153 @@
+{%- liquid
+  assign chip_options = settings.variant_options_for_chips | newline_to_br | strip_newlines | split: '<br />'
+  assign popup_page = pages[block.settings.popup_page]
+  assign popup_content_exists = false
+  assign popup_option = ''
+
+  if block.settings.popup_option != blank and block.settings.popup_label != blank and popup_page.content != blank
+    assign popup_content_exists = true
+    assign popup_option = block.settings.popup_option | downcase
+  endif
+-%}
+
+{%- for option in product.options_with_values -%}
+  {%- liquid
+    assign selected_option = option.values | where: 'selected', true
+    assign swatch_count = option.values | map: 'swatch' | compact | size
+    assign has_swatches = false
+    assign option_name = option.name | downcase
+    assign show_popup_button = false
+
+    if swatch_count > 0 and compact != true
+      assign has_swatches = true
+    endif
+
+    if popup_content_exists and option_name == popup_option
+      assign show_popup_button = true
+    endif
+  -%}
+  <div
+    class="
+      product-variant-selectors__option
+      {% if has_swatches or chip_options contains option.name and compact != true%}
+        product-variant-selectors__option--has-chips-or-swatches
+      {% endif %}
+      product-variant-selectors__option--spacing-{% if block != blank %}{{ block.settings.variant_selectors_spacing }}{% else %}compact{% endif %}
+    "
+    data-product-option
+    {% if sync_id != blank %}
+      data-sync-id="{{ sync_id }}"
+      data-sync-option-name="{{ option.name | handle }}"
+    {% endif %}
+  >
+    {% unless hide_label %}
+      <div class="product-variant-selectors__option-label fs--1">
+        {{ option.name }}
+        {%- if has_swatches %}
+          <span class="selected-value">
+            {{ option.selected_value }}
+          </span>
+        {% endif %}
+
+        {% if show_popup_button %}
+          <button
+            type="button"
+            class="product-variant-selectors__option-popup-button"
+            data-open-overlay
+            data-overlay-template-id="{{ section.id }}-{{ block.settings.popup_label | handle }}"
+            data-overlay-heading="{{ block.settings.popup_label }}"
+            data-has-page-content="true"
+            data-sub-id="modal"
+            aria-label="{{ 'accessibility.open_modal' | t: title: block.settings.popup_label }}"
+          >
+            {% if block.settings.icon != 'none' %}
+              {% render 'theme-icon', icon: block.settings.icon, size: '1em' %}
+            {% endif %}
+            <span>{{ block.settings.popup_label }}</span>
+          </button>
+
+          <template data-template-id="{{ section.id }}-{{ block.settings.popup_label | handle }}">
+            {{ popup_page.content }}
+          </template>
+        {% endif %}
+      </div>
+    {% endunless %}
+
+    {% if has_swatches or chip_options contains option.name and compact != true %}
+      <fieldset>
+        <legend class="visually-hidden">{{ option.name }}</legend>
+        <ul class="product-variant-selectors__option-list reset">
+          {%- for value in option.values -%}
+            <li class="product-variant-selectors__option-list-item{% if has_swatches %} swatch{% else %} chip {% endif %}">
+              {% if has_swatches %}
+                {% render 'swatch',
+                  value: value,
+                  option: option,
+                  product_form_id: product_form_id,
+                  id: id,
+                  option_name: option.name
+                %}
+              {% else %}
+                {% render 'chip',
+                  value: value,
+                  option: option,
+                  product_form_id: product_form_id,
+                  id: id,
+                  option_name: option.name
+                %}
+              {% endif %}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </fieldset>
+    {% else %}
+      <component-custom-select class="custom-select fs--1">
+        <button
+          class="custom-select__button"
+          type="button"
+          role="combobox"
+          aria-label="{{ 'accessibility.show_product_options' | t: option_name: option.name }}"
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          aria-controls="select-dropdown-{{ option.name }}-{{ id }}"
+        >
+          <span data-selected-value>{{ selected_option }}</span>
+          {% render 'theme-icon', icon: 'chevron-down', size: '1.2em', class: 'custom-select__arrow' %}
+        </button>
+        <fieldset>
+          <legend class="visually-hidden">{{ option.name }}</legend>
+          <ul
+            class="custom-select__dropdown product-variant-selectors__option-list fs--1"
+            role="listbox"
+            id="select-dropdown-{{ option.name }}-{{ id }}"
+            data-product-option-input
+          >
+            {%- for value in option.values -%}
+              <li
+                class="product-variant-selectors__option-list-item"
+              >
+                <input
+                  data-product-url="{{ value.product_url }}"
+                  data-option-id="{{ value.id }}"
+                  type="radio"
+                  {% if product_form_id != blank %}
+                    form="{{ product_form_id }}"
+                  {% endif %}
+                  value="{{ value.name | escape }}"
+                  name="options[{{ option.name | escape }}]-{{ id }}"
+                  id="{{ option.name | handle }}-{{ value.name | escape }}-{{ id }}"
+                  {% if value.selected %}
+                    checked
+                  {% endif %}
+                >
+                <label for="{{ option.name | handle }}-{{ value.name | escape }}-{{ id }}">
+                  {{- value.name -}}
+                </label>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </fieldset>
+      </component-custom-select>
+    {% endif %}
+  </div>
+{%- endfor -%}

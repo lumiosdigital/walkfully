@@ -1,0 +1,66 @@
+<component-slider
+  class="
+    slider
+    {% if full_width %}
+      slider--full-width
+    {% endif %}
+    {% if classes != blank %}
+      {{ classes }}
+    {% endif %}
+    swiper
+  "
+  data-mobile-columns="{{ mobile_columns }}"
+  data-tablet-columns="{{ tablet_columns }}"
+  data-desktop-columns="{{ desktop_columns }}"
+  {% if desktop_wide_columns != blank %}
+    data-desktop-wide-columns="{{ desktop_wide_columns }}"
+  {% endif %}
+  {% if disable_nav %}
+    data-disable-nav="true"
+  {% endif %}
+  {% if auto_space_slides %}
+    data-auto-space-slides="true"
+  {% endif %}
+  {% if disable_breakpoints %}
+    data-disable-breakpoints="true"
+  {% endif %}
+  {% if init_only != blank %}
+    data-init-only="{{ init_only }}"
+  {% endif %}
+  {% if enable_loop %}
+    data-enable-loop="true"
+  {% endif %}
+  {% if auto_height %}
+    data-auto-height="true"
+  {% endif %}
+  {% if show_pagination %}
+    data-show-pagination="true"
+  {% endif %}
+  style="
+    --mobile-columns: {{ mobile_columns }};
+    --tablet-columns: {{ tablet_columns }};
+    --desktop-columns: {{ desktop_columns }};
+    {% if desktop_wide_columns != blank %}
+      --desktop-wide-columns: {{ desktop_wide_columns }};
+    {% endif %}
+  "
+>
+  <div class="slider__wrapper swiper-wrapper">
+    {% for item in items %}
+      {{ item }}
+    {% endfor %}
+  </div>
+
+  {% unless disable_nav %}
+    <button type="button" class="swiper-button-prev" aria-label="{{ 'general.slider.previous_slide' | t }}">
+      {% render 'theme-icon', icon: 'arrow-left' %}
+    </button>
+    <button type="button" class="swiper-button-next" aria-label="{{ 'general.slider.next_slide' | t }}">
+      {% render 'theme-icon', icon: 'arrow-right' %}
+    </button>
+  {% endunless %}
+
+  {% if show_pagination %}
+    <div class="swiper-pagination" style="--swiper-pagination-bottom: 0px;"></div>
+  {% endif %}
+</component-slider>

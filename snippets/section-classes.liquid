@@ -1,0 +1,10 @@
+section
+{%- if settings.section_spacing_top != blank and disable_top != true %}
+  section--spacing-top-{{ settings.section_spacing_top }}
+{%- endif -%}
+{% if settings.section_spacing_bottom != blank and disable_bottom != true %}
+  section--spacing-bottom-{{ settings.section_spacing_bottom }}
+{%- endif -%}
+{%- if settings.show_bottom_border -%}
+  section--show-border
+{%- endif %}

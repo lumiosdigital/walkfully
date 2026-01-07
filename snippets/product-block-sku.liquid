@@ -1,0 +1,29 @@
+{% comment %} Dawn uses 'text style' - Body, Subtitle, Uppercase {% endcomment %}
+{% render 'product-blocks-combiner', block: block, index: index, type: 'opening' %}
+
+<div
+  class="
+    product__block
+    {%- render 'product-block-classes', block: block -%}
+    {% if prod.selected_or_first_available_variant.sku == blank and is_featured != false and prod != blank %}
+      hidden
+    {% endif %}
+  "
+  {{ block.shopify_attributes }}
+>
+  <div
+    class="
+      product__sku
+      {% render 'text-control-classes', settings: block.settings %}
+    "
+    data-update-sku
+  >
+    {% if is_featured and prod == blank %}
+      {{ 'products.product.sku' | t }}
+    {% else %}
+      {{ prod.selected_or_first_available_variant.sku }}
+    {% endif %}
+  </div>
+</div>
+
+{% render 'product-blocks-combiner', block: block, index: index, type: 'closing' %}

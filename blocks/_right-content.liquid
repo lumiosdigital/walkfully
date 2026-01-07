@@ -1,0 +1,102 @@
+{%- liquid
+  assign right_reveal_threshold = 100 | minus: section.settings.reveal_threshold
+-%}
+
+{% capture image_sizes %}
+  {% if section.settings.image_bounds == 'extended' %}
+    {% render 'image-sizes',  width: 1 %}
+  {% else %}
+    {% render 'image-sizes', desktop_x_wide_width: 0.9028571429, desktop_wide_width: 0.9215384615, desktop_width: 0.9388090909, tablet_width: 0.9447222222, width: 0.9585081967 %}
+  {% endif %}
+{% endcapture %}
+
+<div
+  class="
+    image-comparison__image
+    image-comparison__image--right
+  "
+>
+  {% if block.settings.compare_image %}
+    {% render 'image', image: block.settings.compare_image, sizes: image_sizes, no_radius: true %}
+  {% else %}
+    {{ 'hero-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+  {% endif %}
+  <div
+    class="image-comparison__image-overlay overlay color-{{ block.settings.color_scheme }}"
+    style="--overlay-opacity: {{ block.settings.image_overlay_opacity | divided_by: 100.0 }}"
+  ></div>
+</div>
+
+<div
+  class="
+    image-comparison__content
+    image-comparison__content--right
+    image-comparison__content--vertical-alignment-{{ block.settings.vertical_alignment }}
+    color-{{ block.settings.color_scheme }}
+    {% if section.settings.starting_reveal_amount <= right_reveal_threshold %}active{% endif %}
+  "
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+  "name": "t:blocks.right_content.name",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-3"
+    },
+    {
+      "type": "image_picker",
+      "id": "compare_image",
+      "label": "t:common.image.label"
+    },
+    {
+      "type": "range",
+      "id": "image_overlay_opacity",
+      "label": "t:common.image_overlay_opacity.label",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "t:common.image_compare.reveal_content_alignment.label",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:common.vertical_alignment.option__top"
+        },
+        {
+          "value": "center",
+          "label": "t:common.vertical_alignment.option__center"
+        },
+        {
+          "value": "bottom",
+          "label": "t:common.vertical_alignment.option__bottom"
+        }
+      ],
+      "default": "center"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "@theme"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.right_content.name"
+    }
+  ]
+}
+{% endschema %}

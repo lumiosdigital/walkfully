@@ -1,0 +1,21 @@
+<component-modal class="modal color-{{ settings.floating_color_scheme }}" data-sub-id="modal">
+  <div class="modal__overlay" data-close-overlay></div>
+
+  <div
+    class="modal__inner"
+    data-scroll-lock-ignore
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-header"
+  >
+    <div class="modal__header-wrapper">
+      <h2 class="modal__header" id="modal-header"></h2>
+      <div class="modal__close-btn-wrapper">
+        <button type="button" class="btn-icon" data-close-overlay aria-label="{{ 'accessibility.close' | t }}">
+          {% render 'theme-icon', icon: 'x', size: '1.25em' %}
+        </button>
+      </div>
+    </div>
+    <div class="modal__content"></div>
+  </div>
+</component-modal>

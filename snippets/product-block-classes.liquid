@@ -1,0 +1,11 @@
+{% if block != blank %}
+  {%- if block.settings.block_spacing_top != blank %}
+    product__block--spacing-top-{{ block.settings.block_spacing_top }}
+  {%- endif -%}
+  {%- if block.settings.block_spacing_bottom != blank %}
+    product__block--spacing-bottom-{{ block.settings.block_spacing_bottom }}
+  {%- endif -%}
+  {%- if block.settings.show_bottom_border -%}
+    product__block--has-border
+  {%- endif %}
+{% endif %}

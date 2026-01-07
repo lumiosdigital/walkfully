@@ -1,0 +1,168 @@
+{%- liquid
+  assign has_tier_2_submenu = false
+-%}
+<component-mega-menu class="mega-menu__dropdown-container" {{ block.shopify_attributes }}>
+  {% if nav_trigger == 'icon' and link.url != '#' %}
+    <div class="fancy-link">
+      <a
+        href="{{ link.url }}"
+        class="{% if link.current %}active{% endif %}"
+        {% if link.current %}
+          aria-current="page"
+        {% endif %}
+      >
+        {{ link.title | escape }}
+      </a>
+    </div>
+    <button
+      class="mega-menu__submenu-trigger"
+      type="button"
+      data-open-mega-menu
+      aria-expanded="false"
+      aria-controls="mega-menu-{{ id }}-{{ forloop.index }}"
+      aria-label="{{ 'accessibility.more_pages' | t: parent: link.title }}"
+      id="mega-menu-button-{{ id }}-{{ forloop.index }}"
+    >
+      {% render 'theme-icon', icon: submenu_icon, size: '1em' %}
+    </button>
+  {% else %}
+    <button
+      class="mega-menu__submenu-trigger"
+      type="button"
+      data-open-mega-menu
+      aria-expanded="false"
+      aria-controls="mega-menu-{{ id }}-{{ forloop.index }}"
+      aria-label="{{ 'accessibility.more_pages' | t: parent: link.title }}"
+      id="mega-menu-button-{{ id }}-{{ forloop.index }}"
+    >
+      {{- link.title | escape -}}
+      {% render 'theme-icon', icon: submenu_icon, size: '1em' %}
+    </button>
+  {% endif %}
+  <div
+    class="mega-menu__mega-container color-{{ settings.header_menus_color_scheme }} fs-0"
+    id="mega-menu-{{ id }}-{{ forloop.index }}"
+    aria-labelledby="mega-menu-button-{{ id }}-{{ forloop.index }}"
+  >
+    <div class="mega-menu__mega-container-inner" data-scroll-lock-ignore>
+      <button
+        type="button"
+        class="mega-menu__close-btn btn-icon"
+        data-close-mega-menu
+        aria-label="{{ 'accessibility.close' | t }}"
+      >
+        {% render 'theme-icon', icon: 'x', size: '1.25em' %}
+      </button>
+      <div class="mega-menu__menus-container">
+        <div class="mega-menu__menus-container-inner">
+          <div class="mega-menu__menu-list">
+            <h4 class="mega-menu__menu-list-title">{{- link.title | escape -}}</h4>
+            <ul
+              class="mega-menu__submenu reset"
+            >
+              {%- for childlink in link.links -%}
+                <li class="mega-menu__submenu-list-item">
+                  <div class="mega-menu__submenu-link-wrapper">
+                    {%- liquid
+                      if childlink.links != blank
+                        assign has_tier_2_submenu = true
+                      endif
+                    -%}
+                    <span class="fancy-link">
+                      <a
+                        href="{{ childlink.url }}"
+                        class="mega-menu__menu-item{% if childlink.current %} active{% endif %}"
+                        {% if childlink.current %}
+                          aria-current="page"
+                        {% endif %}
+                      >
+                        {{ childlink.title | escape }}
+                      </a>
+                    </span>
+                  </div>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+        {% if has_tier_2_submenu %}
+          <div class="mega-menu__submenu-tier-2">
+            <div class="mega-menu__menus-container-inner">
+              {% for childlink in link.links %}
+                {% if childlink.links != blank %}
+                  <div class="mega-menu__menu-list">
+                    <h4 class="mega-menu__menu-list-title">{{- childlink.title | escape -}}</h4>
+                    <ul
+                      id="mega-menu-{{ id }}-{{ childlink.title | escape }}-{{ forloop.index }}"
+                      class="mega-menu__submenu mega-menu__submenu--tier-2 reset"
+                    >
+                      {%- for grandchildlink in childlink.links -%}
+                        <li class="mega-menu__submenu-link-wrapper">
+                          <span class="fancy-link">
+                            <a
+                              href="{{ grandchildlink.url }}"
+                              class="{% if grandchildlink.current %} active{% endif %}"
+                              {% if grandchildlink.current %}
+                                aria-current="page"
+                              {% endif %}
+                            >
+                              {{ grandchildlink.title | escape }}
+                            </a>
+                          </span>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      {% if block != blank %}
+        {% if block.settings.image_1 != blank or block.settings.image_2 != blank %}
+          {% capture image_sizes %}
+            {%- liquid
+              if block.settings.image_1 != blank and block.settings.image_2 != blank
+                render 'image-sizes', desktop_x_wide_width: 0.2071428571, desktop_wide_width: 0.2103846154, desktop_width: 0.2113, width: 1
+                else
+                render 'image-sizes', desktop_x_wide_width: 0.4325, desktop_wide_width: 0.4403846154, desktop_width: 0.4455454545, width: 1
+              endif
+            -%}
+          {% endcapture %}
+
+          <div class="mega-menu__promo-content">
+            {% if block.settings.image_1 != blank %}
+              {% render 'mega-menu-promo-item',
+                color_scheme: block.settings.promotion_color_scheme,
+                aspect_ratio: block.settings.aspect_ratio,
+                url: block.settings.image_link_1,
+                image: block.settings.image_1,
+                sizes: image_sizes,
+                overlay_opacity: block.settings.image_1_overlay_opacity,
+                promo_text: block.settings.promo_text_1,
+                promo_text_font: block.settings.promo_1_text_font,
+                promo_text_font_size: block.settings.promo_1_text_size
+              %}
+            {% endif %}
+            {% if block.settings.image_2 != blank %}
+              {% render 'mega-menu-promo-item',
+                color_scheme: block.settings.promotion_color_scheme,
+                aspect_ratio: block.settings.aspect_ratio,
+                url: block.settings.image_link_2,
+                image: block.settings.image_2,
+                sizes: image_sizes,
+                overlay_opacity: block.settings.image_2_overlay_opacity,
+                promo_text: block.settings.promo_text_2,
+                promo_text_font: block.settings.promo_2_text_font,
+                promo_text_font_size: block.settings.promo_2_text_size
+              %}
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+  <div class="header__overlay color-{{ settings.header_menus_color_scheme }}"></div>
+</component-mega-menu>

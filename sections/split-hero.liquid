@@ -1,0 +1,131 @@
+<div
+  class="
+    split-hero
+    split-hero--aspect-{{ section.settings.aspect_ratio }}
+    split-hero--mobile-aspect-{{ section.settings.mobile_aspect_ratio }}
+  "
+  {% if section.settings.enable_animations %}
+    data-animate-elements-on-scroll
+    data-animate-delay="125"
+  {% endif %}
+>
+  {% content_for 'block', type: '_left-hero', id: 'left-hero' %}
+  {% content_for 'block', type: '_right-hero', id: 'right-hero' %}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.split-hero.name",
+  "class": "split-hero-section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer",
+      "custom.floating"
+    ]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.split-hero.settings.paragraph__aspect_ratios.content"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "t:common.aspect_ratio.label",
+      "options": [
+        {
+          "value": "3-2",
+          "label": "t:common.aspect_ratio.option__3_2"
+        },
+        {
+          "value": "5-4",
+          "label": "t:common.aspect_ratio.option__5_4"
+        },
+        {
+          "value": "11-10",
+          "label": "t:common.aspect_ratio.option__11_10"
+        },
+        {
+          "value": "1-1",
+          "label": "t:common.aspect_ratio.option__1_1"
+        },
+        {
+          "value": "10-11",
+          "label": "t:common.aspect_ratio.option__10_11"
+        },
+        {
+          "value": "4-5",
+          "label": "t:common.aspect_ratio.option__4_5"
+        },
+        {
+          "value": "2-3",
+          "label": "t:common.aspect_ratio.option__2_3"
+        },
+        {
+          "value": "1-2",
+          "label": "t:common.aspect_ratio.option__1_2"
+        }
+      ],
+      "default": "1-1"
+    },
+    {
+      "type": "select",
+      "id": "mobile_aspect_ratio",
+      "label": "t:common.mobile_aspect_ratio.label",
+      "options": [
+        {
+          "value": "3-2",
+          "label": "t:common.aspect_ratio.option__3_2"
+        },
+        {
+          "value": "5-4",
+          "label": "t:common.aspect_ratio.option__5_4"
+        },
+        {
+          "value": "11-10",
+          "label": "t:common.aspect_ratio.option__11_10"
+        },
+        {
+          "value": "1-1",
+          "label": "t:common.aspect_ratio.option__1_1"
+        },
+        {
+          "value": "10-11",
+          "label": "t:common.aspect_ratio.option__10_11"
+        },
+        {
+          "value": "4-5",
+          "label": "t:common.aspect_ratio.option__4_5"
+        },
+        {
+          "value": "2-3",
+          "label": "t:common.aspect_ratio.option__2_3"
+        },
+        {
+          "value": "1-2",
+          "label": "t:common.aspect_ratio.option__1_2"
+        }
+      ],
+      "default": "10-11"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_animations.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "t:common.enable_animations.label",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.split-hero.presets.name",
+      "category": "t:categories.banners"
+    }
+  ]
+}
+{% endschema %}

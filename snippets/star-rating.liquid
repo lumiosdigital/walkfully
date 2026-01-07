@@ -1,0 +1,63 @@
+{%- liquid
+  assign max_star_rating = max_rating | default: prod.metafields.reviews.rating.value.scale_max
+  assign rating = star_rating | default: prod.metafields.reviews.rating.value.rating
+  assign solid_stars = rating | floor
+  assign remaining = max_star_rating | minus: rating
+  assign total_reviews = total_reviews | default: prod.metafields.reviews.rating_count
+-%}
+
+{% capture star_single %}
+<span class="star-rating__icon">
+  {%- render 'theme-icon' with icon: 'star-full', size: size -%}
+</span>
+{% endcapture %}
+
+<div
+  class="star-rating"
+  style="
+    {% if star_color != blank and star_color != 'rgba(0,0,0,0)' %}
+    --star-color: {{ star_color }}
+    {% endif %}
+  "
+>
+  {% if type == 'stars' %}
+    <span class="star-rating__icon">
+      {%- for star in (1..solid_stars) -%}
+        {%- render 'theme-icon' with icon: 'star-full', size: size -%}
+      {%- endfor -%}
+
+      {%- if remaining > 0 -%}
+        {%- assign half_star = remaining | modulo: 1 -%}
+        {%- if half_star != 0 -%}
+          {%- render 'theme-icon' with icon: 'star-half', size: size -%}
+        {%- endif -%}
+
+        {%- assign empty_stars = remaining | floor -%}
+
+        {%- if empty_stars > 0 -%}
+          {%- for empty_star in (1..empty_stars) -%}
+            {%- render 'theme-icon' with icon: 'star-empty', size: size -%}
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endif -%}
+    </span>
+  {% elsif type == 'text' %}
+    {% unless show_rating_total %}
+      {{ star_single }}
+    {% endunless %}
+
+    <span class="star-rating__text">
+      {{ rating }}
+    </span>
+  {% endif %}
+
+  {% if show_rating_total %}
+    {% unless type == 'stars' %}
+      {{ star_single }}
+    {% endunless %}
+
+    <span class="star-rating__total">
+      {{ 'products.product.rating' | t: total: total_reviews }}
+    </span>
+  {% endif %}
+</div>

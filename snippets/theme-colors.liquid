@@ -1,0 +1,88 @@
+{% style %}
+  {% liquid
+    assign button_accent_primary_text = settings.accent_contrast
+    assign button_accent_primary_text_color_brightness = button_accent_primary_text | color_brightness
+    if button_accent_primary_text_color_brightness <= 26
+      assign button_accent_primary_shimmer_opacity = 0.1
+    elsif button_accent_primary_text_color_brightness <= 65
+      assign button_accent_primary_shimmer_opacity = 0.2
+    else
+    assign button_accent_primary_shimmer_opacity = 0.5
+    endif
+
+    assign button_accent_secondary_text = settings.accent
+    assign button_accent_secondary_text_color_brightness = button_accent_secondary_text | color_brightness
+    if button_accent_secondary_text_color_brightness <= 26
+      assign button_accent_secondary_shimmer_opacity = 0.1
+    elsif button_accent_secondary_text_color_brightness <= 65
+      assign button_accent_secondary_shimmer_opacity = 0.2
+    else
+    assign button_accent_secondary_shimmer_opacity = 0.5
+    endif
+  %}
+  :root {
+    --color-accent: {{ settings.accent.red }},{{ settings.accent.green }},{{ settings.accent.blue }};
+    --color-accent-contrast: {{ settings.accent_contrast.red }},{{ settings.accent_contrast.green }},{{ settings.accent_contrast.blue }};
+    --color-accent-primary-button-shimmer: rgba(var(--color-accent-contrast), {{ button_accent_primary_shimmer_opacity }});
+    --color-accent-secondary-button-shimmer: rgba(var(--color-accent), {{ button_accent_secondary_shimmer_opacity }});
+    --color-success: {{ settings.success.red }},{{ settings.success.green }},{{ settings.success.blue }};
+    --color-error: {{ settings.error.red }},{{ settings.error.green }},{{ settings.error.blue }};
+    --color-custom-sale-price: {{ settings.custom_sale_price_color.red }},{{ settings.custom_sale_price_color.green }},{{ settings.custom_sale_price_color.blue }};
+    --color-custom-sale-badge: {{ settings.sale_badge_custom_background_color.red }},{{ settings.sale_badge_custom_background_color.green }},{{ settings.sale_badge_custom_background_color.blue }};
+    --color-custom-sale-badge-text: {{ settings.sale_badge_custom_text_color.red }},{{ settings.sale_badge_custom_text_color.green }},{{ settings.sale_badge_custom_text_color.blue }};
+  }
+
+  {% for scheme in settings.color_schemes -%}
+    {% assign scheme_classes = scheme_classes | append: ', .color-' | append: scheme.id %}
+    {% liquid
+          assign button_primary_text = scheme.settings.button_label
+          assign button_primary_text_color_brightness = button_primary_text | color_brightness
+          if button_primary_text_color_brightness <= 26
+            assign button_primary_text_shimmer_opacity = 0.1
+          elsif button_primary_text_color_brightness <= 65
+            assign button_primary_text_shimmer_opacity = 0.2
+          else
+          assign button_primary_text_shimmer_opacity = 0.5
+          endif
+
+          assign button_secondary_text = scheme.settings.secondary_button_label
+          assign button_secondary_text_color_brightness = button_secondary_text | color_brightness
+          if button_secondary_text_color_brightness <= 26
+            assign button_secondary_text_shimmer_opacity = 0.1
+          elsif button_secondary_text_color_brightness <= 65
+            assign button_secondary_text_shimmer_opacity = 0.2
+          else
+          assign button_secondary_text_shimmer_opacity = 0.5
+          endif
+        %}
+    {% if forloop.index == 1 -%}
+      :root,
+    {%- endif %}
+    .color-{{ scheme.id }} {
+      --color-background: {{ scheme.settings.background.red }},{{ scheme.settings.background.green }},{{ scheme.settings.background.blue }};
+    {% if scheme.settings.background_gradient != empty %}
+      --gradient-background: {{ scheme.settings.background_gradient }};
+    {% else %}
+      --gradient-background: {{ scheme.settings.background }};
+    {% endif %}
+
+    {% liquid
+      assign background_color = scheme.settings.background
+      assign background_color_darken_2 = background_color | color_darken: 2
+      assign background_color_darken_5 = background_color | color_darken: 5
+    %}
+
+    --color-foreground: {{ scheme.settings.text.red }},{{ scheme.settings.text.green }},{{ scheme.settings.text.blue }};
+    --color-background-darken-2: {{ background_color_darken_2.red }},{{ background_color_darken_2.green }},{{ background_color_darken_2.blue }};
+    --color-background-darken-5: {{ background_color_darken_5.red }},{{ background_color_darken_5.green }},{{ background_color_darken_5.blue }};
+    --color-button: {{ scheme.settings.button.red }},{{ scheme.settings.button.green }},{{ scheme.settings.button.blue }};
+    --color-button-text: {{ scheme.settings.button_label.red }},{{ scheme.settings.button_label.green }},{{ scheme.settings.button_label.blue }};
+    --color-button-shimmer: rgba(var(--color-button-text), {{ button_primary_text_shimmer_opacity }});
+    --color-secondary-button: {{ scheme.settings.background.red }},{{ scheme.settings.background.green }},{{ scheme.settings.background.blue }};
+    --color-secondary-button-text: {{ scheme.settings.secondary_button_label.red }},{{ scheme.settings.secondary_button_label.green }},{{ scheme.settings.secondary_button_label.blue }};
+    --color-secondary-button-shimmer: rgba(var(--color-secondary-button-text), {{ button_secondary_text_shimmer_opacity }});
+    --color-link: {{ scheme.settings.secondary_button_label.red }},{{ scheme.settings.secondary_button_label.green }},{{ scheme.settings.secondary_button_label.blue }};
+    --payment-terms-background-color: rgb({{ scheme.settings.background.rgb }});
+  }
+  {% endfor %}
+{% endstyle %}

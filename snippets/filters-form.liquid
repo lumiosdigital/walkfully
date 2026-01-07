@@ -1,0 +1,245 @@
+{%- liquid
+  assign total_active_values = 0
+  assign default_presentation = 'text'
+
+  assign class = 'filters'
+
+  if classes != blank
+    assign class = class | append: ' ' | append: classes
+  endif
+-%}
+
+<component-filters-and-sort-form
+  class="{{ class }}"
+  data-has-active-filters="{{ has_active_filters }}"
+  data-form-type="filters"
+>
+  <form>
+    {%- if results.terms -%}
+      <input type="hidden" name="q" value="{{ results.terms | escape }}">
+      <input name="options[prefix]" type="hidden" value="last">
+    {%- endif -%}
+
+    <component-accordion
+      class="filters__wrapper accordion"
+      data-exclusive="true"
+    >
+      {%- for filter in results.filters -%}
+        {% liquid
+          assign total_active_values = total_active_values | plus: filter.active_values.size
+          assign presentation = filter.presentation | default: default_presentation
+          assign active_filters = filter.values | where: 'active', true
+          assign first_active_filter = active_filters | first
+        %}
+        {% case filter.type %}
+          {% when 'boolean', 'list' %}
+            <button
+              type="button"
+              id="title-{{ filter.param_name | escape }}-{{ section.id }}"
+              class="filters__title accordion__trigger"
+              aria-expanded="{% if forloop.index == 1 %}true{% else %}false{% endif %}"
+              aria-controls="content-{{ filter.param_name | escape }}-{{ section.id }}"
+              data-accordion-trigger
+            >
+              <span class="accordion__title">
+                {{- filter.label | escape }}
+              </span>
+
+              <span data-active-filters class="filters__active fs--1">
+                {% if first_active_filter != blank %}
+                  {{ first_active_filter.label | truncate: 16 }}
+                  {% if active_filters.size > 1 %}
+                    {%- assign count_less_one = active_filters.size | minus: 1 -%}
+                    {{ 'products.filters.plus_active' | t: count: count_less_one }}
+                  {% endif %}
+                {% endif %}
+              </span>
+
+              {% render 'theme-icon', icon: 'chevron-down', size: '1em', class: 'accordion__icon' %}
+            </button>
+
+            <div
+              id="content-{{ filter.param_name | escape }}-{{ section.id }}"
+              role="region"
+              aria-labelledby="title-{{ filter.param_name | escape }}-{{ section.id }}"
+              class="filters__content accordion__panel"
+            >
+              <fieldset>
+                <legend class="visually-hidden">{{ filter.label | escape }}</legend>
+                <ul
+                  class="filters__list reset"
+                  data-filter-group="{{ filter.param_name }}"
+                  aria-labelledby="title-{{ filter.param_name | escape }}-{{ section.id }}"
+                >
+                  {%- for value in filter.values -%}
+                    <li
+                      class="filters__list-item"
+                    >
+                      {% liquid
+                        assign input_id = 'filter-' | append: filter.param_name | escape | append: '-' | append: forloop.index
+                        assign is_disabled = false
+                        if value.count == 0 and value.active == false
+                          assign is_disabled = true
+                        endif
+                      %}
+
+                      {%- if presentation == 'swatch' -%}
+                        <input
+                          type="checkbox"
+                          class="swatch__input filters__input-checkbox visually-hidden"
+                          name="{{ value.param_name }}"
+                          value="{{ value.value }}"
+                          id="{{ input_id }}"
+                          {% if value.active %}
+                            checked
+                          {% endif %}
+                          {% if is_disabled %}
+                            disabled
+                          {% endif %}
+                        >
+
+                        <label
+                          for="{{ input_id }}"
+                          class="filters__input-label swatch__label"
+                        >
+                          {%- liquid
+                            assign swatch = value.swatch
+                            assign swatch_value = null
+                            if swatch.image
+                              assign image_url = swatch.image | image_url: width: 50
+                              assign swatch_value = 'url(' | append: image_url | append: ')'
+                              assign swatch_focal_point = swatch.image.presentation.focal_point
+                            elsif swatch.color
+                              assign swatch_value = 'rgb(' | append: swatch.color.rgb | append: ')'
+                            endif
+                          -%}
+
+                          <span
+                            {% if swatch_value %}
+                              class="swatch__swatch swatch__swatch--shape-{{ settings.swatch_shape }}"
+                              style="--swatch-background: {{ swatch_value }};{% if swatch_focal_point %} --swatch-focal-point: {{ swatch_focal_point }};{% endif %}"
+                            {% else %}
+                              class="swatch__swatch swatch__swatch--unavailable swatch__swatch--shape-{{ settings.swatch_shape }}"
+                            {% endif %}
+                          ></span>
+                          <span class="filters__input-label-text">{{ value.label | escape }}</span>
+                          <span class="filters__input-label-count fs--1">{{ value.count }}</span>
+                        </label>
+                      {%- else -%}
+                        <input
+                          type="checkbox"
+                          class="filters__input-checkbox"
+                          name="{{ value.param_name }}"
+                          value="{{ value.value }}"
+                          id="{{ input_id }}"
+                          {% if value.active %}
+                            checked
+                          {% endif %}
+                          {% if is_disabled %}
+                            disabled
+                          {% endif %}
+                        >
+                        <label for="{{ input_id }}" class="filters__input-label">
+                          <span class="filters__input-label-text">{{ value.label | escape }}</span>
+                          <span class="filters__input-label-count fs--1">{{ value.count }}</span>
+                        </label>
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </fieldset>
+            </div>
+          {% when 'price_range' %}
+            <button
+              type="button"
+              id="title-{{ filter.param_name | escape }}-{{ section.id }}"
+              class="filters__title accordion__trigger"
+              aria-expanded="{% if forloop.index == 1 %}true{% else %}false{% endif %}"
+              aria-controls="content-{{ filter.param_name | escape }}-{{ section.id }}"
+              data-accordion-trigger
+            >
+              <span class="accordion__title">
+                {{- filter.label | escape }}
+              </span>
+              <span data-active-filters class="filters__active fs--1">
+                {%- if filter.min_value.value or filter.max_value.value -%}
+                  {{- filter.min_value.value | default: 0 | money }} -
+                  {{ filter.max_value.value | default: filter.range_max | money -}}
+                {%- endif -%}
+              </span>
+
+              {% render 'theme-icon', icon: 'chevron-down', size: '1em', class: 'accordion__icon' %}
+            </button>
+
+            <div
+              id="content-{{ filter.param_name | escape }}-{{ section.id }}"
+              role="region"
+              aria-labelledby="title-{{ filter.param_name | escape }}-{{ section.id }}"
+              class="filters__content accordion__panel"
+            >
+              <fieldset>
+                <div class="filters__price-range">
+                  <legend class="visually-hidden">{{ filter.label | escape }}</legend>
+                  <component-price-range
+                    data-min-range="0"
+                    data-max-range="{{ filter.range_max | divided_by: 100 }}"
+                    data-min-value="{{ filter.min_value.value | divided_by: 100 }}"
+                    data-max-value="{{ filter.max_value.value | divided_by: 100 }}"
+                    data-range-lower-string="{{ 'accessibility.range_slider_lower' | t }}"
+                    data-range-upper-string="{{ 'accessibility.range_slider_upper' | t }}"
+                  >
+                    <div
+                      class="range-slider"
+                    ></div>
+                    <div class="side-by-side-input">
+                      <div class="field">
+                        <label class="fs--1" for="{{ id_prefix }}{{ filter.label | escape }}-min">
+                          {{ 'accessibility.range_slider_lower' | t }}
+                        </label>
+                        <input
+                          data-min-field
+                          class=""
+                          name="{{ filter.min_value.param_name }}"
+                          id="{{ id_prefix }}{{ filter.label | escape }}-min"
+                          {%- if filter.min_value.value -%}
+                            value="{{ filter.min_value.value | money_without_currency }}"
+                          {%- endif -%}
+                          type="text"
+                          inputmode="decimal"
+                          placeholder="0"
+                          data-pattern="\d| |,|\."
+                        >
+                      </div>
+
+                      <div class="field">
+                        <label class="fs--1" for="{{ id_prefix }}{{ filter.label | escape }}-max">
+                          {{ 'accessibility.range_slider_upper' | t }}
+                        </label>
+                        <input
+                          data-max-field
+                          class=""
+                          name="{{ filter.max_value.param_name }}"
+                          id="{{ id_prefix }}{{ filter.label | escape }}-max"
+                          {%- if filter.max_value.value -%}
+                            value="{{ filter.max_value.value | money_without_currency }}"
+                          {%- endif -%}
+                          type="text"
+                          inputmode="decimal"
+                          placeholder="{{ filter.range_max | money_without_currency }}"
+                          data-pattern="\d| |,|\."
+                        >
+                      </div>
+                    </div>
+                  </component-price-range>
+                </div>
+              </fieldset>
+            </div>
+        {% endcase %}
+      {%- endfor -%}
+    </component-accordion>
+
+    {% if results.current_vendor or results.current_type %}
+      <input type="hidden" name="q" value="{{ results.current_vendor }}{{ results.current_type }}">
+    {% endif %}
+  </form>
+</component-filters-and-sort-form>

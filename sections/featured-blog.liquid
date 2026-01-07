@@ -1,0 +1,426 @@
+{%- liquid
+  assign featured_article = null
+  assign max_posts = section.settings.max_posts
+
+  if section.settings.show_featured_post
+    assign featured_article = section.settings.custom_featured_article | default: section.settings.blog.articles.first
+  endif
+
+  if featured_article
+    assign max_posts = max_posts | plus: 1
+  endif
+-%}
+
+<section-blog-posts
+  class="
+    featured-blog
+    color-{{ section.settings.color_scheme }}
+    grid
+    {% render 'section-classes', settings: section.settings -%}
+  "
+  {% if section.settings.enable_animations %}
+    data-animate-elements-on-scroll
+    data-animate-delay="125"
+  {% endif %}
+>
+  <div class="grid__content">
+    {% render 'prelude',
+      wrapper_classes: 'grid__item--span-12',
+      settings: section.settings,
+      animate: section.settings.enable_animations
+    %}
+
+    <div class="featured-blog__blog-container grid__item--span-12">
+      {% if section.settings.show_featured_post %}
+        {% capture featured_image_sizes %}
+          {% render 'image-sizes', desktop_x_wide_width: 0.4965714286, desktop_wide_width: 0.5068461538, desktop_width: 0.5163454545, tablet_width: 0.5195888889, width: 0.9608428571 %}
+        {% endcapture %}
+        <div class="featured-blog__blog-featured">
+          {% render 'article-card',
+            classes: 'sticky-offset',
+            article: featured_article,
+            sizes: featured_image_sizes,
+            aspect_ratio: section.settings.aspect_ratio,
+            show_tags: section.settings.show_article_tags,
+            show_date: section.settings.show_article_date,
+            show_author: section.settings.show_article_author,
+            show_excerpt: section.settings.show_article_excerpt,
+            placeholder_tag: 'detailed-apparel-1',
+            animate: section.settings.enable_animations
+          %}
+        </div>
+      {% endif %}
+
+      {% capture image_sizes %}
+        {% if section.settings.show_featured_post %}
+          {% render 'image-sizes', desktop_x_wide_width: 0.3880714286, desktop_wide_width: 0.3950769231, desktop_width: 0.4007636364, tablet_width: 0.4011777778, width: 0.46 %}
+        {% else %}
+          {% render 'image-sizes', desktop_x_wide_width: 0.2888071429, desktop_wide_width: 0.2941, desktop_width: 0.2989444444, tablet_width: 0.2957625, width: 0.46 %}
+        {% endif %}
+      {% endcapture %}
+
+      {% capture articles %}
+        {% assign count = 0 %}
+        {% for article in section.settings.blog.articles limit: max_posts %}
+          {% unless article == featured_article %}
+            {%- liquid
+              assign count = count | plus: 1
+
+              if count > section.settings.max_posts
+                break
+              endif
+            -%}
+            {% render 'article-card',
+              classes: 'swiper-slide',
+              article: article,
+              aspect_ratio: section.settings.aspect_ratio,
+              sizes: image_sizes,
+              show_tags: section.settings.show_article_tags,
+              show_date: section.settings.show_article_date,
+              show_author: section.settings.show_article_author,
+              show_excerpt: section.settings.show_article_excerpt,
+              animate: section.settings.enable_animations
+            %}
+          {% endunless %}
+        {% else %}
+        {%- liquid
+          assign max_onboarding_posts = section.settings.max_posts
+
+          if section.settings.show_featured_post
+            assign max_onboarding_posts = max_onboarding_posts
+          endif
+        -%}
+
+          {% for item in (1..max_onboarding_posts) %}
+            {%- assign placeholder_image_index = forloop.index0 | modulo: 3 | plus: 1 -%}
+            {%- assign placeholder_image = 'blog-apparel-' | append: placeholder_image_index -%}
+            {% render 'article-card',
+              classes: 'swiper-slide',
+              aspect_ratio: section.settings.aspect_ratio,
+              show_tags: section.settings.show_article_tags,
+              show_date: section.settings.show_article_date,
+              show_author: section.settings.show_article_author,
+              show_excerpt: section.settings.show_article_excerpt,
+              placeholder_tag: placeholder_image,
+              animate: section.settings.enable_animations
+            %}
+          {% endfor %}
+        {% endfor %}
+      {% endcapture %}
+
+      {% render 'slider',
+        classes: 'featured-blog__blogs',
+        full_width: true,
+        items: articles,
+        mobile_columns: 2,
+        tablet_columns: 2,
+        desktop_columns: 2,
+        init_only: 'mobile mobile-landscape'
+      %}
+    </div>
+  </div>
+</section-blog-posts>
+
+{% schema %}
+{
+  "name": "t:sections.blog.name",
+  "class": "featured-blog-section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer",
+      "custom.floating"
+    ],
+    "templates": [
+      "password"
+    ]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:common.prelude.content"
+    },
+    {
+      "type": "text_alignment",
+      "id": "prelude_alignment",
+      "label": "t:common.alignment.label",
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "prelude_heading",
+      "label": "t:common.heading.label"
+    },
+    {
+      "type": "select",
+      "id": "prelude_heading_text_font",
+      "label": "t:common.heading_font.label",
+      "options": [
+        {
+          "value": "ff-h",
+          "label": "t:common.text_font.option__heading"
+        },
+        {
+          "value": "ff-b",
+          "label": "t:common.text_font.option__body"
+        }
+      ],
+      "default": "ff-h",
+      "visible_if": "{{ section.settings.prelude_heading != blank }}"
+    },
+    {
+      "type": "select",
+      "id": "prelude_heading_text_size",
+      "label": "t:common.heading_size.label",
+      "options": [
+        {
+          "value": "3",
+          "label": "t:common.text_size.option_h4"
+        },
+        {
+          "value": "4",
+          "label": "t:common.text_size.option_h3"
+        },
+        {
+          "value": "5",
+          "label": "t:common.text_size.option_h2"
+        },
+        {
+          "value": "6",
+          "label": "t:common.text_size.option_h1"
+        }
+      ],
+      "default": "4",
+      "visible_if": "{{ section.settings.prelude_heading != blank }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "prelude_heading_text_uppercase",
+      "label": "t:common.heading_uppercase.label",
+      "default": false,
+      "visible_if": "{{ section.settings.prelude_heading != blank }}"
+    },
+    {
+      "type": "richtext",
+      "id": "prelude_text",
+      "label": "t:common.text.label"
+    },
+    {
+      "type": "select",
+      "id": "prelude_text_size",
+      "label": "t:common.text_size.label",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:common.text_size.option_body_small"
+        },
+        {
+          "value": "2",
+          "label": "t:common.text_size.option_body"
+        },
+        {
+          "value": "3",
+          "label": "t:common.text_size.option_h4"
+        }
+      ],
+      "default": "2",
+      "visible_if": "{{ section.settings.prelude_text != blank }}"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__blogs.content"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "t:sections.blog.settings.blog.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_featured_post",
+      "label": "t:sections.blog.settings.show_featured_post.label",
+      "info": "t:sections.blog.settings.show_featured_post.info",
+      "default": true
+    },
+    {
+      "type": "article",
+      "id": "custom_featured_article",
+      "label": "t:sections.blog.settings.custom_featured_article.label"
+    },
+    {
+      "type": "range",
+      "id": "max_posts",
+      "label": "t:sections.blog.settings.max_posts.label",
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "t:sections.blog.settings.article_image_aspect_ratio.label",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:common.aspect_ratio.option__default"
+        },
+        {
+          "value": "3-2",
+          "label": "t:common.aspect_ratio.option__3_2"
+        },
+        {
+          "value": "5-4",
+          "label": "t:common.aspect_ratio.option__5_4"
+        },
+        {
+          "value": "11-10",
+          "label": "t:common.aspect_ratio.option__11_10"
+        },
+        {
+          "value": "1-1",
+          "label": "t:common.aspect_ratio.option__1_1"
+        },
+        {
+          "value": "10-11",
+          "label": "t:common.aspect_ratio.option__10_11"
+        },
+        {
+          "value": "4-5",
+          "label": "t:common.aspect_ratio.option__4_5"
+        },
+        {
+          "value": "2-3",
+          "label": "t:common.aspect_ratio.option__2_3"
+        },
+        {
+          "value": "1-2",
+          "label": "t:common.aspect_ratio.option__1_2"
+        }
+      ],
+      "default": "5-4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_article_tags",
+      "label": "t:sections.blog.settings.show_article_tags.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_article_date",
+      "label": "t:sections.blog.settings.show_article_date.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_article_author",
+      "label": "t:sections.blog.settings.show_article_author.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_article_excerpt",
+      "label": "t:sections.blog.settings.show_article_excerpt.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_spacing_and_border.content"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "label": "t:common.top_spacing.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:common.sizing.none"
+        },
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "x-large"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "label": "t:common.bottom_spacing.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:common.sizing.none"
+        },
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "x-large"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:common.show_bottom_border.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_animations.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "t:common.enable_animations.label",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.blog.presets.name",
+      "category": "t:categories.other"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,15 @@
+{%- liquid
+  if mobile_columns == '2'
+    assign mobile_width = 0.4502332
+  elsif mobile_columns == '1'
+    assign mobile_width = 0.9608428571
+  endif
+
+  if desktop_columns == 2
+    render 'image-sizes', desktop_x_wide_width: 0.4453571429, desktop_wide_width: 0.4542307692, desktop_width: 0.4620636364, tablet_width: 0.4640666667, width: mobile_width
+  elsif desktop_columns == 3
+    render 'image-sizes', desktop_x_wide_width: 0.2928571429, desktop_wide_width: 0.2984615385, desktop_width: 0.3031545455, tablet_width: 0.3038555556, width: mobile_width
+  elsif desktop_columns == 4
+    render 'image-sizes', desktop_x_wide_width: 0.2166071429, desktop_wide_width: 0.2205769231, desktop_width: 0.2236909091, tablet_width: 0.2237444444, width: mobile_width
+  endif
+-%}

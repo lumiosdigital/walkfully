@@ -1,0 +1,78 @@
+{%- liquid
+  assign horizontal_alignment = section.settings.alignment | split: '_' | last
+  assign horizontal_alignment_mobile = section.settings.mobile_alignment | split: '_' | last
+  assign mobile_align = horizontal_alignment_mobile | default: 'left'
+  assign sizes = block.settings.image_max_width | append: 'px'
+-%}
+
+{%- capture wrapper_tag -%}
+  {%- if block.settings.image_link != blank -%}a{%- else -%}div{%- endif -%}
+{%- endcapture -%}
+
+{%- capture attributes -%}
+  {%- if block.settings.image_link != blank -%}
+    href="{{ block.settings.image_link }}"
+    aria-label="{{ block.settings.image.alt }}"
+  {%- endif -%}
+{%- endcapture -%}
+
+<div
+  class="
+    block-image
+    block-image--align-{{ horizontal_alignment }}
+    block-image--mobile-align-{{ mobile_align }}
+    section-block
+    {% if section.settings.enable_animations %}
+      animate
+      animate--slide-in
+    {% endif %}
+  "
+  {{ block.shopify_attributes }}
+>
+  <{{ wrapper_tag }}
+    class="block-image__image"
+    {{ attributes }}
+    style="--image-width: {{ block.settings.image_max_width }}px"
+  >
+    {% render 'image',
+      image: block.settings.image,
+      sizes: sizes,
+      include_placeholder: true,
+      placeholder_aspect: '3-2'
+    %}
+  </{{ wrapper_tag }}>
+</div>
+
+{% schema %}
+{
+  "name": "t:blocks.image.name",
+  "class": "rhythm-image",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:common.image.label"
+    },
+    {
+      "type": "url",
+      "id": "image_link",
+      "label": "t:common.image_link.label"
+    },
+    {
+      "type": "range",
+      "id": "image_max_width",
+      "label": "t:common.image_max_width.label",
+      "min": 100,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "default": 200
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.image.name"
+    }
+  ]
+}
+{% endschema %}

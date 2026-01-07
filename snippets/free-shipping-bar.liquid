@@ -1,0 +1,47 @@
+{%- liquid
+  assign threshold = null
+
+  for item in shop.metaobjects.free_shipping.values
+    assign threshold = item.threshold.value
+    if threshold != blank
+      break
+    endif
+  endfor
+
+  assign threshold = threshold | times: 1.0
+  assign card_total = cart.total_price | times: 1.0
+  assign progress_amount = card_total | divided_by: threshold | times: 100
+  assign amount_needed = threshold | minus: cart.total_price
+  assign amount_needed_money = amount_needed | money
+
+  if progress_amount > 100
+    assign progress_amount = 100
+  endif
+-%}
+
+{% if threshold != blank %}
+  <div
+    class="free-shipping-bar {{ wrapper_class }} free-shipping-bar--color-{{ settings.progress_bar_color }}"
+    style="--bar-custom-color: {{ settings.progress_bar_color_custom }};"
+    {% if isolate_update %}
+      data-update-free-shipping-bar
+    {% endif %}
+  >
+    <div class="free-shipping-bar__message fs--1">
+      {% if settings.free_shipping_icon != 'none' %}
+        {% render 'theme-icon', icon: settings.free_shipping_icon, size: '1.3em', stroke_override: 1.3 %}
+      {% endif %}
+      <span>
+        {% if amount_needed > 0 %}
+          {{ 'sections.free_shipping_bar.more_needed' | t: amount: amount_needed_money }}
+        {% else %}
+          {{ 'sections.free_shipping_bar.success' | t }}
+        {% endif %}
+      </span>
+    </div>
+
+    <div class="free-shipping-bar__bar">
+      <span class="free-shipping-bar__bar-progress" style="width: {{ progress_amount | round }}%;"></span>
+    </div>
+  </div>
+{% endif %}

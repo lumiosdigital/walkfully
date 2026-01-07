@@ -1,0 +1,23 @@
+{% render 'product-blocks-combiner', block: block, index: index, type: 'opening' %}
+
+{%- if block.settings.text != blank -%}
+  <div
+    class="
+      product__block
+      {%- render 'product-block-classes', block: block -%}
+    "
+    {{ block.shopify_attributes }}
+  >
+    {% if block.settings.heading != blank %}
+      <h3 class="product__text-title {% render 'text-control-classes', settings: block.settings, prefix: 'heading' %}">
+        {{ block.settings.heading }}
+      </h3>
+    {% endif %}
+
+    <div class="product__text rte {% render 'text-control-classes', settings: block.settings %}">
+      {{ block.settings.text }}
+    </div>
+  </div>
+{%- endif -%}
+
+{% render 'product-blocks-combiner', block: block, index: index, type: 'closing' %}

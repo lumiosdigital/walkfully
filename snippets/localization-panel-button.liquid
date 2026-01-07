@@ -1,0 +1,65 @@
+{%- liquid
+  assign show_country = false
+  assign show_language = false
+  assign show_localization = false
+
+  if localization.available_countries.size > 1 and enable_country_selector
+    assign show_country = true
+  endif
+
+  if enable_language_selector and localization.available_languages.size > 1
+    assign show_language = true
+  endif
+
+  if show_country or show_language
+    assign show_localization = true
+  endif
+-%}
+
+{% if show_localization and show_as_one %}
+  <button
+    type="button"
+    class="{{ id }}__localization-panel-button fs--1"
+    data-open-overlay
+    data-sub-id="localization{% if show_country %}Country{% endif %}{% if show_language %}Language{% endif %}Panel"
+    aria-label="{{ 'accessibility.open_localization' | t }}"
+  >
+    {% if show_country and show_language %}
+      {{ localization.country.currency.iso_code }} / {{ localization.language.iso_code | upcase }}
+    {% elsif show_country %}
+      {{ localization.country.currency.iso_code }}
+    {% elsif show_language %}
+      {{ localization.language.iso_code | upcase }}
+    {% endif %}
+  </button>
+{% elsif show_localization %}
+  {% if show_country %}
+    <button
+      type="button"
+      class="{{ id }}__localization-panel-button fs--1"
+      data-open-overlay
+      data-sub-id="localizationCountryPanel"
+      aria-label="{{ 'accessibility.open_localization' | t }}"
+    >
+      <span>
+        {{- localization.country | truncate: 24, '...' -}}
+        <span>
+          | {{ localization.country.currency.iso_code }}
+          {{ localization.country.currency.symbol -}}
+        </span></span
+      >
+    </button>
+  {% endif %}
+
+  {% if show_language %}
+    <button
+      type="button"
+      class="{{ id }}__localization-panel-button fs--1"
+      data-open-overlay
+      data-sub-id="localizationLanguagePanel"
+      aria-label="{{ 'accessibility.open_localization' | t }}"
+    >
+      {{ localization.language.endonym_name }}
+    </button>
+  {% endif %}
+{% endif %}

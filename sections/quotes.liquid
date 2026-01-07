@@ -1,0 +1,541 @@
+{%- liquid
+  assign quote_mark_style = 'quote-' | append: section.settings.quote_mark_style
+  assign quote_mark_size = section.settings.quote_mark_size | divided_by: 100.0 | append: 'em'
+  assign quote_size = section.settings.text_size
+  assign quote_mark_color = section.settings.quote_mark_color
+
+  case quote_size
+    when '6'
+      assign mobile_columns = 1.025
+      assign tablet_columns = 1.04
+      assign desktop_columns = 1.05
+    when '5'
+      assign mobile_columns = 1.05
+      assign tablet_columns = 1.1
+      assign desktop_columns = 1.15
+    when '4'
+      assign mobile_columns = 1.2
+      assign tablet_columns = 1.3
+      assign desktop_columns = 1.4
+    when '3'
+      assign mobile_columns = 1.3
+      assign tablet_columns = 1.5
+      assign desktop_columns = 1.75
+    when '2'
+      assign mobile_columns = 1.7
+      assign tablet_columns = 2.1
+      assign desktop_columns = 2.3
+  endcase
+
+  if quote_size == '6'
+    assign author_size = '2'
+  elsif quote_size == '5' or quote_size == '4'
+    assign author_size = '1'
+  elsif quote_size == '3'
+    assign author_size = '0'
+  elsif quote_size == '2'
+    assign author_size = '-1'
+  endif
+-%}
+
+{% capture quotes %}
+  {% for block in section.blocks %}
+    <div class="quotes__quote swiper-slide{% if section.settings.enable_animations %} animate animate--slide-in{% endif %}" {{ block.shopify_attributes }}>
+      {% if block.settings.quote != blank %}
+        <div class="quotes__quote-text-wrapper {% render 'text-control-classes', settings: section.settings %}">
+          {% if section.settings.show_quote_mark %}
+            <div class="quotes__quote-symbol">{% render 'icon-quotes', icon: quote_mark_style, size: quote_mark_size %}</div>
+          {% endif %}
+          <div class="quotes__quote-text rte">
+            {{ block.settings.quote }}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if block.settings.author != blank %}
+        <cite class="quotes__quote-author{% if section.settings.text_size == '2' %} fs--1{% endif %} fs-{{ author_size }}">
+          &mdash;&nbsp;&nbsp;{{ block.settings.author }}
+        </cite>
+      {% endif %}
+    </div>
+  {% else %}
+    {% for i in (1..5) %}
+      <div class="quotes__quote swiper-slide{% if section.settings.enable_animations %} animate animate--slide-in{% endif %}">
+          <div class="quotes__quote-text-wrapper {% render 'text-control-classes', settings: section.settings %}">
+            {% if section.settings.show_quote_mark %}
+              <div class="quotes__quote-symbol">{% render 'icon-quotes', icon: quote_mark_style, size: quote_mark_size %}</div>
+            {% endif %}
+            <div class="quotes__quote-text rte">
+              {% assign quote = 'sections.quotes.quote_' | append: forloop.index %}
+              {{ quote | t }}
+            </div>
+          </div>
+      </div>
+    {% endfor %}
+  {% endfor %}
+{% endcapture %}
+
+<div
+  class="
+    quotes
+    quotes--quote-mark-{{ quote_mark_color }}
+    color-{{ section.settings.color_scheme }}
+    grid
+    {% render 'section-classes', settings: section.settings -%}
+  "
+  style="--quote-mark-opacity: {{ section.settings.quote_mark_opacity | divided_by: 100.0 }}"
+  {% if section.settings.enable_animations %}
+    data-animate-elements-on-scroll
+    data-animate-delay="125"
+  {% endif %}
+>
+  <div class="grid__content">
+    {% render 'prelude', wrapper_classes: 'grid__item--span-12', settings: section.settings %}
+    <div class="quotes__quotes grid__item--span-12">
+      {% render 'slider',
+        classes: 'grid__item--span-12',
+        full_width: true,
+        items: quotes,
+        mobile_columns: mobile_columns,
+        tablet_columns: tablet_columns,
+        desktop_columns: desktop_columns
+      %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.quotes.name",
+  "class": "quotes-section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer",
+      "custom.floating"
+    ]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:common.prelude.content"
+    },
+    {
+      "type": "text_alignment",
+      "id": "prelude_alignment",
+      "label": "t:common.alignment.label",
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "prelude_heading",
+      "label": "t:common.heading.label"
+    },
+    {
+      "type": "select",
+      "id": "prelude_heading_text_font",
+      "label": "t:common.heading_font.label",
+      "options": [
+        {
+          "value": "ff-h",
+          "label": "t:common.text_font.option__heading"
+        },
+        {
+          "value": "ff-b",
+          "label": "t:common.text_font.option__body"
+        }
+      ],
+      "default": "ff-h",
+      "visible_if": "{{ section.settings.prelude_heading != blank }}"
+    },
+    {
+      "type": "select",
+      "id": "prelude_heading_text_size",
+      "label": "t:common.heading_size.label",
+      "options": [
+        {
+          "value": "3",
+          "label": "t:common.text_size.option_h4"
+        },
+        {
+          "value": "4",
+          "label": "t:common.text_size.option_h3"
+        },
+        {
+          "value": "5",
+          "label": "t:common.text_size.option_h2"
+        },
+        {
+          "value": "6",
+          "label": "t:common.text_size.option_h1"
+        }
+      ],
+      "default": "4",
+      "visible_if": "{{ section.settings.prelude_heading != blank }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "prelude_heading_text_uppercase",
+      "label": "t:common.heading_uppercase.label",
+      "default": false,
+      "visible_if": "{{ section.settings.prelude_heading != blank }}"
+    },
+    {
+      "type": "richtext",
+      "id": "prelude_text",
+      "label": "t:common.text.label"
+    },
+    {
+      "type": "select",
+      "id": "prelude_text_size",
+      "label": "t:common.text_size.label",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:common.text_size.option_body_small"
+        },
+        {
+          "value": "2",
+          "label": "t:common.text_size.option_body"
+        },
+        {
+          "value": "3",
+          "label": "t:common.text_size.option_h4"
+        }
+      ],
+      "default": "2",
+      "visible_if": "{{ section.settings.prelude_text != blank }}"
+    },
+    {
+      "type": "text",
+      "id": "prelude_button_text",
+      "label": "t:common.button_text.label"
+    },
+    {
+      "type": "url",
+      "id": "prelude_button_link",
+      "label": "t:common.button_link.label"
+    },
+    {
+      "type": "select",
+      "id": "prelude_button_size",
+      "label": "t:common.button_size.label",
+      "options": [
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        }
+      ],
+      "default": "standard",
+      "visible_if": "{{ section.settings.prelude_button_text != blank }}"
+    },
+    {
+      "type": "select",
+      "id": "prelude_button_style",
+      "label": "t:common.button_style.label",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:common.button_style.option__primary"
+        },
+        {
+          "value": "secondary",
+          "label": "t:common.button_style.option__secondary"
+        },
+        {
+          "value": "accent-primary",
+          "label": "t:common.button_style.option__accent_primary"
+        },
+        {
+          "value": "accent-secondary",
+          "label": "t:common.button_style.option__accent_secondary"
+        },
+        {
+          "value": "accent-text-link",
+          "label": "t:common.button_style.option__accent_text"
+        },
+        {
+          "value": "text-link",
+          "label": "t:common.button_style.option__text"
+        }
+      ],
+      "default": "primary",
+      "visible_if": "{{ section.settings.prelude_button_text != blank }}"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__content.content"
+    },
+    {
+      "type": "select",
+      "id": "text_font",
+      "label": "t:common.quote_font.label",
+      "options": [
+        {
+          "value": "ff-h",
+          "label": "t:common.text_font.option__heading"
+        },
+        {
+          "value": "ff-b",
+          "label": "t:common.text_font.option__body"
+        }
+      ],
+      "default": "ff-h"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "t:common.quote_size.label",
+      "options": [
+        {
+          "value": "2",
+          "label": "t:common.text_size.option_body"
+        },
+        {
+          "value": "3",
+          "label": "t:common.text_size.option_h4"
+        },
+        {
+          "value": "4",
+          "label": "t:common.text_size.option_h3"
+        },
+        {
+          "value": "5",
+          "label": "t:common.text_size.option_h2"
+        },
+        {
+          "value": "6",
+          "label": "t:common.text_size.option_h1"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quote_mark",
+      "label": "t:sections.quotes.settings.show_quote_mark.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "quote_mark_style",
+      "label": "t:sections.quotes.settings.quote_mark_style.label",
+      "default": "3",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:common.number_select.option__1"
+        },
+        {
+          "value": "2",
+          "label": "t:common.number_select.option__2"
+        },
+        {
+          "value": "3",
+          "label": "t:common.number_select.option__3"
+        },
+        {
+          "value": "4",
+          "label": "t:common.number_select.option__4"
+        },
+        {
+          "value": "5",
+          "label": "t:common.number_select.option__5"
+        },
+        {
+          "value": "6",
+          "label": "t:common.number_select.option__6"
+        },
+        {
+          "value": "7",
+          "label": "t:common.number_select.option__7"
+        },
+        {
+          "value": "8",
+          "label": "t:common.number_select.option__8"
+        },
+        {
+          "value": "9",
+          "label": "t:common.number_select.option__9"
+        },
+        {
+          "value": "10",
+          "label": "t:common.number_select.option__10"
+        },
+        {
+          "value": "11",
+          "label": "t:common.number_select.option__11"
+        },
+        {
+          "value": "12",
+          "label": "t:common.number_select.option__12"
+        },
+        {
+          "value": "13",
+          "label": "t:common.number_select.option__13"
+        },
+        {
+          "value": "14",
+          "label": "t:common.number_select.option__14"
+        }
+      ],
+      "visible_if": "{{ section.settings.show_quote_mark }}"
+    },
+    {
+      "type": "range",
+      "id": "quote_mark_size",
+      "label": "t:sections.quotes.settings.quote_mark_size.label",
+      "min": 50,
+      "max": 500,
+      "step": 5,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ section.settings.show_quote_mark }}"
+    },
+    {
+      "type": "select",
+      "id": "quote_mark_color",
+      "label": "t:sections.quotes.settings.quote_mark_color.label",
+      "options": [
+        {
+          "value": "foreground",
+          "label": "t:sections.quotes.settings.quote_mark_color.option__text"
+        },
+        {
+          "value": "accent",
+          "label": "t:sections.quotes.settings.quote_mark_color.option__accent"
+        }
+      ],
+      "default": "foreground",
+      "visible_if": "{{ section.settings.show_quote_mark }}"
+    },
+    {
+      "type": "range",
+      "id": "quote_mark_opacity",
+      "label": "t:sections.quotes.settings.quote_mark_opacity.label",
+      "min": 5,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 10,
+      "visible_if": "{{ section.settings.show_quote_mark }}"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_spacing_and_border.content"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "label": "t:common.top_spacing.label",
+      "options": [
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "x-large"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "label": "t:common.bottom_spacing.label",
+      "options": [
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "x-large"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:common.show_bottom_border.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_animations.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "t:common.enable_animations.label",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "quote",
+      "name": "t:sections.quotes.blocks.quote.name",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "quote",
+          "label": "t:common.quote.label",
+          "default": "Beautifully made, easy to use, and exactly what I was looking for. I'd absolutely recommend this to anyone."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "t:common.author.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.quotes.presets.name",
+      "category": "t:categories.informative"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,82 @@
+{%- if paginate.parts.size > 0 -%}
+  {%- liquid
+    assign pagination_start = paginate.current_offset | plus: 1
+    assign pagination_end = paginate.current_page | times: paginate.page_size
+    assign pagination_range = pagination_start
+
+    if pagination_end > paginate.items
+      assign pagination_end = paginate.items
+    endif
+
+    assign progress = pagination_end | times: 1.0 | divided_by: paginate.items | times: 100
+    assign pagination_range = pagination_range | append: '-' | append: pagination_end
+
+    if type == blank
+      assign type = 'general.pagination.type_results'
+    endif
+    assign pagination_type = type | t
+  -%}
+  <nav
+    class="pagination{% if classes != blank %} {{ classes }}{% endif %}"
+    role="navigation"
+    aria-label="{{ 'general.pagination.label' | t }}"
+  >
+    {% if show_count %}
+      <div class="pagination__header fs--1" style="--progress: {{ progress }}%">
+        <div class="pagination__progress-bar-container">
+          <div class="pagination__progress-bar">
+            <div class="pagination__progress-bar-value" style="width: {{ progress }}%;"></div>
+          </div>
+        </div>
+        <p>
+          {{ 'general.pagination.showing' | t: of: pagination_range, total: paginate.items, item: pagination_type }}
+        </p>
+      </div>
+    {% endif %}
+    <ul class="pagination__list list-unstyled" role="list">
+      {%- if paginate.previous -%}
+        <li class="pagination__list-item">
+          <a
+            href="{{ paginate.previous.url }}{{ anchor }}"
+            class="pagination__button-link pagination__button-link--prev fs--1"
+          >
+            {% render 'theme-icon', icon: 'arrow-left', size: '1em', stroke_override: '1.5' %}
+            {{ 'general.pagination.previous' | t }}
+          </a>
+        </li>
+      {%- endif -%}
+
+      {%- for part in paginate.parts -%}
+        <li class="pagination__list-item">
+          {%- if part.is_link -%}
+            <a
+              href="{{ part.url }}{{ anchor }}"
+              class="pagination__button-link fs--1"
+              aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
+            >
+              {{- part.title -}}
+            </a>
+          {%- else -%}
+            {%- if part.title == paginate.current_page -%}
+              <span class="pagination__button-link active fs--1">{{ part.title }}</span>
+            {%- else -%}
+              <span class="pagination__button-link fs--1">{{ part.title }}</span>
+            {%- endif -%}
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+
+      {%- if paginate.next -%}
+        <li class="pagination__list-item">
+          <a
+            href="{{ paginate.next.url }}{{ anchor }}"
+            class="pagination__button-link pagination__button-link--next fs--1"
+          >
+            {{ 'general.pagination.next' | t }}
+            {% render 'theme-icon', icon: 'arrow-right', size: '1em', stroke_override: '1.5' %}
+          </a>
+        </li>
+      {%- endif -%}
+    </ul>
+  </nav>
+{%- endif -%}

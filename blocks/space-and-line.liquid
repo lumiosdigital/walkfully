@@ -1,0 +1,144 @@
+{%- liquid
+  assign horizontal_alignment = section.settings.alignment | split: '_' | last
+  assign horizontal_alignment_mobile = section.settings.mobile_alignment | split: '_' | last
+  assign mobile_align = horizontal_alignment_mobile | default: 'left'
+-%}
+
+<div
+  class="
+    block-space-and-line
+    block-space-and-line--top-spacing-{{ block.settings.spacing_top }}
+    block-space-and-line--bottom-spacing-{{ block.settings.spacing_bottom }}
+    block-space-and-line--align-{{ horizontal_alignment }}
+    block-space-and-line--mobile-align-{{ mobile_align }}
+    block-space-and-line--color-{{ block.settings.line_color }}
+    section-block
+    {% if section.settings.enable_animations %}
+      animate
+      animate--slide-in
+    {% endif %}
+  "
+  {{ block.shopify_attributes }}
+  style="
+    --line-height: {{ block.settings.line_height }}px;
+    --line-width: {{ block.settings.line_width }}%;
+  "
+>
+  {% if block.settings.show_line %}
+    <div class="block-space-and-line__line"></div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "t:blocks.space_and_line.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "spacing_top",
+      "label": "t:common.top_spacing.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:common.sizing.none"
+        },
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        }
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "select",
+      "id": "spacing_bottom",
+      "label": "t:common.bottom_spacing.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:common.sizing.none"
+        },
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        }
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_line",
+      "label": "t:blocks.space_and_line.settings.show_line.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "line_color",
+      "label": "t:blocks.space_and_line.settings.line_color.label",
+      "options": [
+        {
+          "value": "text",
+          "label": "t:blocks.space_and_line.settings.line_color.option__text"
+        },
+        {
+          "value": "accent",
+          "label": "t:blocks.space_and_line.settings.line_color.option__accent"
+        }
+      ],
+      "default": "text",
+      "visible_if": "{{ block.settings.show_line }}"
+    },
+    {
+      "type": "range",
+      "id": "line_height",
+      "label": "t:blocks.space_and_line.settings.line_height.label",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1,
+      "unit": "px",
+      "visible_if": "{{ block.settings.show_line }}"
+    },
+    {
+      "type": "range",
+      "id": "line_width",
+      "label": "t:blocks.space_and_line.settings.line_width.label",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ block.settings.show_line }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:blocks.space_and_line.name"
+    }
+  ]
+}
+{% endschema %}

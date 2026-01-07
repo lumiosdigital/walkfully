@@ -1,0 +1,26 @@
+{%- liquid
+  assign interactive_border_radius = '0'
+
+  if settings.interactive_border_radius == 'slightly-rounded'
+    assign interactive_border_radius = '0.25em'
+  elsif settings.interactive_border_radius == 'rounded'
+    assign interactive_border_radius = '0.5em'
+  elsif settings.interactive_border_radius == 'round'
+    assign interactive_border_radius = '1.5em'
+  endif
+
+  assign media_border_radius = '0'
+
+  if settings.media_border_radius == 'slightly-rounded'
+    assign media_border_radius = '0.5rem'
+  elsif settings.media_border_radius == 'rounded'
+    assign media_border_radius = '0.8rem'
+  endif
+-%}
+
+{% style %}
+  :root {
+    --elements-border-radius: {{ interactive_border_radius }};
+    --media-border-radius: {{ media_border_radius }};
+  }
+{% endstyle %}

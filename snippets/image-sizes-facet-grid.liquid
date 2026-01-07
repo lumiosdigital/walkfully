@@ -1,0 +1,55 @@
+{%- liquid
+  case image_span_mobile
+    when '12'
+      if image_bounds == 'extended'
+        assign mobile_width = 1
+      else
+        assign mobile_width = 0.9563333333
+      endif
+    when '8'
+      if image_bounds == 'extended'
+        assign mobile_width = 0.6666666667
+      else
+        assign mobile_width = 0.6375666667
+      endif
+    when '6'
+      if image_bounds == 'extended'
+        assign mobile_width = 0.5
+      else
+        assign mobile_width = 0.4781833333
+      endif
+    when '4'
+      if image_bounds == 'extended'
+        assign mobile_width = 0.3333333333
+      else
+        assign mobile_width = 0.3187833333
+      endif
+  endcase
+
+  case image_span
+    when '12'
+      if image_bounds == 'extended'
+        render 'image-sizes', desktop_x_wide_width: 1, desktop_wide_width: 1, desktop_width: 1, tablet_width: 1, width: mobile_width
+      else
+        render 'image-sizes', desktop_x_wide_width: 0.9028571429, desktop_wide_width: 0.9215384615, desktop_width: 0.9388, tablet_width: 0.938275, width: mobile_width
+      endif
+    when '8'
+      if image_bounds == 'extended'
+        render 'image-sizes', desktop_x_wide_width: 0.666675, desktop_wide_width: 0.666675, desktop_width: 0.666675, tablet_width: 0.666675, width: mobile_width
+      else
+        render 'image-sizes', desktop_x_wide_width: 0.6019, desktop_wide_width: 0.6143538462, desktop_width: 0.6258636364, tablet_width: 0.6255125, width: mobile_width
+      endif
+    when '6'
+      if image_bounds == 'extended'
+        render 'image-sizes', desktop_x_wide_width: 0.5, desktop_wide_width: 0.5, desktop_width: 0.5, tablet_width: 0.5, width: mobile_width
+      else
+        render 'image-sizes', desktop_x_wide_width: 0.4514285714, desktop_wide_width: 0.4607692308, desktop_width: 0.4694, tablet_width: 0.4691375, width: mobile_width
+      endif
+    when '4'
+      if image_bounds == 'extended'
+        render 'image-sizes', desktop_x_wide_width: 0.333336, desktop_wide_width: 0.333336, desktop_width: 0.333336, tablet_width: 0.333336, width: mobile_width
+      else
+        render 'image-sizes', desktop_x_wide_width: 0.3080928571, desktop_wide_width: 0.3071769231, desktop_width: 0.3129363636, tablet_width: 0.31275, width: mobile_width
+      endif
+  endcase
+-%}

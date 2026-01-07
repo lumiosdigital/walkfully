@@ -1,0 +1,203 @@
+<div
+  class="
+    rich-text
+    rich-text--content-alignment-{{ section.settings.content_alignment }}
+    color-{{ section.settings.color_scheme }}
+    grid
+    {% render 'section-classes', settings: section.settings -%}
+  "
+  {% if section.settings.enable_animations %}
+    data-animate-elements-on-scroll
+    data-animate-delay="125"
+  {% endif %}
+>
+  <div class="rich-text__content grid__content">
+    <div
+      class="
+        custom-width
+        custom-width--width-{{ section.settings.content_width }}
+        custom-width--alignment-{{ section.settings.content_alignment }}
+        grid__item--span-12
+      "
+      style="--content-max-width: {{ section.settings.custom_content_width }}px;"
+    >
+      <div class="rich-text__items custom-width__content">
+        {% content_for 'blocks' %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.rich-text.name",
+  "tag": "section",
+  "class": "rich-text-section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer",
+      "custom.floating"
+    ]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__content_container.content"
+    },
+    {
+      "type": "text_alignment",
+      "id": "content_alignment",
+      "label": "t:common.content_alignment.label",
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "t:common.content_width.label",
+      "options": [
+        {
+          "value": "full",
+          "label": "t:common.content_width.option__full"
+        },
+        {
+          "value": "custom",
+          "label": "t:common.content_width.option__custom"
+        }
+      ],
+      "default": "custom"
+    },
+    {
+      "type": "range",
+      "id": "custom_content_width",
+      "label": "t:common.custom_width.label",
+      "min": 500,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 700,
+      "visible_if": "{{ section.settings.content_width == \"custom\" }}"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_spacing_and_border.content"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "label": "t:common.top_spacing.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:common.sizing.none"
+        },
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "label": "t:common.bottom_spacing.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:common.sizing.none"
+        },
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:common.show_bottom_border.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_animations.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "t:common.enable_animations.label",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "@theme"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.rich-text.presets.name",
+      "category": "t:categories.informative",
+      "blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "buttons",
+          "blocks": [
+            {
+              "type": "_button"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

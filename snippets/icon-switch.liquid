@@ -1,0 +1,16 @@
+{%- liquid
+  assign icon_is_button = false
+  if button
+    assign icon_is_button = true
+  endif
+-%}
+
+<span
+  class="icon-switch"
+  {% if size != blank %}
+    style="--icon-size: {{ size }};"
+  {% endif %}
+>
+  {% render 'theme-icon', icon: icon_active, button: icon_is_button %}
+  {% render 'theme-icon', icon: icon_inactive, button: icon_is_button %}
+</span>

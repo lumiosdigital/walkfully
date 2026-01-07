@@ -1,0 +1,23 @@
+<div
+  class="
+    block-text
+    block-text--align-{{ align }}
+    block-text--mobile-align-{{ mobile_align }}
+    rhythm-text
+    rte
+    {% if wrapper %}
+      {{ wrapper }}
+    {% endif %}
+    section-block
+    {% render 'text-control-classes', settings: block.settings %}
+    {% if animate %}
+      animate
+      animate--slide-in
+    {% endif %}
+  "
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.text %}
+    {{ block.settings.text }}
+  {% endif %}
+</div>

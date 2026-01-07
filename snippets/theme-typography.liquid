@@ -1,0 +1,48 @@
+{%- liquid
+  assign body_font = settings.body_font
+  assign body_font_bold = body_font | font_modify: 'weight', 'bold'
+  assign body_font_italic = body_font | font_modify: 'style', 'italic'
+  assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
+  assign header_font = settings.header_font
+%}
+
+{% style %}
+  {{ body_font | font_face: font_display: 'swap' }}
+  {{ body_font_bold | font_face: font_display: 'swap' }}
+  {{ body_font_italic | font_face: font_display: 'swap' }}
+  {{ body_font_bold_italic | font_face: font_display: 'swap' }}
+  {{ header_font | font_face: font_display: 'swap' }}
+
+  :root {
+    --font-body: {{ body_font.family }}, {{ body_font.fallback_families }};
+    --font-body-style: {{ body_font.style }};
+    --font-body-weight: {{ body_font.weight }};
+    --font-body-weight-bold: {{ body_font.weight | plus: 300 | at_most: 1000 }};
+    --font-body-line-height: {{ settings.body_line_height }};
+    --font-body-letter-spacing: {{ settings.body_letter_spacing | times: 0.001 | append: 'em' }};
+
+    --font-heading: {{ header_font.family }}, {{ header_font.fallback_families }};
+    --font-heading-style: {{ header_font.style }};
+    --font-heading-weight: {{ header_font.weight }};
+    --font-heading-line-height: {{ settings.header_line_height }};
+    --font-heading-letter-spacing: {{ settings.heading_letter_spacing | times: 0.001 | append: 'em' }};
+
+    --font-button: {% if settings.button_font == 'body' %}{{ body_font.family }}, {{ body_font.fallback_families }}{% else %}{{ header_font.family }}, {{ header_font.fallback_families }}{% endif %};
+    --font-button-style: {% if settings.button_font == 'body' %}{{ body_font.style }}{% else %}{{ header_font.style }}{% endif %};
+    --font-button-weight: {% if settings.button_font == 'body' %}{{ body_font.weight }}{% else %}{{ header_font.weight }}{% endif %};
+    --font-button-line-height: 1;
+    --font-button-letter-spacing: {{ settings.button_letter_spacing | times: 0.001 | append: 'em' }};
+    --font-button-text-transform: {% if settings.button_uppercase %}uppercase{% else %}none{% endif %};
+  }
+{% endstyle %}
+
+{%- unless settings.body_font.system? -%}
+  {% comment %}theme-check-disable AssetPreload{% endcomment %}
+  <link rel="preload" as="font" href="{{ settings.body_font | font_url }}" type="font/woff2" crossorigin>
+  {% comment %}theme-check-enable AssetPreload{% endcomment %}
+{%- endunless -%}
+{%- unless settings.header_font.system? -%}
+  {% comment %}theme-check-disable AssetPreload{% endcomment %}
+  <link rel="preload" as="font" href="{{ settings.header_font | font_url }}" type="font/woff2" crossorigin>
+  {% comment %}theme-check-enable AssetPreload{% endcomment %}
+{%- endunless -%}

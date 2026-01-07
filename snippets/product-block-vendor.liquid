@@ -1,0 +1,30 @@
+{% render 'product-blocks-combiner', block: block, index: index, type: 'opening' %}
+
+{%- if prod.vendor != blank or is_featured -%}
+  {% assign display_mode = block.settings.vendor_display_mode %}
+  <div
+    class="
+      product__block
+      {%- render 'product-block-classes', block: block -%}
+    "
+    {{ block.shopify_attributes }}
+  >
+    <div
+      class="
+        product__vendor
+        {% if display_mode == 'link' %} fancy-link{% endif %}
+        {% render 'text-control-classes', settings: block.settings %}
+      "
+    >
+      {% if is_featured and prod == blank %}
+        <span>{{ 'products.product.vendor' | t }}</span>
+      {% elsif display_mode == 'link' %}
+        <a href="{{ prod.vendor | url_for_vendor }}">{{ prod.vendor }}</a>
+      {% else %}
+        <span>{{ prod.vendor }}</span>
+      {% endif %}
+    </div>
+  </div>
+{%- endif -%}
+
+{% render 'product-blocks-combiner', block: block, index: index, type: 'closing' %}

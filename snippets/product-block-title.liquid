@@ -1,0 +1,47 @@
+{%- liquid
+  capture tag
+    if show_as_link
+      echo 'a'
+    else
+      echo 'h1'
+    endif
+  endcapture
+
+  capture attributes
+    if show_as_link
+      echo 'href="' | append: prod.url | append: '"'
+    endif
+  endcapture
+-%}
+
+{% render 'product-blocks-combiner', block: block, index: index, type: 'opening' %}
+
+{%- if prod.title != blank or is_featured -%}
+  <div
+    class="
+      product__block
+      {%- render 'product-block-classes', block: block -%}
+    "
+    {{ block.shopify_attributes }}
+  >
+    <{{ tag }}
+      {{ attributes }}
+      class="
+        product__title
+        {% if block != blank %}
+          {% render 'text-control-classes', settings: block.settings %}
+        {% else %}
+          fs-2
+        {% endif %}
+      "
+    >
+      {% if is_featured and prod == blank %}
+        {{ 'products.product.product_title' | t }}
+      {% else %}
+        {{ prod.title }}
+      {% endif %}
+    </{{ tag }}>
+  </div>
+{%- endif -%}
+
+{% render 'product-blocks-combiner', block: block, index: index, type: 'closing' %}

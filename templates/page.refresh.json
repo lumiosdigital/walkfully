@@ -1,0 +1,374 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "color_scheme": "",
+        "title_alignemnt": "left",
+        "section_spacing_top": "large",
+        "section_spacing_bottom": "large",
+        "show_bottom_border": false,
+        "enable_animations": true
+      }
+    },
+    "image_hero_8DhF94": {
+      "type": "image-hero",
+      "blocks": {
+        "heading_hjnbKX": {
+          "type": "heading",
+          "settings": {
+            "heading": "14-Day Mind & Body Refresh",
+            "text_font": "ff-h",
+            "text_size": "6",
+            "text_uppercase": false
+          },
+          "blocks": {}
+        },
+        "text_qL3wYg": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Walk your way to more energy, calm, and clarity with a simple, science-backed program.</p>",
+            "text_size": "3"
+          },
+          "blocks": {}
+        },
+        "buttons_QViPq7": {
+          "type": "buttons",
+          "disabled": true,
+          "settings": {},
+          "blocks": {
+            "button_yVhhWQ": {
+              "type": "_button",
+              "settings": {
+                "button_text": "Button label",
+                "button_link": "",
+                "button_size": "standard",
+                "button_style": "primary"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "button_yVhhWQ"
+          ]
+        }
+      },
+      "block_order": [
+        "heading_hjnbKX",
+        "text_qL3wYg",
+        "buttons_QViPq7"
+      ],
+      "name": "t:sections.image-hero.presets.name",
+      "settings": {
+        "color_scheme": "scheme-4",
+        "section_height": "custom",
+        "height_desktop": 80,
+        "height_mobile": 80,
+        "image_overlay_opacity": 25,
+        "desktop_image": "shopify://shop_images/pexels-jk-holland-752385-10049592.jpg",
+        "mobile_image": "shopify://shop_images/pexels-gochrisgoxyz-1643430.jpg",
+        "show_content_background": false,
+        "content_color_scheme": "",
+        "show_gradient": false,
+        "alignment": "center_center",
+        "mobile_alignment": "center_center",
+        "content_width": 700,
+        "enable_animations": true
+      }
+    },
+    "image_with_text_Tfrg3Y": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_WmBGh7": {
+          "type": "heading",
+          "settings": {
+            "heading": "This isn't a challenge.",
+            "text_font": "ff-h",
+            "text_size": "4",
+            "text_uppercase": false
+          },
+          "blocks": {}
+        },
+        "text_NcwN7F": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>It’s a reclamation of yourself and your life.</strong></p><p>Reclaim your energy, clarity, and calm in just 14 days. The WalkFully Refresh guides you to move with intention, reduce stress, boost focus, and feel more alive—no gear, no pressure, no judgment.</p><p><strong>Ready to feel better, not busier?</strong></p>",
+            "text_size": "2"
+          },
+          "blocks": {}
+        },
+        "buttons_wVqmKD": {
+          "type": "buttons",
+          "settings": {},
+          "blocks": {
+            "button_HLfhww": {
+              "type": "_button",
+              "settings": {
+                "button_text": "Sign Up Now",
+                "button_link": "",
+                "button_size": "standard",
+                "button_style": "primary"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "button_HLfhww"
+          ]
+        }
+      },
+      "block_order": [
+        "heading_WmBGh7",
+        "text_NcwN7F",
+        "buttons_wVqmKD"
+      ],
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "color_scheme": "",
+        "image": "shopify://shop_images/pexels-roman-odintsov-8018917.jpg",
+        "aspect_ratio": "4-5",
+        "image_bounds": "extended",
+        "image_position": "right",
+        "image_span": 5,
+        "content_span": 7,
+        "stick_on_scroll": true,
+        "alignment": "left",
+        "content_vertical_alignment": "center",
+        "mobile_aspect_ratio": "4-5",
+        "mobile_image_position": "above",
+        "mobile_alignment": "left",
+        "section_spacing_top": "standard",
+        "section_spacing_bottom": "none",
+        "show_bottom_border": false,
+        "enable_animations": true
+      }
+    },
+    "rich_text_8ED8iT": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_Xn9xta": {
+          "type": "heading",
+          "settings": {
+            "heading": "<strong>What to Expect</strong>",
+            "text_font": "ff-h",
+            "text_size": "4",
+            "text_uppercase": false
+          },
+          "blocks": {}
+        },
+        "buttons_eJ3iTM": {
+          "type": "buttons",
+          "settings": {},
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading_Xn9xta",
+        "buttons_eJ3iTM"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "content_alignment": "center",
+        "content_width": "custom",
+        "custom_content_width": 700,
+        "section_spacing_top": "standard",
+        "section_spacing_bottom": "standard",
+        "show_bottom_border": true,
+        "enable_animations": true
+      }
+    },
+    "multi_column_CKiWCq": {
+      "type": "multi-column",
+      "blocks": {
+        "column_WtRRmL": {
+          "type": "column",
+          "settings": {
+            "icon": "none",
+            "heading": "<strong>A daily walking prompt.</strong>",
+            "text_size": "3",
+            "text_uppercase": false,
+            "subheading_text": "<p>Each one will gently push you different directions to explore the wide variety of profound impacts walking can have on your life.</p>",
+            "subheading_text_size": "1"
+          }
+        },
+        "column_whRQja": {
+          "type": "column",
+          "settings": {
+            "icon": "none",
+            "heading": "<strong>A supportive community.</strong>",
+            "text_size": "3",
+            "text_uppercase": false,
+            "subheading_text": "<p>Even when you’re going solo, you’re walking as part of a new movement – based on the most ancient and essential movement. </p>",
+            "subheading_text_size": "1"
+          }
+        },
+        "column_UYCChr": {
+          "type": "column",
+          "settings": {
+            "icon": "none",
+            "heading": "<strong>A foundation for change.</strong>",
+            "text_size": "3",
+            "text_uppercase": false,
+            "subheading_text": "<p>Simple, powerful surveys that help you see yourself shift. Awareness is what makes change last.</p>",
+            "subheading_text_size": "1"
+          }
+        }
+      },
+      "block_order": [
+        "column_WtRRmL",
+        "column_whRQja",
+        "column_UYCChr"
+      ],
+      "name": "t:sections.multi-column.presets.name",
+      "settings": {
+        "color_scheme": "scheme-2",
+        "prelude_alignment": "left",
+        "prelude_heading": "",
+        "prelude_heading_text_font": "ff-h",
+        "prelude_heading_text_size": "4",
+        "prelude_heading_text_uppercase": false,
+        "prelude_text": "",
+        "prelude_text_size": "2",
+        "prelude_button_text": "",
+        "prelude_button_link": "",
+        "prelude_button_size": "standard",
+        "prelude_button_style": "primary",
+        "media_max_width": 80,
+        "media_max_width_mobile": 80,
+        "media_shape": "natural",
+        "show_media_border": false,
+        "border_weight": "1",
+        "border_padding": 0,
+        "desktop_columns": 3,
+        "media_layout": "above",
+        "horizontal_alignment": "left",
+        "vertical_alignment": "top",
+        "mobile_layout": "columns",
+        "mobile_columns": "2",
+        "media_layout_mobile": "above",
+        "horizontal_alignment_mobile": "left",
+        "vertical_alignment_mobile": "top",
+        "section_spacing_top": "large",
+        "section_spacing_bottom": "large",
+        "show_bottom_border": false,
+        "enable_animations": true
+      }
+    },
+    "image_with_text_pxckCi": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_yfkP4A": {
+          "type": "heading",
+          "settings": {
+            "heading": "Why 14 Days?",
+            "text_font": "ff-h",
+            "text_size": "4",
+            "text_uppercase": false
+          },
+          "blocks": {}
+        },
+        "text_ytAX43": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Because lasting change comes from presence, practiced daily.</p><p>Research shows that even short, consistent behavioral shifts over two weeks can start to reshape patterns in the brain, regulate stress, and boost physical well-being. </p><p>Our program is designed to easily:</p><p><strong>Boost your energy</strong> — feel lighter, clearer, and more focused each day<br/><strong>Lower your stress</strong> — calm your nervous system and reset your mood naturally<br/><strong>Reconnect with your body</strong> — rediscover its resilience and vitality<br/> <strong>Build a routine that sticks</strong> — create daily “you-time” with ease<br/><strong>Create lasting change</strong> — learn tools and habits you’ll carry well beyond 14 days</p>",
+            "text_size": "2"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading_yfkP4A",
+        "text_ytAX43"
+      ],
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "color_scheme": "",
+        "image": "shopify://shop_images/pexels-gochrisgoxyz-1643430.jpg",
+        "aspect_ratio": "2-3",
+        "image_bounds": "extended",
+        "image_position": "left",
+        "image_span": 5,
+        "content_span": 7,
+        "stick_on_scroll": true,
+        "alignment": "left",
+        "content_vertical_alignment": "center",
+        "mobile_aspect_ratio": "4-5",
+        "mobile_image_position": "above",
+        "mobile_alignment": "left",
+        "section_spacing_top": "none",
+        "section_spacing_bottom": "none",
+        "show_bottom_border": false,
+        "enable_animations": true
+      }
+    },
+    "rich_text_QMLGid": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_pQLHbx": {
+          "type": "heading",
+          "settings": {
+            "heading": "Two weeks. Nothing to prove. Everything to gain.",
+            "text_font": "ff-h",
+            "text_size": "3",
+            "text_uppercase": false
+          },
+          "blocks": {}
+        },
+        "buttons_TAhrjA": {
+          "type": "buttons",
+          "settings": {},
+          "blocks": {
+            "button_tpRCn8": {
+              "type": "_button",
+              "settings": {
+                "button_text": "Sign Up Now",
+                "button_link": "",
+                "button_size": "standard",
+                "button_style": "primary"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "button_tpRCn8"
+          ]
+        }
+      },
+      "block_order": [
+        "heading_pQLHbx",
+        "buttons_TAhrjA"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "color_scheme": "scheme-2",
+        "content_alignment": "center",
+        "content_width": "custom",
+        "custom_content_width": 700,
+        "section_spacing_top": "standard",
+        "section_spacing_bottom": "standard",
+        "show_bottom_border": true,
+        "enable_animations": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "image_hero_8DhF94",
+    "image_with_text_Tfrg3Y",
+    "rich_text_8ED8iT",
+    "multi_column_CKiWCq",
+    "image_with_text_pxckCi",
+    "rich_text_QMLGid"
+  ]
+}

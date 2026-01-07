@@ -1,0 +1,244 @@
+<div
+  class="
+    product__block
+    {% if show_quick_buy_widget and show_gift_card_form == false %} sticky{% endif %}
+    {%- render 'product-block-classes', block: block -%}
+  "
+>
+  <component-product-form
+    data-product-url="{{ prod.url }}"
+    {{ block.shopify_attributes }}
+    class="product-form"
+  >
+    {%- if prod != blank -%}
+      {%- form 'product', prod, id: product_form_id, novalidate: 'novalidate' -%}
+        <input
+          type="hidden"
+          name="id"
+          value="{{ prod.selected_or_first_available_variant.id }}"
+          {% if prod.selected_or_first_available_variant.available == false
+            or quantity_rule_soldout
+            or prod.selected_or_first_available_variant == null
+          %}
+            disabled
+          {% endif %}
+          data-update-hidden-id
+        >
+
+        {%- if show_gift_card_form -%}
+          {%- render 'gift-card-recipient-form', prod: prod, form: form, section: section -%}
+        {%- endif -%}
+
+        <div class="product-form__error-message fs--1">
+          <span class="product-form__error-message-text"></span>
+        </div>
+
+        <div
+          class="product-form__buttons"
+          {% unless show_gift_card_form %}
+            data-update-buy-buttons
+          {% endunless %}
+        >
+          {%- liquid
+            assign check_against_inventory = true
+            if prod.selected_or_first_available_variant.inventory_management != 'shopify' or prod.selected_or_first_available_variant.inventory_policy == 'continue'
+              assign check_against_inventory = false
+            endif
+            if prod.selected_or_first_available_variant.quantity_rule.min > prod.selected_or_first_available_variant.inventory_quantity and check_against_inventory
+              assign quantity_rule_soldout = true
+            endif
+          -%}
+          <div class="product-form__submit-wrapper">
+            {% if product.has_only_default_variant == false
+              and has_variant_picker
+              and show_quick_buy_widget
+              and show_gift_card_form == false
+            %}
+              <component-product-quick-buy-widget class="product-quick-buy-widget">
+                <button
+                  class="btn-icon product-form__utility-button product-quick-buy-widget__trigger"
+                  type="button"
+                  role="combobox"
+                  aria-label="{{ 'accessibility.show_quick_buy' | t }}"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-controls="quick-buy-widget"
+                  id="button-quick-buy-{{ id }}"
+                >
+                  <span>{{ 'products.product.options' | t }}</span>
+                  {% render 'theme-icon', icon: 'gear', size: '1em', class: 'custom-select__arrow' %}
+                </button>
+
+                <div
+                  class="product-quick-buy-widget__dropdown"
+                  role="listbox"
+                  id="quick-buy-widget"
+                  aria-labelledby="button-quick-buy-{{ id }}"
+                >
+                  <div class="product-quick-buy-widget__dropdown-header">
+                    <div class="product-quick-buy-widget__dropdown-images">
+                      {% for media in prod.media %}
+                        {%- liquid
+                          capture image_wrapper_class
+                            echo 'product-quick-buy-widget__dropdown-image'
+
+                            assign selected_product_has_media = true
+
+                            if prod.selected_or_first_available_variant.featured_media.id == blank
+                              assign selected_product_has_media = false
+                            endif
+
+                            if selected_product_has_media
+                              if media.id != prod.selected_or_first_available_variant.featured_media.id
+                                echo ' hidden'
+                              endif
+                            else
+                              if forloop.first != true
+                                echo ' hidden'
+                              endif
+                            endif
+                          endcapture
+
+                          capture wrapper_attributes
+                            echo 'data-media-id="[[ID]]"' | replace: '[[ID]]', media.id
+                            echo 'class="[[wc]]"' | replace: '[[wc]]', image_wrapper_class
+                          endcapture
+                        -%}
+                        <div {{ wrapper_attributes }}>
+                          {%
+                            render 'image',
+                            image: media,
+                            aspect_ratio: media_aspect_ratio,
+                            include_placeholder: true,
+                            shimmer_disabled: true,
+                            sizes: '300px';
+                          %}
+                        </div>
+                      {% endfor %}
+                    </div>
+
+                    <div class="product-quick-buy-widget__dropdown-details">
+                      <div class="product-quick-buy-widget__dropdown-title fs-1 ff-h">
+                        {{ prod.title }}
+                      </div>
+                      <div data-update-widget-price>
+                        {% if prod.selected_or_first_available_variant.price -%}
+                          {%- render 'price', prod: prod, use_variant: true -%}
+                        {%- else -%}
+                          {{ 'products.product.unavailable' | t }}
+                        {%- endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="product-quick-buy-widget__dropdown-footer">
+                    <div class="product-quick-buy-widget__dropdown-footer-labels">
+                      {% if has_quantity_selector %}
+                        <div class="product-quick-buy-widget__dropdown-footer-label fs--1">
+                          {{ 'products.product.quantity.label' | t }}
+                        </div>
+                      {% endif %}
+                      {%- for option in prod.options_with_values -%}
+                        <div class="product-quick-buy-widget__dropdown-footer-label fs--1">{{ option.name }}</div>
+                      {%- endfor -%}
+                    </div>
+
+                    <div class="product-quick-buy-widget__dropdown-footer-elements">
+                      {% if has_quantity_selector %}
+                        <div class="product-quick-buy-widget__quantity" data-product-quantity-selector>
+                          {% assign quanity_id = 'widget-quantity-selector-' | append: id %}
+                          {% render 'quantity-selector',
+                            product: prod,
+                            block: block,
+                            id: quanity_id,
+                            sync_id: 'product-quantity-selector',
+                            hide_label: true
+                          %}
+                        </div>
+                      {% endif %}
+                      <div class="product-quick-buy-widget__variant-options">
+                        {% assign option_id = 'widget-variant-options-' | append: id %}
+                        {% render 'product-variant-options',
+                          product: prod,
+                          block: block,
+                          id: option_id,
+                          sync_id: 'product-variant-options',
+                          compact: true,
+                          hide_label: true
+                        %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </component-product-quick-buy-widget>
+            {% endif %}
+
+            <button
+              type="submit"
+              name="add"
+              class="product-form__submit btn btn--full-width btn--height-standard {% if block.settings.show_dynamic_checkout %}btn--secondary{% else %}btn--primary{% endif %}"
+              data-update-buy-buttons-tunneled
+              {% if prod.selected_or_first_available_variant.available == false
+                or quantity_rule_soldout
+                or prod.selected_or_first_available_variant == null
+              %}
+                disabled
+              {% endif %}
+            >
+              <span>
+                {%- if prod.selected_or_first_available_variant == null -%}
+                  {{ 'products.product.unavailable' | t }}
+                {%- elsif prod.selected_or_first_available_variant.available == false or quantity_rule_soldout -%}
+                  {{ 'products.product.sold_out' | t }}
+                {%- else -%}
+                  {{ 'products.product.add_to_cart' | t }}
+                {%- endif -%}
+              </span>
+
+              {% render 'loader', type: 'spinner', size: '1em' %}
+            </button>
+          </div>
+        </div>
+        {%- if block.settings.show_dynamic_checkout -%}
+          {{ form | payment_button }}
+        {%- endif -%}
+      {%- endform -%}
+    {%- else -%}
+      <div class="product-form__buttons form">
+        {{ wish_list_button }}
+        <button
+          type="submit"
+          name="add"
+          class="product-form__submit"
+          disabled
+        >
+          {{ 'products.product.unavailable' | t }}
+        </button>
+      </div>
+    {%- endif -%}
+  </component-product-form>
+</div>
+
+{% if show_quick_buy_widget and show_gift_card_form == false %}
+  <div class="sticky-placeholder"></div>
+  <div class="sticky-sentinel"></div>
+{% endif %}
+
+{%- if show_pickup_availability -%}
+  {%- assign pick_up_availabilities = prod.selected_or_first_available_variant.store_availabilities
+    | where: 'pick_up_enabled', true
+  -%}
+
+  <component-pickup-availability
+    class="
+      product__pickup-availability
+      product__pickup-availability--spacing-top-{{ block.settings.block_spacing_top }}
+      product__pickup-availability--spacing-bottom-{{ block.settings.block_spacing_bottom }}
+      {% if prod.selected_or_first_available_variant.available and pick_up_availabilities.size > 0 %}
+        active
+      {% endif %}
+    "
+    data-root-url="{{ routes.root_url }}"
+    data-variant-id="{{ prod.selected_or_first_available_variant.id }}"
+  >
+  </component-pickup-availability>
+{%- endif -%}

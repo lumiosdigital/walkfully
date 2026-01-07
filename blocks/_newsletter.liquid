@@ -1,0 +1,90 @@
+{%- liquid
+  assign horizontal_alignment = section.settings.alignment | split: '_' | last
+  assign horizontal_alignment_mobile = section.settings.mobile_alignment | split: '_' | last
+  assign mobile_align = horizontal_alignment_mobile | default: 'left'
+-%}
+
+<div
+  class="
+    block-newsletter-signup
+    block-newsletter-signup--align-{{ horizontal_alignment }}
+    block-newsletter-signup--mobile-align-{{ mobile_align }}
+    rhythm-newsletter-signup
+    section-block
+    {% if section.settings.enable_animations %}
+      animate
+      animate--slide-in
+    {% endif %}
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- form 'customer', id: 'newsletter-signup' -%}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+    {%- if form.posted_successfully? -%}
+      <div class="form__message no-line" role="status">
+        <h3 class="form__message-heading fs-1 ff-b" id="NewsletterSignup-success" tabindex="-1" autofocus>
+          {% render 'theme-icon', icon: 'check-circle', size: '1em' %}
+          {{- 'newsletter.success' | t }}
+        </h3>
+      </div>
+    {% else %}
+      <div class="field">
+        <label class="visually-hidden" for="NewsletterForm--{{ section.id }}">
+          {{ 'newsletter.label' | t }}
+          <span aria-hidden="true">*</span>
+        </label>
+        <div class="block-newsletter-signup__input-wrapper">
+          <div class="block-newsletter-signup__input">
+            <input
+              id="NewsletterForm--{{ section.id }}"
+              type="email"
+              name="contact[email]"
+              class="field__input"
+              value="{{ form.email }}"
+              aria-required="true"
+              autocorrect="off"
+              autocapitalize="off"
+              autocomplete="email"
+              {% if form.errors %}
+                autofocus
+                aria-invalid="true"
+                aria-describedby="NewsletterSignup-error"
+              {% elsif form.posted_successfully? %}
+                aria-describedby="NewsletterSignup-success"
+              {% endif %}
+              placeholder="{{ 'newsletter.label' | t }}"
+              required
+            >
+            {%- if form.errors contains 'email' -%}
+              <div id="NewsletterSignup-error" class="form__field-message fs--1">
+                {% render 'theme-icon', icon: 'alert-circle', size: '1em' %}
+                <span>
+                  {{- form.errors.translated_fields.email | capitalize }}
+                  {{ form.errors.messages.email -}}
+                </span>
+              </div>
+            {%- endif -%}
+          </div>
+          <button
+            type="submit"
+            class="block-newsletter-signup__form-button btn btn--primary"
+          >
+            {{ 'newsletter.button_label' | t }}
+          </button>
+        </div>
+      </div>
+    {%- endif -%}
+  {%- endform -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:blocks.newsletter_signup.name",
+  "class": "rhythm-newsletter-signup",
+  "presets": [
+    {
+      "name": "t:blocks.newsletter_signup.name"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,22 @@
+{%- liquid
+  assign font_key = 'text_font'
+  assign size_key = 'text_size'
+  assign uppercase_key = 'text_uppercase'
+
+  if prefix != blank
+    assign font_key = font_key | prepend: '_' | prepend: prefix
+    assign size_key = size_key | prepend: '_' | prepend: prefix
+    assign uppercase_key = uppercase_key | prepend: '_' | prepend: prefix
+  endif
+-%}
+
+{% if settings[font_key] != blank -%}
+  {{- settings[font_key] -}}
+{%- endif %}
+{%- if settings[size_key] != blank -%}
+  {%- assign text_size = settings[size_key] | minus: 2 -%}
+  fs-{{ text_size }}
+{%- endif -%}
+{%- if settings[uppercase_key] -%}
+  tt-u
+{%- endif -%}

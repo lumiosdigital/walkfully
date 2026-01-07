@@ -1,0 +1,67 @@
+{%- if prod.description != blank or is_featured -%}
+  <div
+    class="
+      product__block
+      {%- render 'product-block-classes', block: block -%}
+    "
+    {{ block.shopify_attributes }}
+  >
+    {% capture content %}
+      <div class="product__description rte {% render 'text-control-classes', settings: block.settings %}">
+        {% if is_featured and prod == blank %}
+            {{ 'products.product.description_text' | t }}
+          {% else %}
+            {{ prod.description }}
+        {% endif %}
+      </div>
+    {% endcapture %}
+
+    {%- if block.settings.show_as_accordion -%}
+      <component-accordion
+        class="accordion"
+        data-exclusive="true"
+      >
+        <button
+          type="button"
+          class="accordion__trigger"
+          id="title-product-accordion-{{ index }}-{{ section.id }}"
+          aria-expanded="{% if block.settings.initial_state == 'open' %}true{% else %}false{% endif %}"
+          aria-controls="content-product-accordion-{{ index }}-{{ section.id }}"
+          data-accordion-trigger
+        >
+          <span class="accordion__title {% render 'text-control-classes', settings: block.settings, prefix: 'heading' %}">
+            {% if block.settings.icon != 'none' %}
+              {% render 'theme-icon', icon: block.settings.icon, size: '1em' %}
+            {% endif %}
+            {% if block.settings.heading != blank %}
+              {{ block.settings.heading }}
+            {% else %}
+              {{ 'products.product.description' | t }}
+            {% endif %}
+          </span>
+
+          {% render 'theme-icon', icon: 'chevron-down', size: '1.2em', class: 'accordion__icon' %}
+        </button>
+
+        <div
+          id="content-product-accordion-{{ index }}-{{ section.id }}"
+          role="region"
+          aria-labelledby="title-product-accordion-{{ index }}-{{ section.id }}"
+          class="accordion__panel"
+        >
+          <div class="accordion__panel-content">
+            {{ content }}
+          </div>
+        </div>
+      </component-accordion>
+
+    {%- else -%}
+      {% if block.settings.heading != blank %}
+        <h3 class="product__description-title {% render 'text-control-classes', settings: block.settings, prefix: 'heading' %}">
+          {{ block.settings.heading }}
+        </h3>
+      {% endif %}
+      {{ content }}
+    {%- endif -%}
+  </div>
+{%- endif -%}

@@ -1,0 +1,817 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "slideshow": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_GhVcpC": {
+          "type": "_slide",
+          "name": "t:sections.slideshow.blocks.slide.name",
+          "settings": {
+            "color_scheme": "scheme-4",
+            "image_overlay_opacity": 8,
+            "desktop_image": "shopify://shop_images/Copy_of_banner_2.png",
+            "mobile_image": "shopify://shop_images/Copy_of_banner_2.png",
+            "show_content_background": false,
+            "content_color_scheme": "scheme-1",
+            "show_gradient": false,
+            "alignment": "center_center",
+            "mobile_alignment": "center_center",
+            "content_width": 640
+          },
+          "blocks": {
+            "heading_GCaTpk": {
+              "type": "heading",
+              "settings": {
+                "heading": "<strong>Step into yourself.</strong>",
+                "text_font": "ff-b",
+                "text_size": "5",
+                "text_uppercase": false
+              },
+              "blocks": {}
+            },
+            "text_wFKYVe": {
+              "type": "text",
+              "settings": {
+                "text": "<p>Walk fully, live fully.</p>",
+                "text_size": "3"
+              },
+              "blocks": {}
+            },
+            "buttons_jAa7gL": {
+              "type": "buttons",
+              "name": "t:blocks.buttons.name",
+              "settings": {},
+              "blocks": {
+                "button_Wz8m7B": {
+                  "type": "_button",
+                  "settings": {
+                    "button_text": "Sign Up Now",
+                    "button_link": "https://manage.kmail-lists.com/subscriptions/subscribe?a=WVb9tL&g=S4Rx7p",
+                    "button_size": "standard",
+                    "button_style": "primary"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "button_Wz8m7B"
+              ]
+            }
+          },
+          "block_order": [
+            "heading_GCaTpk",
+            "text_wFKYVe",
+            "buttons_jAa7gL"
+          ]
+        }
+      },
+      "block_order": [
+        "slide_GhVcpC"
+      ],
+      "settings": {
+        "auto_rotate": true,
+        "rotate_speed": 10,
+        "transition_style": "slide",
+        "section_height": "custom",
+        "height_desktop": 100,
+        "height_mobile": 80,
+        "enable_animations": true
+      }
+    },
+    "banner_marquee": {
+      "type": "banner-marquee",
+      "blocks": {
+        "icon_YYRiYe": {
+          "type": "icon",
+          "settings": {
+            "icon": "eye",
+            "custom_icon_width": 40
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "Strengthen Body and Mind"
+          }
+        },
+        "icon_RNgjUU": {
+          "type": "icon",
+          "settings": {
+            "icon": "heart",
+            "custom_icon_width": 40
+          }
+        },
+        "text_xMAKcQ": {
+          "type": "text",
+          "settings": {
+            "text": "Regulate Emotion and Energy"
+          }
+        },
+        "icon_3QtEdW": {
+          "type": "icon",
+          "settings": {
+            "icon": "sun",
+            "custom_icon_width": 40
+          }
+        },
+        "text_xnCVxC": {
+          "type": "text",
+          "settings": {
+            "text": "Deepen Connection and Presence"
+          }
+        }
+      },
+      "block_order": [
+        "icon_YYRiYe",
+        "text",
+        "icon_RNgjUU",
+        "text_xMAKcQ",
+        "icon_3QtEdW",
+        "text_xnCVxC"
+      ],
+      "settings": {
+        "color_scheme": "scheme-3",
+        "show_gradient": false,
+        "space_between": "none",
+        "text_font": "ff-h",
+        "text_size": "2",
+        "scroll_speed": 1,
+        "scroll_direction": "left",
+        "section_spacing_top": "compact",
+        "section_spacing_bottom": "compact",
+        "show_bottom_border": false
+      }
+    },
+    "rich_text": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_JNKHeq": {
+          "type": "heading",
+          "settings": {
+            "heading": "WalkFully is the world's newest, oldest movement. And it’s the simplest way to feel stronger, think clearer, and live better.",
+            "text_font": "ff-h",
+            "text_size": "4",
+            "text_uppercase": false
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading_JNKHeq"
+      ],
+      "disabled": true,
+      "settings": {
+        "color_scheme": "scheme-2",
+        "content_alignment": "center",
+        "content_width": "full",
+        "custom_content_width": 940,
+        "section_spacing_top": "x-large",
+        "section_spacing_bottom": "x-large",
+        "show_bottom_border": false,
+        "enable_animations": true
+      }
+    },
+    "image_hero_Jbr9w7": {
+      "type": "image-hero",
+      "blocks": {
+        "heading_4QfTVn": {
+          "type": "heading",
+          "settings": {
+            "heading": "<strong>Welcome to the world's newest, oldest movement.</strong>",
+            "text_font": "ff-b",
+            "text_size": "4",
+            "text_uppercase": false
+          },
+          "blocks": {}
+        },
+        "text_cqACTX": {
+          "type": "text",
+          "settings": {
+            "text": "<p>And the simplest way to feel <strong>stronger</strong>, think <strong>clearer</strong>, and live <strong>better</strong>.</p>",
+            "text_size": "2"
+          },
+          "blocks": {}
+        },
+        "buttons_DEhUNY": {
+          "type": "buttons",
+          "settings": {},
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading_4QfTVn",
+        "text_cqACTX",
+        "buttons_DEhUNY"
+      ],
+      "name": "t:sections.image-hero.presets.name",
+      "settings": {
+        "color_scheme": "",
+        "section_height": "default",
+        "height_desktop": 100,
+        "height_mobile": 100,
+        "image_overlay_opacity": 0,
+        "desktop_image": "shopify://shop_images/Walkbanner.png",
+        "show_content_background": false,
+        "content_color_scheme": "",
+        "show_gradient": false,
+        "alignment": "center_center",
+        "mobile_alignment": "center_center",
+        "content_width": 700,
+        "enable_animations": true
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "disabled": true,
+      "settings": {
+        "color_scheme": "scheme-1",
+        "prelude_alignment": "left",
+        "prelude_heading": "The Haven sheet collection",
+        "prelude_heading_text_font": "ff-h",
+        "prelude_heading_text_size": "4",
+        "prelude_heading_text_uppercase": false,
+        "prelude_text": "<p>Each of our sheet sets is thoughtfully crafted to suit the way you rest - whether you run hot, love extra softness, crave hotel-level crispness, or prefer a touch of luxury.</p>",
+        "prelude_text_size": "2",
+        "prelude_button_text": "",
+        "prelude_button_link": "",
+        "prelude_button_size": "standard",
+        "prelude_button_style": "primary",
+        "collection": "sheet-sets",
+        "product_list": [],
+        "product_display_mode": "slider",
+        "max_products": 8,
+        "desktop_columns": 4,
+        "mobile_columns": "2",
+        "section_spacing_top": "x-large",
+        "section_spacing_bottom": "x-large",
+        "show_bottom_border": false,
+        "enable_animations": true
+      }
+    },
+    "split_hero_qfPYzc": {
+      "type": "split-hero",
+      "blocks": {
+        "left-hero": {
+          "type": "_left-hero",
+          "disabled": true,
+          "static": true,
+          "settings": {
+            "color_scheme": "scheme-3",
+            "desktop_image": "shopify://shop_images/ScreenShot2025-02-19at17.51.54.png",
+            "image_overlay_opacity": 45,
+            "heading": "Weighted Belt",
+            "text_font": "ff-b",
+            "text_size": "3",
+            "url": "",
+            "button_text": "Shop now",
+            "button_size": "standard",
+            "button_style": "primary"
+          },
+          "blocks": {}
+        },
+        "right-hero": {
+          "type": "_right-hero",
+          "disabled": true,
+          "static": true,
+          "settings": {
+            "color_scheme": "scheme-3",
+            "image_overlay_opacity": 45,
+            "url": "",
+            "heading": "Luxe Throw",
+            "text_font": "ff-b",
+            "text_size": "3",
+            "button_text": "Shop now",
+            "button_size": "standard",
+            "button_style": "primary"
+          },
+          "blocks": {}
+        }
+      },
+      "name": "t:sections.split-hero.presets.name",
+      "settings": {
+        "aspect_ratio": "1-1",
+        "mobile_aspect_ratio": "10-11",
+        "enable_animations": true
+      }
+    },
+    "collection_list_aeGknR": {
+      "type": "collection-list",
+      "blocks": {
+        "collection_8rFHjc": {
+          "type": "collection",
+          "settings": {
+            "collection": "blankets",
+            "title": ""
+          }
+        },
+        "collection_iQz6Fa": {
+          "type": "collection",
+          "settings": {
+            "collection": "mattress-acessories",
+            "title": ""
+          }
+        },
+        "collection_dXRjft": {
+          "type": "collection",
+          "settings": {
+            "collection": "pillows",
+            "title": ""
+          }
+        }
+      },
+      "block_order": [
+        "collection_8rFHjc",
+        "collection_iQz6Fa",
+        "collection_dXRjft"
+      ],
+      "disabled": true,
+      "name": "t:sections.collection-list.presets.name",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "prelude_alignment": "left",
+        "prelude_heading": "",
+        "prelude_heading_text_font": "ff-h",
+        "prelude_heading_text_size": "4",
+        "prelude_heading_text_uppercase": false,
+        "prelude_text": "",
+        "prelude_text_size": "2",
+        "prelude_button_text": "",
+        "prelude_button_link": "",
+        "prelude_button_size": "standard",
+        "prelude_button_style": "primary",
+        "product_display_mode": "slider",
+        "desktop_columns": 3,
+        "mobile_columns": "2",
+        "section_spacing_top": "x-large",
+        "section_spacing_bottom": "x-large",
+        "show_bottom_border": false,
+        "enable_animations": true
+      }
+    },
+    "shop_the_look_AFCeHB": {
+      "type": "shop-the-look",
+      "name": "t:sections.shop_the_look.presets.name",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "overlay_color_scheme": "scheme-4",
+        "image_position": "left",
+        "image_bounds": "extended",
+        "image_overlay_opacity": 0,
+        "desktop_image": "shopify://shop_images/STOP_RUNNING_1.png",
+        "aspect_ratio": "3-2",
+        "mobile_image": "shopify://shop_images/STOP_RUNNING_1.png",
+        "mobile_aspect_ratio": "4-5",
+        "heading": "It’s not about steps or calories or optimization.",
+        "heading_text_font": "ff-b",
+        "heading_text_size": "3",
+        "heading_text_uppercase": false,
+        "text": "<p>Rooted in wellness, fitness, and mindfulness, WalkFully carves a new path — one free from pressure and performance. Because well-being isn’t something to chase — it’s something to reclaim.</p>",
+        "text_size": "2",
+        "button_text": "Sign Up Now",
+        "button_link": "https://manage.kmail-lists.com/subscriptions/subscribe?a=WVb9tL&g=S4Rx7p",
+        "button_size": "standard",
+        "button_style": "primary",
+        "section_spacing_top": "none",
+        "section_spacing_bottom": "none",
+        "show_bottom_border": false,
+        "enable_animations": true
+      }
+    },
+    "image_compare_eFRK4F": {
+      "type": "image-compare",
+      "blocks": {
+        "left-content": {
+          "type": "_left-content",
+          "static": true,
+          "settings": {
+            "color_scheme": "scheme-1",
+            "compare_image": "shopify://shop_images/darius-bashar-xMNel_otvWs-unsplash.jpg",
+            "image_overlay_opacity": 30,
+            "vertical_alignment": "center"
+          },
+          "blocks": {
+            "heading_cMdRWn": {
+              "type": "heading",
+              "name": "t:blocks.heading.name",
+              "settings": {
+                "heading": "See the difference thoughtful bedding makes.",
+                "text_font": "ff-h",
+                "text_size": "4",
+                "text_uppercase": false
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "heading_cMdRWn"
+          ]
+        },
+        "right-content": {
+          "type": "_right-content",
+          "static": true,
+          "settings": {
+            "color_scheme": "scheme-3",
+            "compare_image": "shopify://shop_images/neom-OCKa0AkSyRc-unsplash_1.jpg",
+            "image_overlay_opacity": 30,
+            "vertical_alignment": "center"
+          },
+          "blocks": {
+            "heading_DHgxYW": {
+              "type": "heading",
+              "name": "t:blocks.heading.name",
+              "settings": {
+                "heading": "Designed for comfort, calm, and better sleep.",
+                "text_font": "ff-h",
+                "text_size": "4",
+                "text_uppercase": false
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "heading_DHgxYW"
+          ]
+        }
+      },
+      "disabled": true,
+      "name": "t:sections.image-compare.presets.name",
+      "settings": {
+        "color_scheme": "scheme-3",
+        "prelude_alignment": "center",
+        "prelude_heading": "The difference is in the details",
+        "prelude_heading_text_font": "ff-h",
+        "prelude_heading_text_size": "4",
+        "prelude_heading_text_uppercase": false,
+        "prelude_text": "",
+        "prelude_text_size": "2",
+        "prelude_button_text": "",
+        "prelude_button_link": "",
+        "prelude_button_size": "standard",
+        "prelude_button_style": "primary",
+        "aspect_ratio": "3-2",
+        "image_bounds": "contained",
+        "starting_reveal_amount": 60,
+        "reveal_threshold": 55,
+        "section_spacing_top": "2x-large",
+        "section_spacing_bottom": "2x-large",
+        "show_bottom_border": false,
+        "enable_animations": true
+      }
+    },
+    "multi_column_X66Etn": {
+      "type": "multi-column",
+      "blocks": {
+        "column_hbKAL7": {
+          "type": "column",
+          "settings": {
+            "icon": "none",
+            "heading": "Stronger Body",
+            "text_size": "3",
+            "text_uppercase": false,
+            "subheading_text": "<p>Muscles awaken, your heartbeat strengthens, and your body remembers its natural rhythm and power.</p>",
+            "subheading_text_size": "1"
+          }
+        },
+        "column_ebiray": {
+          "type": "column",
+          "settings": {
+            "icon": "none",
+            "heading": "Clearer Mind",
+            "text_size": "3",
+            "text_uppercase": false,
+            "subheading_text": "<p>Each step untangles thoughts and carves out room for clarity, creativity, focus, and a fresh perspective.</p>",
+            "subheading_text_size": "1"
+          }
+        },
+        "column_3MTeK7": {
+          "type": "column",
+          "settings": {
+            "icon": "none",
+            "heading": "Energized Spirit",
+            "text_size": "3",
+            "text_uppercase": false,
+            "subheading_text": "<p>Movement sparks circulation, lifts energy, and carries you forward with a lightness that’s felt in your whole being.</p>",
+            "subheading_text_size": "1"
+          }
+        },
+        "column_UJaGkD": {
+          "type": "column",
+          "settings": {
+            "icon": "none",
+            "heading": "Balanced Calm",
+            "text_size": "3",
+            "text_uppercase": false,
+            "subheading_text": "<p>Step by step, your mind softens, your body relaxes, and an empowering balance emerges.</p>",
+            "subheading_text_size": "1"
+          }
+        }
+      },
+      "block_order": [
+        "column_hbKAL7",
+        "column_ebiray",
+        "column_3MTeK7",
+        "column_UJaGkD"
+      ],
+      "name": "t:sections.multi-column.presets.name",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "prelude_alignment": "center",
+        "prelude_heading": "Why WalkFully?",
+        "prelude_heading_text_font": "ff-b",
+        "prelude_heading_text_size": "5",
+        "prelude_heading_text_uppercase": false,
+        "prelude_text": "<p>Here’s where the benefits begin.</p>",
+        "prelude_text_size": "2",
+        "prelude_button_text": "",
+        "prelude_button_link": "",
+        "prelude_button_size": "standard",
+        "prelude_button_style": "primary",
+        "media_max_width": 200,
+        "media_max_width_mobile": 150,
+        "media_shape": "natural",
+        "show_media_border": false,
+        "border_weight": "2",
+        "border_padding": 0,
+        "desktop_columns": 4,
+        "media_layout": "above",
+        "horizontal_alignment": "left",
+        "vertical_alignment": "top",
+        "mobile_layout": "slider",
+        "mobile_columns": "1",
+        "media_layout_mobile": "above",
+        "horizontal_alignment_mobile": "left",
+        "vertical_alignment_mobile": "top",
+        "section_spacing_top": "standard",
+        "section_spacing_bottom": "standard",
+        "show_bottom_border": false,
+        "enable_animations": true
+      }
+    },
+    "quotes_mTze3n": {
+      "type": "quotes",
+      "blocks": {
+        "quote_4apHT4": {
+          "type": "quote",
+          "settings": {
+            "quote": "Walking has never felt this restorative, intentional, or powerful.",
+            "author": ""
+          }
+        },
+        "quote_azieWb": {
+          "type": "quote",
+          "settings": {
+            "quote": "I feel stronger, both in my body and my mindset, after every walk.",
+            "author": ""
+          }
+        },
+        "quote_q8cVEe": {
+          "type": "quote",
+          "settings": {
+            "quote": "My energy, mood, and mental clarity have all improved from just committing to mindful walks every day.",
+            "author": ""
+          }
+        },
+        "quote_zTKWFW": {
+          "type": "quote",
+          "settings": {
+            "quote": "It’s incredible how much mental and physical reset comes from simply slowing down, noticing your steps, and being outside.",
+            "author": ""
+          }
+        }
+      },
+      "block_order": [
+        "quote_4apHT4",
+        "quote_azieWb",
+        "quote_q8cVEe",
+        "quote_zTKWFW"
+      ],
+      "name": "t:sections.quotes.presets.name",
+      "settings": {
+        "color_scheme": "scheme-5",
+        "prelude_alignment": "left",
+        "prelude_heading": "",
+        "prelude_heading_text_font": "ff-h",
+        "prelude_heading_text_size": "4",
+        "prelude_heading_text_uppercase": false,
+        "prelude_text": "",
+        "prelude_text_size": "2",
+        "prelude_button_text": "",
+        "prelude_button_link": "",
+        "prelude_button_size": "standard",
+        "prelude_button_style": "primary",
+        "text_font": "ff-h",
+        "text_size": "3",
+        "show_quote_mark": true,
+        "quote_mark_style": "3",
+        "quote_mark_size": 100,
+        "quote_mark_color": "accent",
+        "quote_mark_opacity": 40,
+        "section_spacing_top": "standard",
+        "section_spacing_bottom": "standard",
+        "show_bottom_border": false,
+        "enable_animations": true
+      }
+    },
+    "video_hero_wPfayW": {
+      "type": "video-hero",
+      "disabled": true,
+      "name": "t:sections.video-hero.presets.name",
+      "settings": {
+        "color_scheme": "scheme-3",
+        "section_height": "default",
+        "height_desktop": 100,
+        "height_mobile": 100,
+        "video_overlay_opacity": 0,
+        "video": "shopify://files/videos/3127085-uhd_3840_2160_24fps.mp4",
+        "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+        "show_content_background": false,
+        "content_color_scheme": "scheme-1",
+        "show_gradient": false,
+        "alignment": "center_center",
+        "mobile_alignment": "center_center",
+        "content_width": 700,
+        "enable_animations": true
+      }
+    },
+    "rich_text_7JhGef": {
+      "type": "rich-text",
+      "blocks": {
+        "text_eVXh7y": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>",
+            "text_size": "2"
+          },
+          "blocks": {}
+        },
+        "buttons_zRJwMm": {
+          "type": "buttons",
+          "settings": {},
+          "blocks": {
+            "button_bzzyVK": {
+              "type": "_button",
+              "disabled": true,
+              "settings": {
+                "button_text": "Button label",
+                "button_link": "",
+                "button_size": "standard",
+                "button_style": "primary"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "button_bzzyVK"
+          ]
+        }
+      },
+      "block_order": [
+        "text_eVXh7y",
+        "buttons_zRJwMm"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "color_scheme": "",
+        "content_alignment": "center",
+        "content_width": "custom",
+        "custom_content_width": 700,
+        "section_spacing_top": "standard",
+        "section_spacing_bottom": "standard",
+        "show_bottom_border": true,
+        "enable_animations": true
+      }
+    },
+    "shop_the_look_WBqnjq": {
+      "type": "shop-the-look",
+      "name": "t:sections.shop_the_look.presets.name",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "overlay_color_scheme": "scheme-4",
+        "image_position": "right",
+        "image_bounds": "extended",
+        "image_overlay_opacity": 0,
+        "desktop_image": "shopify://shop_images/Serene_Outdoor_Portrait.png",
+        "aspect_ratio": "3-2",
+        "mobile_image": "shopify://shop_images/Serene_Outdoor_Portrait.png",
+        "mobile_aspect_ratio": "4-5",
+        "heading": "Try Our 14-Day Mind-Body Refresh",
+        "heading_text_font": "ff-b",
+        "heading_text_size": "4",
+        "heading_text_uppercase": false,
+        "text": "<p>In just 14 days, our WalkFully Refresh helps you reconnect with your body, clear your mind, and restore energy through simple, guided walks. No trackers, apps, or pressure — just intentional steps that make a real difference. (Coming soon!)</p>",
+        "text_size": "2",
+        "button_text": "Claim Your Spot",
+        "button_link": "shopify://pages/14-day-mind-and-body-refresh",
+        "button_size": "standard",
+        "button_style": "primary",
+        "section_spacing_top": "none",
+        "section_spacing_bottom": "none",
+        "show_bottom_border": false,
+        "enable_animations": true
+      }
+    },
+    "rich_text_7GCkwA": {
+      "type": "rich-text",
+      "blocks": {
+        "text_Fytnf3": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>",
+            "text_size": "2"
+          },
+          "blocks": {}
+        },
+        "buttons_cBCbcJ": {
+          "type": "buttons",
+          "settings": {},
+          "blocks": {
+            "button_gYWMz7": {
+              "type": "_button",
+              "disabled": true,
+              "settings": {
+                "button_text": "Button label",
+                "button_link": "",
+                "button_size": "standard",
+                "button_style": "primary"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "button_gYWMz7"
+          ]
+        }
+      },
+      "block_order": [
+        "text_Fytnf3",
+        "buttons_cBCbcJ"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "color_scheme": "",
+        "content_alignment": "center",
+        "content_width": "custom",
+        "custom_content_width": 700,
+        "section_spacing_top": "standard",
+        "section_spacing_bottom": "standard",
+        "show_bottom_border": true,
+        "enable_animations": true
+      }
+    },
+    "featured_blog": {
+      "type": "featured-blog",
+      "settings": {
+        "color_scheme": "scheme-aca9db96-3ad6-4584-9fa2-e79b5b3239ce",
+        "prelude_alignment": "center",
+        "prelude_heading": "Field Notes",
+        "prelude_heading_text_font": "ff-b",
+        "prelude_heading_text_size": "5",
+        "prelude_heading_text_uppercase": false,
+        "prelude_text": "<p>Real stories and research on moving through life with intention.</p>",
+        "prelude_text_size": "2",
+        "blog": "field-notes",
+        "show_featured_post": true,
+        "custom_featured_article": "news/how-to-choose-the-right-sheets-for-your-sleep-style",
+        "max_posts": 3,
+        "aspect_ratio": "1-1",
+        "show_article_tags": false,
+        "show_article_date": false,
+        "show_article_author": false,
+        "show_article_excerpt": false,
+        "section_spacing_top": "x-large",
+        "section_spacing_bottom": "x-large",
+        "show_bottom_border": false,
+        "enable_animations": true
+      }
+    }
+  },
+  "order": [
+    "slideshow",
+    "banner_marquee",
+    "rich_text",
+    "image_hero_Jbr9w7",
+    "featured_collection",
+    "split_hero_qfPYzc",
+    "collection_list_aeGknR",
+    "shop_the_look_AFCeHB",
+    "image_compare_eFRK4F",
+    "multi_column_X66Etn",
+    "quotes_mTze3n",
+    "video_hero_wPfayW",
+    "rich_text_7JhGef",
+    "shop_the_look_WBqnjq",
+    "rich_text_7GCkwA",
+    "featured_blog"
+  ]
+}

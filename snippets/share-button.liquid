@@ -1,0 +1,71 @@
+<component-share-button class="share-button">
+  <component-custom-select class="custom-select">
+    {%- liquid
+      assign meta_image = share_image | default: page_image
+      assign meta_image = meta_image | image_url: width: 1024, height: 1024
+    -%}
+    <button
+      class="share-button__trigger custom-select__button fs-0"
+      type="button"
+      role="combobox"
+      aria-label="{{ 'accessibility.show_share_options' | t }}"
+      aria-haspopup="listbox"
+      aria-expanded="false"
+      aria-controls="select-dropdown-share-{{ section.id }}"
+    >
+      {% render 'theme-icon', icon: 'share', size: '1em' %}
+      <span data-selected-value>
+        {{ 'general.share.share' | t: item: type -}}
+      </span>
+      <div class="share-button__success-message">
+        {% render 'theme-icon', icon: 'check-circle', size: '1em' %}
+        {{ 'general.share.success_message' | t }}
+      </div>
+    </button>
+    <ul
+      class="share-button__dropdown custom-select__dropdown fs--1"
+      role="listbox"
+      id="select-dropdown-share-{{ section.id }}"
+    >
+      <li>
+        <a
+          href="//www.facebook.com/sharer.php?u={{ share_url }}"
+          target="_blank"
+          rel="noopener"
+          class="share-button__share-link"
+        >
+          {% render 'social-icons', icon: 'facebook', size: '1.41em' %}
+          <span>{{ 'general.social.share.facebook' | t }}</span>
+        </a>
+      </li>
+      <li>
+        <a
+          href="//pinterest.com/pin/create/button/?url={{ url }}&amp;media={{ meta_image }}&amp;description={{ title | url_param_escape }}"
+          target="_blank"
+          rel="noopener"
+          class="share-button__share-link"
+        >
+          {% render 'social-icons', icon: 'pinterest', size: '1.41em' %}
+          <span>{{ 'general.social.share.pinterest' | t }}</span>
+        </a>
+      </li>
+      <li>
+        <a
+          href="//x.com/share?text={{ title | url_param_escape }}&amp;url={{ share_url }}"
+          target="_blank"
+          rel="noopener"
+          class="share-button__share-link"
+        >
+          {% render 'social-icons', icon: 'x', size: '1.41em' %}
+          <span>{{ 'general.social.share.twitter' | t }}</span>
+        </a>
+      </li>
+      <li>
+        <button type="button" class="share-button__copy-button" data-copy-to-clipboard data-url="{{ share_url }}">
+          {% render 'theme-icon', icon: 'copy', size: '1.41em' %}
+          <span>{{ 'general.share.copy_to_clipboard' | t }}</span>
+        </button>
+      </li>
+    </ul>
+  </component-custom-select>
+</component-share-button>

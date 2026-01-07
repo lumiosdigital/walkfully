@@ -1,0 +1,281 @@
+{%- liquid
+  assign has_thumbs = false
+  if media_layout_desktop == 'thumbs' or media_layout_mobile == 'thumbs'
+    assign has_thumbs = true
+  endif
+
+  assign slider_has_autoheight = false
+  if media_aspect_ratio == 'default'
+    assign slider_has_autoheight = true
+  endif
+
+  assign featured_media = prod.selected_or_first_available_variant.featured_media
+
+  if product.has_only_default_variant
+    assign featured_media = prod.featured_media
+  endif
+-%}
+
+<component-product-media-gallery
+  class="product-media-gallery sticky-offset"
+  style="
+    --thumbnail-columns-mobile: {{ media_thumb_size | minus: 2 }};
+    --thumbnail-columns-tablet: {{ media_thumb_size | minus: 1 }};
+    --thumbnail-columns-desktop: {{ media_thumb_size }};
+    --thumbnail-columns-desktop-x-wide: {{ media_thumb_size | plus: 1 }};
+  "
+  data-media-size="{{ prod.media.size }}"
+  data-autoplay-videos="{{ auto_play_videos }}"
+  data-update-images
+>
+  {%- if first_3d_model and is_quick_add != true -%}
+    <button
+      class="btn"
+      type="button"
+      aria-label="{{ 'products.product.xr_button_label' | t }}"
+      data-shopify-xr
+      data-shopify-model3d-id="{{ first_3d_model.id }}"
+      data-shopify-title="{{ prod.title | escape }}"
+      data-shopify-xr-hidden
+    >
+      {%- render 'icon-3d-model' -%}
+      {{ 'products.product.xr_button' | t }}
+    </button>
+  {%- endif -%}
+
+  {% capture gallery_image_sizes %}
+    {% render 'image-sizes-product-images',
+      layout_desktop: media_layout_desktop,
+      layout_mobile: media_layout_mobile,
+      media_width: media_width,
+      image_bounds: image_bounds,
+    %}
+  {% endcapture %}
+
+  {% capture gallery_image_sizes %}
+    {% render 'image-sizes-product-images',
+      layout_desktop: media_layout_desktop,
+      layout_mobile: media_layout_mobile,
+      media_width: media_width,
+      image_bounds: image_bounds,
+    %}
+  {% endcapture %}
+
+  {% capture gallery_image_sizes_first %}
+    {% render 'image-sizes-product-images',
+      layout_desktop: media_layout_desktop,
+      layout_mobile: media_layout_mobile,
+      media_width: media_width,
+      image_bounds: image_bounds,
+      is_first_image: true
+    %}
+  {% endcapture %}
+
+  <div
+    class="product-media-gallery__content"
+    data-lightbox
+  >
+    {% capture product_images %}
+      {% if is_featured and prod == blank %}
+        {% for media in (1..4) %}
+          {% render 'product-media-gallery-item-placeholder',
+            has_thumbs: has_thumbs,
+            forloop: forloop,
+            media_aspect_ratio: media_aspect_ratio,
+            no_radius: no_radius,
+            media_layout_desktop: media_layout_desktop,
+            media_layout_mobile: media_layout_mobile,
+            gallery_image_sizes: gallery_image_sizes
+          %}
+        {% endfor %}
+      {% else %}
+        {% if featured_media != blank %}
+          {% render 'product-media-gallery-item',
+            prod: prod,
+            media: featured_media,
+            featured_media: featured_media,
+            has_thumbs: has_thumbs,
+            is_first: true,
+            media_aspect_ratio: media_aspect_ratio,
+            enable_lightbox: enable_lightbox,
+            enable_video_looping: enable_video_looping,
+            no_radius: no_radius,
+            media_layout_desktop: media_layout_desktop,
+            media_layout_mobile: media_layout_mobile,
+            auto_play_videos: auto_play_videos,
+            gallery_image_sizes: gallery_image_sizes_first,
+            is_quick_add: is_quick_add
+          %}
+        {% endif %}
+        {% for media in prod.media %}
+          {%- liquid
+            assign image_sizes = gallery_image_sizes
+
+            if featured_media == blank and forloop.first
+              assign image_sizes = gallery_image_sizes_first
+            elsif forloop.last
+              assign image_sizes = gallery_image_sizes_first
+            endif
+
+            if media.id == featured_media.id
+              continue
+            endif
+
+          -%}
+          {% render 'product-media-gallery-item',
+            prod: prod,
+            media: media,
+            featured_media: featured_media,
+            has_thumbs: has_thumbs,
+            is_first: false,
+            forloop: forloop,
+            media_aspect_ratio: media_aspect_ratio,
+            enable_lightbox: enable_lightbox,
+            enable_video_looping: enable_video_looping,
+            no_radius: no_radius,
+            media_layout_desktop: media_layout_desktop,
+            media_layout_mobile: media_layout_mobile,
+            auto_play_videos: auto_play_videos,
+            gallery_image_sizes: image_sizes,
+            is_quick_add: is_quick_add
+          %}
+        {% else %}
+          {% render 'product-media-gallery-item-placeholder',
+            has_thumbs: false,
+            forloop: forloop,
+            media_aspect_ratio: media_aspect_ratio,
+            no_radius: no_radius,
+            media_layout_desktop: media_layout_desktop,
+            media_layout_mobile: media_layout_mobile,
+            gallery_image_sizes: gallery_image_sizes
+          %}
+        {% endfor %}
+      {% endif %}
+    {% endcapture %}
+
+    {% if media_layout_mobile == 'swiper' or media_layout_desktop == 'swiper' %}
+      {%- liquid
+        assign init_only = ''
+        assign under_desktop_columns = 1.05
+
+        if prod.media.size == 1
+          assign under_desktop_columns = 1
+        endif
+
+        if media_layout_mobile == 'swiper' and media_layout_desktop != 'swiper'
+          assign init_only = 'mobile mobile-landscape tablet'
+        elsif media_layout_mobile != 'swiper' and media_layout_desktop == 'swiper'
+          assign init_only = 'desktop desktop-wide desktop-x-wide'
+        endif
+      -%}
+      {% render 'slider',
+        items: product_images,
+        mobile_columns: under_desktop_columns,
+        tablet_columns: under_desktop_columns,
+        desktop_columns: 1,
+        init_only: init_only,
+        enable_loop: true,
+        show_pagination: true,
+        auto_height: slider_has_autoheight
+      %}
+    {% else %}
+      {{ product_images }}
+    {% endif %}
+  </div>
+
+  {% for media in prod.media %}
+    {% if media.media_type != 'image' %}
+      <template data-template-id="{{ media.id }}">
+        {%- case media.media_type -%}
+          {%- when 'external_video' -%}
+            {%- assign video_class = 'js-' | append: media.host -%}
+            {%- if media.host == 'youtube' -%}
+              {{
+                media
+                | external_video_url: loop: enable_video_looping, playlist: media.external_id
+                | external_video_tag: class: video_class, loading: 'lazy'
+              }}
+            {%- else -%}
+              {{
+                media
+                | external_video_url: loop: enable_video_looping
+                | external_video_tag: class: video_class, loading: 'lazy'
+              }}
+            {%- endif -%}
+          {%- when 'video' -%}
+            {{
+              media
+              | media_tag:
+                image_size: '100vw',
+                loop: enable_video_looping,
+                muted: false,
+                controls: true,
+                preload: 'none'
+            }}
+          {%- when 'model' -%}
+            {{ media | media_tag: image_size: '100vw', toggleable: true }}
+        {%- endcase -%}
+      </template>
+    {% endif %}
+  {% endfor %}
+
+  {% if has_thumbs and is_featured and prod == blank %}
+    <div class="product-media-gallery__thumbs">
+      {% for i in (1..4) %}
+        <div
+          class="product-media-gallery__thumb{% if forloop.first %} active{% endif %}"
+        >
+          {% render 'image',
+            image: media,
+            sizes: thumb_image_sizes,
+            wrapper_class: 'product-media-gallery__thumb-image',
+            aspect_ratio: media_thumb_aspect_ratio,
+            include_placeholder: true,
+            shimmer_disabled: false
+          %}
+        </div>
+      {% endfor %}
+    </div>
+  {% elsif has_thumbs and prod.media.size > 1 %}
+    {% capture thumb_image_sizes %}
+      {%- liquid
+        case media_thumb_size
+          when '7'
+            render 'image-sizes', desktop_x_wide_width: 0.06220714286, desktop_wide_width: 0.07499230769, desktop_width: 0.0766, tablet_width: 0.1231111111, width: 0.17068
+          when '6'
+            render 'image-sizes', desktop_x_wide_width: 0.07239285714, desktop_wide_width: 0.08913076923, desktop_width: 0.09128181818, tablet_width: 0.1435125, width: 0.2194
+          when '5'
+            render 'image-sizes', desktop_x_wide_width: 0.08597857143, desktop_wide_width: 0.1089153846, desktop_width: 0.1118363636, tablet_width: 0.1778777778, width: 0.30058
+        endcase
+      -%}
+    {% endcapture %}
+
+    <div class="product-media-gallery__thumbs">
+      {% for media in prod.media %}
+        <button
+          type="button"
+          data-thumb-id="{{ media.id }}"
+          class="
+            product-media-gallery__thumb
+            {% if media.id == featured_media.id %}
+              active
+            {% elsif featured_media.id == blank and forloop.first %}
+              active
+            {% endif %}
+          "
+          aria-label="{{ 'accessibility.thumb_select' | t: x: forloop.index }}"
+          test-id="{{ media.id }}"
+          selected-id="{{ featured_media.id }}"
+        >
+          {% render 'image',
+            image: media,
+            sizes: thumb_image_sizes,
+            wrapper_class: 'product-media-gallery__thumb-image',
+            aspect_ratio: media_thumb_aspect_ratio,
+            shimmer_disabled: true
+          %}
+        </button>
+      {% endfor %}
+    </div>
+  {% endif %}
+</component-product-media-gallery>

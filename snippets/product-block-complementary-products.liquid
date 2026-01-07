@@ -1,0 +1,112 @@
+{%- liquid
+  assign should_hide = true
+
+  if block.settings.product_source == 'product-list' and block.settings.product_list.count > 0
+    assign should_hide = false
+  endif
+-%}
+
+{% capture image_sizes %}
+  {% render 'image-sizes', desktop_x_wide_width: 0.1300928571, desktop_wide_width: 0.1322384615, desktop_width: 0.1330181818, width: 0.3669875 %}
+{% endcapture %}
+
+{%- capture content -%}
+  {% if block.settings.product_source == 'product-list' and block.settings.product_list.count > 0 %}
+    {% capture product_list %}
+      {% for comp_prod in block.settings.product_list limit: block.settings.max_products %}
+        {% render 'product-card',
+          prod: comp_prod,
+          sizes: image_sizes
+          wrapper_classes: 'swiper-slide'
+        %}
+      {% endfor %}
+    {% endcapture %}
+    {% render 'slider', items: product_list, mobile_columns: 2.1, tablet_columns: 2.5, desktop_columns: 2, desktop_wide_columns: 3 %}
+    {% else %}
+      <component-recommended-products
+        class="recommended-products"
+        data-url="{{ routes.product_recommendations_url }}?limit={{ block.settings.max_products }}&intent=complementary"
+        data-section-id="{{ section.id }}"
+        data-product-id="{{ prod.id }}"
+        data-parent-selector=".product__block"
+        {{ block.shopify_attributes }}
+      >
+        {%- if recommendations.performed and recommendations.products_count > 0 -%}
+          {% capture product_list %}
+            {% for recommendation in recommendations.products %}
+              {% render 'product-card',
+                  prod: recommendation,
+                  sizes: image_sizes
+                  wrapper_classes: 'swiper-slide'
+                %}
+              {% endfor %}
+            {% endcapture %}
+          {% render 'slider', items: product_list, mobile_columns: 2.1, tablet_columns: 2.5, desktop_columns: 2, desktop_wide_columns: 3 %}
+        {%- endif -%}
+      </component-recommended-products>
+  {% endif %}
+{%- endcapture -%}
+
+<div
+  class="
+    product__block
+    {%- render 'product-block-classes', block: block -%}
+    {% if should_hide %}
+      hidden
+    {% endif %}
+  "
+>
+  <div
+    class="product__complementary-products"
+    {%- if block.settings.show_as_accordion -%}
+      data-type="accordion"
+    {% endif %}
+  >
+    {%- if block.settings.show_as_accordion -%}
+      <component-accordion
+        class="accordion"
+        data-exclusive="true"
+      >
+        <button
+          type="button"
+          class="accordion__trigger"
+          id="title-product-accordion-{{ index }}-{{ section.id }}"
+          aria-expanded="false"
+          aria-controls="content-product-accordion-{{ index }}-{{ section.id }}"
+          data-accordion-trigger
+        >
+          <span class="accordion__title {% render 'text-control-classes', settings: block.settings %}">
+            {% if block.settings.icon != 'none' %}
+              {% render 'theme-icon', icon: block.settings.icon, size: '1em' %}
+            {% endif %}
+            {{ block.settings.heading }}
+          </span>
+
+          {% render 'theme-icon', icon: 'chevron-down', size: '1.2em', class: 'accordion__icon' %}
+        </button>
+
+        <div
+          id="content-product-accordion-{{ index }}-{{ section.id }}"
+          role="region"
+          aria-labelledby="title-product-accordion-{{ index }}-{{ section.id }}"
+          class="accordion__panel"
+        >
+          <div class="product__complementary-products-list">
+            {{ content }}
+          </div>
+        </div>
+      </component-accordion>
+
+    {%- else -%}
+      {% if block.settings.heading %}
+        <h3 class="product__complementary-products-title {% render 'text-control-classes', settings: block.settings %}">
+          {{ block.settings.heading }}
+        </h3>
+
+        <div class="product__complementary-products-list">
+          {{ content }}
+        </div>
+      {% endif %}
+    {%- endif -%}
+  </div>
+</div>

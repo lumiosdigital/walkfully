@@ -1,0 +1,94 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:groups.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement-0": {
+          "type": "announcement",
+          "settings": {
+            "color_scheme": "scheme-aca9db96-3ad6-4584-9fa2-e79b5b3239ce",
+            "show_gradient": false,
+            "announcement": "<p><a href=\"/pages/14-day-mind-and-body-refresh\" title=\"14 Day Mind and Body Refresh\">Sign Up for Our FREE 14-Day Refresh! (Coming soon!)</a></p>"
+          }
+        }
+      },
+      "block_order": [
+        "announcement-0"
+      ],
+      "settings": {
+        "announcement_advancement_type": "rotate",
+        "rotate_speed": 8,
+        "scroll_speed": 10,
+        "scroll_direction": "left",
+        "announcement_size": "compact"
+      }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "mega_menu_kFkW9D": {
+          "type": "mega_menu",
+          "disabled": true,
+          "settings": {
+            "position": 1,
+            "enable_in_drawer_menu": true,
+            "promotion_color_scheme": "scheme-3",
+            "aspect_ratio": "10-11",
+            "image_link_1": "",
+            "image_1_overlay_opacity": 25,
+            "promo_text_1": "",
+            "promo_1_text_font": "ff-b",
+            "promo_1_text_size": "2",
+            "image_link_2": "",
+            "image_2_overlay_opacity": 25,
+            "promo_text_2": "",
+            "promo_2_text_font": "ff-b",
+            "promo_2_text_size": "2"
+          }
+        }
+      },
+      "block_order": [
+        "mega_menu_kFkW9D"
+      ],
+      "custom_css": [
+        ".header__content-right {display: none;}"
+      ],
+      "settings": {
+        "display_mode": "sticky-on-scroll",
+        "cart_icon": "cart",
+        "show_border": false,
+        "border_color": "text",
+        "border_weight": "1",
+        "border_opacity": 15,
+        "menu": "main-menu",
+        "navigation_display": "dropdown",
+        "nav_position": "inline",
+        "nav_text_size": "2",
+        "nav_trigger": "link",
+        "submenu_icon": "chevron-down",
+        "logo_alignment": "left",
+        "logo_alignment_mobile": "center",
+        "transparent_on_home": false,
+        "transparent_templates": "",
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "show_social_icons_in_drawer_menu": true
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

@@ -1,0 +1,195 @@
+{%- if section.blocks.size > 0 -%}
+  {%- liquid
+    assign advancement_type = section.settings.announcement_advancement_type
+    assign max_scroll_speed = 20
+    assign scroll_speed = max_scroll_speed | minus: section.settings.scroll_speed | plus: 1
+    assign wrapper_class = 'marquee-container'
+
+    if advancement_type == 'rotate'
+      assign wrapper_class = 'swiper-wrapper'
+    endif
+
+    assign blocks_use_same_scheme = true
+    for block in section.blocks
+      if forloop.first == false and current_scheme != block.settings.color_scheme
+        assign blocks_use_same_scheme = false
+        break
+      endif
+
+      assign current_scheme = block.settings.color_scheme
+    endfor
+  -%}
+
+  <section-announcement-bar
+    class="
+      announcement-bar
+      announcement-bar--{{ advancement_type }}
+      announcement-bar--size-{{ section.settings.announcement_size | replace: "_", "-"  }}
+      {% if advancement_type == 'rotate' %} swiper{% endif %}
+      {% if blocks_use_same_scheme %} color-{{ current_scheme }}{% endif %}
+    "
+    data-id="{{ section.id }}"
+    data-advancement-type="{{ advancement_type }}"
+    data-rotate-speed="{{ section.settings.rotate_speed }}"
+    data-scroll-speed="{{ scroll_speed }}"
+    data-scroll-direction="{{ section.settings.scroll_direction }}"
+    style="
+      {%- for block in section.blocks %}
+        --nav-buttons-color-{{ forloop.index0 }}: {{ block.settings.color_scheme.settings.text }};
+      {%- endfor %}
+    "
+  >
+    <div
+      class="{{ wrapper_class }}"
+      {% if advancement_type == 'rotate' %}
+        tabindex="0"
+      {% endif %}
+    >
+      {%- for block in section.blocks -%}
+        <div
+          class="announcement-bar__slide {% if advancement_type == 'rotate' %} swiper-slide{% endif %}{% unless blocks_use_same_scheme %} color-{{ block.settings.color_scheme }}{% endunless %} rte"
+          data-index="{{ forloop.index0 }}"
+          {{ block.shopify_attributes }}
+          {% if block.settings.show_gradient %}
+            style="background: var(--gradient-background);"
+          {% endif %}
+        >
+          {{ block.settings.announcement }}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if advancement_type == 'rotate' -%}
+      <button type="button" class="swiper-button-prev" aria-label="{{ 'general.slider.previous_slide' | t }}">
+        {% render 'theme-icon', icon: 'chevron-left' %}
+      </button>
+      <button type="button" class="swiper-button-next" aria-label="{{ 'general.slider.next_slide' | t }}">
+        {% render 'theme-icon', icon: 'chevron-right' %}
+      </button>
+    {%- endif -%}
+  </section-announcement-bar>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.announcement-bar.name",
+  "class": "announcement-bar-section shopify-section--full-width",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "announcement_advancement_type",
+      "label": "t:sections.announcement-bar.settings.announcement_advancement.label",
+      "options": [
+        {
+          "value": "rotate",
+          "label": "t:sections.announcement-bar.settings.announcement_advancement.option__rotate"
+        },
+        {
+          "value": "scroll",
+          "label": "t:sections.announcement-bar.settings.announcement_advancement.option__scroll"
+        }
+      ],
+      "default": "rotate"
+    },
+    {
+      "type": "range",
+      "id": "rotate_speed",
+      "label": "t:sections.announcement-bar.settings.rotate_speed.label",
+      "min": 6,
+      "max": 12,
+      "step": 1,
+      "default": 8,
+      "unit": "s",
+      "visible_if": "{{ section.settings.announcement_advancement_type == \"rotate\" }}"
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "label": "t:sections.announcement-bar.settings.scroll_speed.label",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 10,
+      "visible_if": "{{ section.settings.announcement_advancement_type == \"scroll\" }}"
+    },
+    {
+      "type": "select",
+      "id": "scroll_direction",
+      "label": "t:common.scroll_direction.label",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:common.direction.left"
+        },
+        {
+          "value": "right",
+          "label": "t:common.direction.right"
+        }
+      ],
+      "visible_if": "{{ section.settings.announcement_advancement_type == \"scroll\" }}"
+    },
+    {
+      "type": "select",
+      "id": "announcement_size",
+      "label": "t:sections.announcement-bar.settings.announcement_size.label",
+      "options": [
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x_large",
+          "label": "t:common.sizing.x_large"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "t:sections.announcement-bar.blocks.announcement.name",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "t:sections.all.colors.label",
+          "default": "scheme-3"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_gradient",
+          "label": "t:common.show_gradient.label",
+          "info": "t:common.show_gradient.info",
+          "default": false
+        },
+        {
+          "type": "richtext",
+          "id": "announcement",
+          "label": "t:sections.announcement-bar.blocks.announcement.settings.announcement.label",
+          "default": "<p>Say something here</p>"
+        }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "announcement"
+      },
+      {
+        "type": "announcement"
+      }
+    ]
+  }
+}
+{% endschema %}

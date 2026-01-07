@@ -1,0 +1,381 @@
+<div
+  class="
+    main-orders
+    grid
+    color-{{ section.settings.color_scheme }}
+    {% render 'section-classes', settings: section.settings -%}
+  "
+>
+  <div class="grid__content">
+    <div class="grid__item--span-12">
+      <div class="main-orders__header">
+        {% render 'theme-icon', icon: 'chevron-left', size: '1em' %}
+        <div class="fancy-link">
+          <a href="{{ routes.account_url }}">{{ 'customer.account.return' | t }}</a>
+        </div>
+      </div>
+      <h1 class="fs-4 ff-b">{{ 'customer.order.title' | t: name: order.name }}</h1>
+    </div>
+
+    <div class="main-order__details grid__item--span-12 grid__item--span-5-tablet">
+      <h4 class="main-order__divider-heading">{{ 'customer.order.details' | t }}</h4>
+
+      {%- if order.cancelled -%}
+        <div class="main-order__details-container main-order__details-container--cancelled fs--1">
+          {%- assign cancelled_at = order.cancelled_at | time_tag: format: 'date_at_time' -%}
+          <p>{{ 'customer.order.cancelled_html' | t: date: cancelled_at }}</p>
+          <p>{{ 'customer.order.cancelled_reason' | t: reason: order.cancel_reason_label }}</p>
+        </div>
+      {%- endif -%}
+
+      <div class="main-order__details-container grid grid--inner-grid">
+        <div class="grid__content">
+          <div class="main-order__details-column-left grid__item--span-12 grid__item--span-6-mobile-landscape">
+            <div class="main-order__details-item">
+              <span>{{ 'customer.orders.total' | t }}</span>
+              <div class="fs--1">
+                {{ order.total_net_amount | money_with_currency }}
+              </div>
+            </div>
+
+            <div class="main-order__details-item">
+              <span>{{ 'customer.orders.date' | t }}</span>
+              <div class="fs--1">
+                {{ order.created_at | time_tag: format: 'date_at_time' }}
+              </div>
+            </div>
+          </div>
+          <div class="main-order__details-column-right grid__item--span-12 grid__item--span-6-mobile-landscape">
+            <div class="main-order__details-item">
+              <span>{{ 'customer.orders.payment_status' | t }}</span>
+              <div class="fs--1">
+                {{ order.financial_status_label }}
+              </div>
+            </div>
+            <div class="main-order__details-item">
+              <span>{{ 'customer.orders.fulfillment_status' | t }}</span>
+              <div class="fs--1">
+                {{ order.fulfillment_status_label }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-order__details-container grid grid--inner-grid">
+        <div class="grid__content">
+          <div class="main-order__details-column-left grid__item--span-12 grid__item--span-6-mobile-landscape">
+            <div class="main-order__details-item">
+              <span>{{ 'customer.order.shipping_address' | t }}</span>
+
+              <div class="main-orders__address fs--1">
+                {{ order.shipping_address | format_address }}
+              </div>
+            </div>
+          </div>
+          <div class="main-order__details-column-right grid__item--span-12 grid__item--span-6-mobile-landscape">
+            <div class="main-order__details-item ">
+              <span>{{ 'customer.order.billing_address' | t }}</span>
+
+              <div class="main-orders__address fs--1">
+                {{ order.billing_address | format_address }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-order__items grid__item--span-12 grid__item--span-7-tablet">
+      <h4 class="main-order__divider-heading">{{ 'customer.order.items' | t }}</h4>
+
+      {%- for line_item in order.line_items -%}
+        <div class="main-order__items-item">
+          <div class="main-order__items-item-column-left">
+            {%- if line_item.url != blank -%}
+              <a href="{{ line_item.url }}" tabindex="-1">
+            {%- endif -%}
+
+            {% render 'image',
+              image: line_item.image,
+              sizes: '200px',
+              aspect_ratio: settings.product_card_aspect_ratio,
+              include_placeholder: true
+            %}
+
+            {%- if line_item.url != blank -%}
+              </a>
+            {%- endif -%}
+
+            <div class="main-order__items-item-details">
+              {%- if line_item.url != blank -%}
+                <a href="{{ line_item.url }}" class="ff-h">{{ line_item.product.title | escape }}</a>
+              {%- else -%}
+                <div class="ff-h">{{ line_item.product.title | escape }}</div>
+              {%- endif -%}
+
+              {% unless line_item.product.has_only_default_variant %}
+                <div class="main-order__items-item-details-variant fs--1">
+                  {{ line_item.variant.title }}
+                </div>
+              {% endunless %}
+
+              {% if line_item.sku != blank %}
+                <div class="main-order__items-item-details-sku fs--1">
+                  <span>{{ 'customer.order.sku' | t }}</span>
+                  {{ line_item.sku }}
+                </div>
+              {% endif %}
+
+              {%- unless line_item.selling_plan_allocation == null -%}
+                <div class="fs--1">
+                  {{ line_item.selling_plan_allocation.selling_plan.name }}
+                </div>
+              {%- endunless -%}
+
+              {%- assign property_size = line_item.properties | size -%}
+              {%- if property_size != 0 -%}
+                {%- for property in line_item.properties -%}
+                  {% assign property_first_char = property.first | slice: 0 %}
+                  {%- if property.last != blank and property_first_char != '_' -%}
+                    <div class="fs--1">
+                      <span>{{ property.first }}:</span>
+                      <span>
+                        {%- if property.last contains '/uploads/' -%}
+                          <a href="{{ property.last }}">{{ property.last | split: '/' | last }}</a>
+                        {%- else -%}
+                          {{ property.last }}
+                        {%- endif -%}
+                      </span>
+                    </div>
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+
+              {%- if line_item.line_level_discount_allocations != blank -%}
+                {%- for discount_allocation in line_item.line_level_discount_allocations -%}
+                  <div class="fs--1">
+                    {{- discount_allocation.discount_application.title | escape }}
+                    <span class="main-order--sale"
+                      >(-
+                      {{- discount_allocation.amount | money -}}
+                      )</span
+                    >
+                  </div>
+                {%- endfor -%}
+              {%- endif -%}
+
+              {%- if line_item.fulfillment -%}
+                <div class="main-order__items-item-shipping fs--1">
+                  {% render 'theme-icon', icon: 'truck', size: '1em' %}
+
+                  <div class="main-order__items-item-shipping-content">
+                    {%- assign created_at = line_item.fulfillment.created_at | time_tag: format: 'date' -%}
+                    <span>{{ 'customer.order.fulfilled_at_html' | t: date: created_at }}</span>
+
+                    <span>
+                      {{ line_item.fulfillment.tracking_company }}
+                      {%- if line_item.fulfillment.tracking_number -%}
+                        #{{ line_item.fulfillment.tracking_number }}
+                      {%- endif -%}
+                    </span>
+
+                    {%- if line_item.fulfillment.tracking_url -%}
+                      <div class="fancy-link">
+                        <a href="{{ line_item.fulfillment.tracking_url }}">
+                          {{ 'customer.order.track_shipment' | t }}
+                        </a>
+                      </div>
+                    {%- endif -%}
+                  </div>
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+
+          <div class="main-order__items-item-total">
+            <div class="main-order__items-item-total-item">
+              <div class="main-order__items-item-total-item-price">
+                <div>
+                  <span class="fs--1">{{ 'customer.order.price' | t }}</span>
+                  {%- if line_item.original_price != line_item.final_price -%}
+                    <s class="main-order--sale">{{ line_item.original_price | money }}</s>
+                    <span>{{ line_item.final_price | money }}</span>
+                  {%- else -%}
+                    {{ line_item.original_price | money }}
+                  {%- endif -%}
+                </div>
+                {%- if line_item.unit_price_measurement -%}
+                  <small class="unit-price">
+                    <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
+                    <span class="unit-price__price">
+                      <span>{{- line_item.unit_price | money -}}</span>
+                      <span aria-hidden="true">/</span>
+                      <span class="visually-hidden">&nbsp;{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span>
+                      <span>
+                        {%- if line_item.unit_price_measurement.reference_value != 1 -%}
+                          {{- line_item.unit_price_measurement.reference_value -}}
+                        {%- endif -%}
+                        {{ line_item.unit_price_measurement.reference_unit }}
+                      </span>
+                    </span>
+                  </small>
+                {%- endif -%}
+              </div>
+            </div>
+            <div class="main-order__items-item-total-item">
+              <span class="fs--1">{{ 'customer.order.quantity' | t }}</span>
+              {{ line_item.quantity }}
+            </div>
+            <div class="main-order__items-item-total-item">
+              <span class="fs--1">{{ 'customer.order.total_price' | t }}</span>
+
+              {%- if line_item.original_line_price != line_item.final_line_price -%}
+                <s class="main-order--sale">{{ line_item.original_line_price | money }}</s>
+                <span>{{ line_item.final_line_price | money }}</span>
+              {%- else -%}
+                {{ line_item.original_line_price | money }}
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="main-order__footer grid__item--span-12 grid grid--inner-grid">
+      <div class="grid__content">
+        <div class="main-order__footer-spacer grid__item--span-5"></div>
+        <div class="main-order__footer-content grid__item--span-12 grid__item--span-7-tablet grid__item--shift-both-below-tablet">
+          <div class="main-order__footer-content-item">
+            <span>{{ 'customer.order.footer_subtotal' | t }}</span>
+            {{ order.line_items_subtotal_price | money }}
+          </div>
+
+          {%- if order.cart_level_discount_applications != blank -%}
+            {%- for discount_application in order.cart_level_discount_applications -%}
+              <div class="main-order__footer-content-item">
+                <span>{{ 'customer.order.discount' | t }}</span>
+
+                <div>
+                  <span>-{{ discount_application.total_allocated_amount | money }}</span>
+                  {{- discount_application.title | escape -}}
+                </div>
+              </div>
+            {%- endfor -%}
+          {%- endif -%}
+
+          {%- for shipping_method in order.shipping_methods -%}
+            <div class="main-order__footer-content-item">
+              <span>{{ 'customer.order.shipping' | t }} ({{ shipping_method.title | escape }})</span>
+
+              {{ shipping_method.price | money }}
+            </div>
+          {%- endfor -%}
+
+          {%- for tax_line in order.tax_lines -%}
+            <div class="main-order__footer-content-item">
+              <span>
+                {{- 'customer.order.tax' | t }} ({{ tax_line.title | escape }}
+                {{ tax_line.rate | times: 100 }}%)</span
+              >
+              {{ tax_line.price | money }}
+            </div>
+          {%- endfor -%}
+
+          {%- if order.total_refunded_amount > 0 -%}
+            <div class="main-order__footer-content-item">
+              <span>{{ 'customer.order.total_refunded' | t }}</span>
+              -{{ order.total_refunded_amount | money_with_currency }}
+            </div>
+          {%- endif -%}
+
+          <div class="main-order__footer-content-item fs-1">
+            <span>{{ 'customer.order.total' | t }}</span>
+            {{ order.total_net_amount | money_with_currency }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-orders.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_spacing_and_border.content"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "label": "t:common.top_spacing.label",
+      "options": [
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "2x-large"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "label": "t:common.bottom_spacing.label",
+      "options": [
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "2x-large"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:common.show_bottom_border.label",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

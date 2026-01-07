@@ -1,0 +1,29 @@
+{%- liquid
+  capture tag
+    if url != blank
+      echo 'a'
+    else
+      echo 'div'
+    endif
+  endcapture
+
+  capture attributes
+    if url != blank
+      echo 'href="' | append: url | append: '"'
+    endif
+  endcapture
+-%}
+
+<{{ tag }} {{ attributes }} class="mega-menu__promo-item color-{{ color_scheme }}">
+  {% render 'image', image: image, sizes: sizes, aspect_ratio: aspect_ratio %}
+  <div
+    class="mega-menu__promo-overlay"
+    style="--overlay-opacity: {{ overlay_opacity | divided_by: 100.0 }}"
+  >
+    {% if promo_text != blank %}
+      <p class="mega-menu__promo-text {{ promo_text_font }} fs-{{ promo_text_font_size | minus: 2 }} rte">
+        {{ promo_text }}
+      </p>
+    {% endif %}
+  </div>
+</{{ tag }}>

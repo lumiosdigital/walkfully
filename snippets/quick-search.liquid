@@ -1,0 +1,59 @@
+<component-quick-search class="quick-search" data-results-limit="{{ settings.quick_search_limit }}">
+  <button
+    type="button"
+    class="header-search__button quick-search__trigger btn-icon"
+    aria-controls="quick-search-{{ id }}"
+    data-open-quick-search
+    aria-expanded="false"
+    aria-label="{{ 'accessibility.open_quick_search' | t }}"
+    id="quick-search-button-{{ id }}"
+  >
+    {% render 'theme-icon', icon: 'search', size: '1.4em' %}
+  </button>
+
+  <div
+    class="quick-search__container color-{{ settings.header_menus_color_scheme }}"
+    data-scroll-lock-ignore
+    id="quick-search-{{ id }}"
+    aria-labelledby="quick-search-button-{{ id }}"
+  >
+    <form
+      action="{{ routes.search_url }}"
+      class="quick-search__form grid grid--inner-grid"
+      autocomplete="off"
+      data-quick-search-form
+    >
+      <input type="hidden" name="options[prefix]" value="last">
+      <div class="quick-search__content grid__content">
+        <div class="quick-search__input-wrapper grid__item--span-12">
+          <label
+            for="quick-search-input-{{ id }}"
+            class="visually-hidden"
+            aria-label="{{ 'templates.search.placeholder' | t }}"
+          ></label>
+          {% render 'theme-icon', icon: 'search', size: '1em' %}
+          <input
+            class="quick-search__input"
+            id="quick-search-input-{{ id }}"
+            type="text"
+            name="q"
+            placeholder="{{ 'templates.search.placeholder' | t }}"
+            data-quick-search-input
+          >
+
+          <button
+            type="reset"
+            class="btn-icon quick-search__reset-button"
+            aria-label="{{ 'general.search.reset' | t }}"
+            data-quick-search-reset
+          >
+            {% render 'theme-icon', icon: 'x', size: '1em' %}
+          </button>
+        </div>
+      </div>
+
+      <div class="quick-search__results grid grid--inner-grid"></div>
+    </form>
+  </div>
+  <div class="header__overlay color-{{ settings.header_menus_color_scheme }}"></div>
+</component-quick-search>
