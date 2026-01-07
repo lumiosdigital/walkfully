@@ -176,7 +176,7 @@
           {{ navigation }}
         {% endif %}
 
-        {% if section.settings.menu != blank %}
+        {% if section.settings.menu != blank and navigation_display == 'drawer' %}
           <button
             type="button"
             class="header__drawer-menu btn-icon"
