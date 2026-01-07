@@ -1,0 +1,485 @@
+{%- liquid
+  assign image_overlay_opacity = section.settings.image_overlay_opacity | divided_by: 100.0
+  assign use_video = section.settings.use_video
+-%}
+<div
+  class="
+    walkfully-hero
+    color-{{ section.settings.color_scheme }}
+  "
+  data-section-id="{{ section.id }}"
+  style="
+    --image-overlay-opacity: {{ image_overlay_opacity }};
+  "
+>
+  <div class="walkfully-hero__media-wrapper">
+    {% if use_video and section.settings.hero_video != blank %}
+      <video
+        class="walkfully-hero__video"
+        autoplay
+        muted
+        loop
+        playsinline
+      >
+        {% for source in section.settings.hero_video.sources %}
+          <source src="{{ source.url }}" type="{{ source.mime_type }}">
+        {% endfor %}
+      </video>
+    {% elsif section.settings.hero_image != blank %}
+      {% render 'image',
+        image: section.settings.hero_image,
+        sizes: '100vw',
+        no_radius: true,
+        wrapper_class: 'walkfully-hero__image'
+      %}
+    {% else %}
+      <div class="image no-radius walkfully-hero__image">
+        {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="walkfully-hero__overlay"></div>
+
+  <div class="walkfully-hero__content">
+    {% if section.settings.top_text != blank %}
+      <h1 class="walkfully-hero__top-text">
+        {{ section.settings.top_text }}
+      </h1>
+    {% endif %}
+
+    {% if section.settings.middle_text != blank %}
+      <div class="walkfully-hero__middle-text">
+        {{ section.settings.middle_text }}
+      </div>
+    {% endif %}
+
+    {% if section.settings.bottom_text != blank %}
+      <h2 class="walkfully-hero__bottom-text">
+        {{ section.settings.bottom_text }}
+      </h2>
+    {% endif %}
+  </div>
+
+  <div class="walkfully-hero__footer">
+    <div class="walkfully-hero__footer-left">
+      {% if section.settings.description_text != blank %}
+        <p class="walkfully-hero__description">
+          {{ section.settings.description_text }}
+        </p>
+      {% endif %}
+    </div>
+
+    <div class="walkfully-hero__footer-right">
+      {% if section.settings.cta_text != blank %}
+        <a
+          href="{{ section.settings.cta_link }}"
+          class="walkfully-hero__cta"
+          {% if section.settings.cta_link == blank %}onclick="return false;"{% endif %}
+        >
+          {{ section.settings.cta_text }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="walkfully-hero__border-bottom"></div>
+</div>
+
+<style>
+  .walkfully-hero {
+    position: relative;
+    width: 100%;
+    height: 895px;
+    overflow: hidden;
+  }
+
+  .walkfully-hero__media-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .walkfully-hero__image,
+  .walkfully-hero__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .walkfully-hero__video.walkfully-hero__video {
+    border: none;
+  }
+
+  iframe.walkfully-hero__video {
+    pointer-events: none;
+  }
+
+  .walkfully-hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, var(--image-overlay-opacity, 0.3));
+    pointer-events: none;
+  }
+
+  .walkfully-hero__content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 2;
+    width: 100%;
+    max-width: 909px;
+    padding: 0 40px;
+  }
+
+  .walkfully-hero__top-text {
+    font-family: 'Alte Haas Grotesk';
+    font-size: 87.801px;
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.878px;
+    text-transform: uppercase;
+    color: #f7f1e5;
+    margin: 0 0 5px 0;
+  }
+
+  .walkfully-hero__middle-text {
+    font-family: 'Crimson Pro';
+    font-size: 175px;
+    font-weight: 400;
+    font-style: italic;
+    line-height: 0.85;
+    letter-spacing: -3.9702px;
+    color: #ffcd68;
+    margin: -46px 0 -15px 0;
+  }
+
+  .walkfully-hero__bottom-text {
+    font-family: 'Alte Haas Grotesk';
+    font-size: 87.801px;
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.878px;
+    text-transform: uppercase;
+    color: #f7f1e5;
+    margin: 5px 0 0 0;
+  }
+
+  .walkfully-hero__footer {
+    position: absolute;
+    bottom: 20px;
+    left: 40px;
+    right: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+  }
+
+  .walkfully-hero__description {
+    font-family: 'Work Sans', Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: -0.16px;
+    color: #f7f1e5;
+    margin: 0;
+    max-width: 470px;
+  }
+
+  .walkfully-hero__cta {
+    font-family: 'Work Sans', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #f7f1e5;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .walkfully-hero__cta:hover {
+    opacity: 0.8;
+  }
+
+  .walkfully-hero__border-bottom {
+    position: absolute;
+    bottom: 110px;
+    left: 40px;
+    right: 40px;
+    height: 1px;
+    opacity: 0.3;
+    background: #F7F1E5;
+    z-index: 3;
+  }
+
+  /* Responsive styles */
+  @media screen and (max-width: 990px) {
+    .walkfully-hero {
+      height: 700px;
+    }
+
+    .walkfully-hero__content {
+      padding: 0 20px;
+    }
+
+    .walkfully-hero__top-text {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .walkfully-hero__middle-text {
+      font-size: 96px;
+      letter-spacing: -3.84px;
+      margin: -5px 0;
+    }
+
+    .walkfully-hero__bottom-text {
+      font-size: 48px;
+      margin-top: 12px;
+    }
+
+    .walkfully-hero__footer {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+      left: 20px;
+      right: 20px;
+    }
+
+    .walkfully-hero__description {
+      font-size: 14px;
+    }
+
+    .walkfully-hero__cta {
+      font-size: 12px;
+    }
+
+    .walkfully-hero__border-bottom {
+      bottom: 80px;
+      left: 20px;
+      right: 20px;
+    }
+  }
+
+  @media screen and (max-width: 750px) {
+    .walkfully-hero {
+      height: 600px;
+    }
+
+    .walkfully-hero__top-text {
+      font-size: 36px;
+    }
+
+    .walkfully-hero__middle-text {
+      font-size: 72px;
+      letter-spacing: -2.88px;
+    }
+
+    .walkfully-hero__bottom-text {
+      font-size: 36px;
+    }
+  }
+</style>
+
+<style>
+  /* Header - Remove margin */
+  .header {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  /* Header Padding */
+  .header__inner {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  @media screen and (max-width: 990px) {
+    .header__inner {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+
+  /* Header Navigation Links - Custom Styling */
+  .header__menu .fancy-link a,
+  .nav-menu a {
+    color: var(--Cement, #F7F1E5);
+    font-family: "Work Sans";
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: uppercase;
+  }
+
+  /* When header is colored (not transparent or when hovered), navigation should be dark */
+  .header:not(.header--is-transparent) .header__menu .fancy-link a,
+  .header:not(.header--is-transparent) .nav-menu a,
+  .header.header--transparent:hover .header__menu .fancy-link a,
+  .header.header--transparent:hover .nav-menu a,
+  .header.header--transparent:focus-within .header__menu .fancy-link a,
+  .header.header--transparent:focus-within .nav-menu a {
+    color: var(--Deep-Night, #21262F);
+  }
+
+  /* Header Subscribe Button Styles */
+  .header__subscribe-button {
+    display: none;
+  }
+
+  @media screen and (min-width: 990px) {
+    .header__subscribe-button {
+      display: block;
+      margin-right: 20px;
+    }
+  }
+
+  .btn-subscribe {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    height: 40px;
+    border: 1px solid #d14626;
+    border-radius: 3px;
+    font-family: 'Work Sans', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #d14626;
+    background: transparent;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+
+  .btn-subscribe:hover {
+    background: #d14626;
+    color: #f7f1e5;
+    border-color: #d14626;
+  }
+
+  /* Transparent header state - white button (only when not hovered/focused) */
+  .header.header--transparent.header--is-transparent:not(:hover):not(:focus-within) .btn-subscribe {
+    color: #f7f1e5;
+    border-color: #f7f1e5;
+    background: transparent;
+  }
+
+  .header.header--transparent.header--is-transparent:not(:hover):not(:focus-within) .btn-subscribe:hover {
+    background: #f7f1e5;
+    color: #252b36;
+    border-color: #f7f1e5;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Walkfully Hero",
+  "class": "walkfully-hero-section can-tuck-under-header",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-3"
+    },
+    {
+      "type": "header",
+      "content": "Hero Background"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_video",
+      "label": "Use video background",
+      "default": false,
+      "info": "Toggle to use video instead of image"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero image"
+    },
+    {
+      "type": "video",
+      "id": "hero_video",
+      "label": "Hero video file"
+    },
+    {
+      "type": "range",
+      "id": "image_overlay_opacity",
+      "label": "Background overlay opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Hero Text Content"
+    },
+    {
+      "type": "text",
+      "id": "top_text",
+      "label": "Top text",
+      "default": "YOU BECOME"
+    },
+    {
+      "type": "text",
+      "id": "middle_text",
+      "label": "Middle text (stylized)",
+      "default": "alive",
+      "info": "This text will be displayed in italic with accent color"
+    },
+    {
+      "type": "textarea",
+      "id": "bottom_text",
+      "label": "Bottom text",
+      "default": "WHEN YOU\nWALK"
+    },
+    {
+      "type": "header",
+      "content": "Footer Content"
+    },
+    {
+      "type": "textarea",
+      "id": "description_text",
+      "label": "Description text",
+      "default": "WalkFully is a walking platform.\nCommunity programs, editorial, and weighted essentials built for daily use, for years to come."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "Join the Free 14-Day Reset"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Walkfully Hero",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

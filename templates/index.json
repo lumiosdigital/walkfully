@@ -9,82 +9,18 @@
  */
 {
   "sections": {
-    "slideshow": {
-      "type": "slideshow",
-      "blocks": {
-        "slide_GhVcpC": {
-          "type": "_slide",
-          "name": "t:sections.slideshow.blocks.slide.name",
-          "settings": {
-            "color_scheme": "scheme-4",
-            "image_overlay_opacity": 8,
-            "desktop_image": "shopify://shop_images/Copy_of_banner_2.png",
-            "mobile_image": "shopify://shop_images/Copy_of_banner_2.png",
-            "show_content_background": false,
-            "content_color_scheme": "scheme-1",
-            "show_gradient": false,
-            "alignment": "center_center",
-            "mobile_alignment": "center_center",
-            "content_width": 640
-          },
-          "blocks": {
-            "heading_GCaTpk": {
-              "type": "heading",
-              "settings": {
-                "heading": "<strong>Step into yourself.</strong>",
-                "text_font": "ff-b",
-                "text_size": "5",
-                "text_uppercase": false
-              },
-              "blocks": {}
-            },
-            "text_wFKYVe": {
-              "type": "text",
-              "settings": {
-                "text": "<p>Walk fully, live fully.</p>",
-                "text_size": "3"
-              },
-              "blocks": {}
-            },
-            "buttons_jAa7gL": {
-              "type": "buttons",
-              "name": "t:blocks.buttons.name",
-              "settings": {},
-              "blocks": {
-                "button_Wz8m7B": {
-                  "type": "_button",
-                  "settings": {
-                    "button_text": "Sign Up Now",
-                    "button_link": "https://manage.kmail-lists.com/subscriptions/subscribe?a=WVb9tL&g=S4Rx7p",
-                    "button_size": "standard",
-                    "button_style": "primary"
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "button_Wz8m7B"
-              ]
-            }
-          },
-          "block_order": [
-            "heading_GCaTpk",
-            "text_wFKYVe",
-            "buttons_jAa7gL"
-          ]
-        }
-      },
-      "block_order": [
-        "slide_GhVcpC"
-      ],
+    "walkfully_hero": {
+      "type": "walkfully-hero",
       "settings": {
-        "auto_rotate": true,
-        "rotate_speed": 10,
-        "transition_style": "slide",
-        "section_height": "custom",
-        "height_desktop": 100,
-        "height_mobile": 80,
-        "enable_animations": true
+        "color_scheme": "scheme-3",
+        "hero_image": "shopify://shop_images/Copy_of_banner_2.png",
+        "image_overlay_opacity": 30,
+        "top_text": "YOU BECOME",
+        "middle_text": "alive",
+        "bottom_text": "WHEN YOU\nWALK",
+        "description_text": "WalkFully is a walking platform.\nCommunity programs, editorial, and weighted essentials built for daily use, for years to come.",
+        "cta_text": "Join the Free 14-Day Reset",
+        "cta_link": "shopify://pages/14-day-mind-and-body-refresh"
       }
     },
     "banner_marquee": {
@@ -797,7 +733,7 @@
     }
   },
   "order": [
-    "slideshow",
+    "walkfully_hero",
     "banner_marquee",
     "rich_text",
     "image_hero_Jbr9w7",
