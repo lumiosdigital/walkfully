@@ -219,6 +219,10 @@
     z-index: 3;
   }
 
+  .walkfully-hero__footer-right {
+    position: relative;
+  }
+
   /* Responsive styles */
   @media screen and (max-width: 990px) {
     .walkfully-hero {
@@ -262,9 +266,12 @@
     }
 
     .walkfully-hero__border-bottom {
-      bottom: 80px;
-      left: 20px;
-      right: 20px;
+      display: none;
+    }
+
+    .walkfully-hero__footer-right {
+      padding-top: 20px;
+      border-top: 1px solid rgba(247, 241, 229, 0.3);
     }
   }
 
@@ -285,137 +292,6 @@
     .walkfully-hero__bottom-text {
       font-size: 36px;
     }
-  }
-</style>
-
-<style>
-  /* Header - Remove margin */
-  .header {
-    margin-left: 0;
-    margin-right: 0;
-    transition: opacity 0.2s ease, transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease !important;
-  }
-
-  /* Force header to stay transparent on homepage when not hovering */
-  .header.header--transparent:not(:hover):not(:focus-within) {
-    background-color: rgba(0,0,0,0) !important;
-  }
-
-  .header.header--transparent:not(:hover):not(:focus-within) .header__menu .fancy-link a,
-  .header.header--transparent:not(:hover):not(:focus-within) .nav-menu a {
-    color: var(--Cement, #F7F1E5) !important;
-  }
-
-  /* Keep icons white when transparent */
-  .header.header--transparent:not(:hover):not(:focus-within) .btn-icon {
-    color: #F7F1E5 !important;
-  }
-
-  /* Keep subscribe button white when transparent */
-  .header.header--transparent:not(:hover):not(:focus-within) .btn-subscribe {
-    color: #f7f1e5 !important;
-    border-color: #f7f1e5 !important;
-  }
-
-  .header a:not(.btn-icon),
-  .header__inner,
-  .header__menu,
-  .nav-menu {
-    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-  }
-
-  /* Header Padding */
-  .header__inner {
-    padding-left: 40px;
-    padding-right: 40px;
-  }
-
-  @media screen and (max-width: 990px) {
-    .header__inner {
-      padding-left: 20px;
-      padding-right: 20px;
-    }
-  }
-
-  /* Header Navigation Links - Custom Styling */
-  .header__menu .fancy-link a,
-  .nav-menu a {
-    color: var(--Cement, #F7F1E5);
-    font-family: "Work Sans";
-    font-size: 13px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    text-transform: uppercase;
-  }
-
-  /* When header is colored (not transparent or when hovered), navigation should be dark */
-  .header:not(.header--is-transparent) .header__menu .fancy-link a,
-  .header:not(.header--is-transparent) .nav-menu a,
-  .header.header--transparent:hover .header__menu .fancy-link a,
-  .header.header--transparent:hover .nav-menu a,
-  .header.header--transparent:focus-within .header__menu .fancy-link a,
-  .header.header--transparent:focus-within .nav-menu a {
-    color: var(--Deep-Night, #21262F);
-  }
-
-  /* Header Icons - Alignment */
-  .btn-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .btn-icon svg {
-    display: block;
-  }
-
-  /* Header Subscribe Button Styles */
-  .header__subscribe-button {
-    display: none;
-  }
-
-  @media screen and (min-width: 990px) {
-    .header__subscribe-button {
-      display: block;
-      margin-right: 20px;
-    }
-  }
-
-  .btn-subscribe {
-    display: inline-flex;
-    justify-content: center;
-    padding: 10px 20px;
-    height: 40px;
-    border: 1px solid #d14626;
-    border-radius: 3px;
-    font-family: 'Work Sans', Arial, sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    text-transform: uppercase;
-    color: #d14626;
-    background: transparent;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-
-  .btn-subscribe:hover {
-    background: #d14626;
-    color: #f7f1e5;
-    border-color: #d14626;
-  }
-
-  /* Transparent header state - white button (only when not hovered/focused) */
-  .header.header--transparent.header--is-transparent:not(:hover):not(:focus-within) .btn-subscribe {
-    color: #f7f1e5;
-    border-color: #f7f1e5;
-    background: transparent;
-  }
-
-  .header.header--transparent.header--is-transparent:not(:hover):not(:focus-within) .btn-subscribe:hover {
-    background: #f7f1e5;
-    color: #252b36;
-    border-color: #f7f1e5;
   }
 </style>
 
