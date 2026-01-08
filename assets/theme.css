@@ -11576,3 +11576,346 @@ a.pagination__button-link:hover, a.pagination__button-link:focus {
   border-bottom-right-radius: 10%;
   left: 0;
 }
+
+/* ==========================================================================
+   Stories from the Walk - Carousel Styles
+   ========================================================================== */
+
+/* Stories Section */
+.stories-section {
+  overflow: hidden;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.stories-section__container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* Responsive padding for stories section */
+@media screen and (max-width: 1024px) {
+  .stories-section {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
+
+@media screen and (max-width: 990px) {
+  .stories-section {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .stories-section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Stories Header */
+.stories-header {
+  text-align: center;
+  margin-bottom: var(--space-l);
+}
+
+.stories-header__accent {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: clamp(3.5rem, 8vw, 5.625rem);
+  line-height: 1;
+  color: var(--color-canyon-clay, #D14626);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.stories-header__title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.75rem);
+  line-height: 1;
+  color: rgb(var(--color-foreground));
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  margin: -10px 0 0;
+}
+
+/* Stories Carousel */
+.stories-carousel {
+  position: relative;
+}
+
+.stories-carousel__slider {
+  overflow: visible;
+}
+
+.stories-carousel__wrapper {
+  display: flex;
+}
+
+.stories-carousel__slide {
+  flex-shrink: 0;
+  width: calc((100% - (var(--desktop-columns) - 1) * 16px) / var(--desktop-columns));
+  margin-right: 16px;
+}
+
+@media (max-width: 64em) {
+  .stories-carousel__slide {
+    width: calc((100% - (var(--tablet-columns) - 1) * 12px) / var(--tablet-columns));
+    margin-right: 12px;
+  }
+}
+
+@media (max-width: 48em) {
+  .stories-carousel__slide {
+    width: calc((100% - (var(--mobile-columns) - 1) * 10px) / var(--mobile-columns));
+    margin-right: 10px;
+  }
+}
+
+/* Hide swiper nav buttons - we use footer buttons instead */
+.stories-carousel .stories-carousel__nav {
+  display: none;
+}
+
+/* Stories Footer with line and nav */
+.stories-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-l);
+  padding-left: 40px;
+  padding-right: 40px;
+  overflow: visible;
+}
+
+.stories-footer__track {
+  position: relative;
+  flex: 1;
+  height: 1px;
+  background-color: rgba(33, 38, 47, 0.3);
+  margin-right: 16px;
+}
+
+.stories-footer__line {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  height: 2px;
+  background-color: var(--color-canyon-clay, #D14626);
+  width: 120px;
+  transition: transform 0.3s ease;
+}
+
+.stories-footer__nav {
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.stories-footer__btn {
+  background: transparent;
+  border: none;
+  padding: 2px;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.stories-footer__btn:hover svg rect {
+  stroke-opacity: 0.6;
+}
+
+.stories-footer__btn:hover svg path {
+  opacity: 0.6;
+}
+
+.stories-footer__btn svg {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  min-height: 30px;
+  display: block;
+  overflow: visible;
+}
+
+/* Story Card */
+.story-card {
+  position: relative;
+  width: 100%;
+}
+
+.story-card__link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.story-card__image-wrapper {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  padding-bottom: 166.67%; /* 5/3 aspect ratio */
+}
+
+.story-card__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.story-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.story-card__image--placeholder {
+  position: absolute;
+  inset: 0;
+  background-color: rgb(var(--color-foreground), 0.1);
+}
+
+.story-card__overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
+  border-radius: 0 0 10px 10px;
+  pointer-events: none;
+}
+
+.story-card__content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-m);
+  text-align: center;
+  color: var(--color-cement, #F7F1E5);
+}
+
+.story-card__author {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--space-3xs) 0;
+  opacity: 0.9;
+}
+
+.story-card__quote {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(0.875rem, 2vw, 1.125rem);
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* Story card hover effect */
+.story-card__link:hover .story-card__image img,
+.story-card__link:focus .story-card__image img {
+  transform: scale(1.05);
+}
+
+.story-card__image img {
+  transition: transform 0.5s ease-out;
+}
+
+/* Responsive adjustments for stories section */
+@media screen and (max-width: 1024px) {
+  .stories-header {
+    margin-bottom: var(--space-m);
+  }
+
+  .stories-footer {
+    margin-top: var(--space-m);
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  .stories-footer__line {
+    width: 100px;
+  }
+}
+
+@media screen and (max-width: 990px) {
+  .stories-carousel__slide {
+    width: calc((100% - (var(--tablet-columns) - 1) * 10px) / var(--tablet-columns));
+    margin-right: 10px;
+  }
+
+  .stories-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .stories-footer__line {
+    width: 80px;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .stories-header {
+    margin-bottom: var(--space-s);
+  }
+
+  .stories-header__accent {
+    font-size: 3rem;
+  }
+
+  .stories-header__title {
+    font-size: 1.75rem;
+    margin: -5px 0 0;
+  }
+
+  .stories-carousel__slide {
+    width: calc(100% - 40px);
+    margin-right: 10px;
+  }
+
+  .stories-footer {
+    margin-top: var(--space-s);
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .stories-footer__line {
+    width: 60px;
+  }
+
+  .stories-footer__track {
+    margin-right: 12px;
+  }
+
+  .story-card__content {
+    padding: var(--space-s);
+  }
+
+  .story-card__author {
+    font-size: 0.875rem;
+  }
+
+  .story-card__quote {
+    font-size: 0.875rem;
+  }
+}

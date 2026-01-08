@@ -1,21 +1,7 @@
-{%- liquid
-  assign featured_article = null
-  assign max_posts = section.settings.max_posts
-
-  if section.settings.show_featured_post
-    assign featured_article = section.settings.custom_featured_article | default: section.settings.blog.articles.first
-  endif
-
-  if featured_article
-    assign max_posts = max_posts | plus: 1
-  endif
--%}
-
-<section-blog-posts
+<div
   class="
-    featured-blog
+    stories-section
     color-{{ section.settings.color_scheme }}
-    grid
     {% render 'section-classes', settings: section.settings -%}
   "
   {% if section.settings.enable_animations %}
@@ -23,114 +9,178 @@
     data-animate-delay="125"
   {% endif %}
 >
-  <div class="grid__content">
-    {% render 'prelude',
-      wrapper_classes: 'grid__item--span-12',
-      settings: section.settings,
-      animate: section.settings.enable_animations
-    %}
+  <div class="stories-section__container page-width">
+    <div class="stories-header {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
+      {%- if section.settings.stories_accent_text != blank -%}
+        <p class="stories-header__accent">{{ section.settings.stories_accent_text }}</p>
+      {%- endif -%}
+      {%- if section.settings.stories_heading_text != blank -%}
+        <h2 class="stories-header__title">{{ section.settings.stories_heading_text }}</h2>
+      {%- endif -%}
+    </div>
 
-    <div class="featured-blog__blog-container grid__item--span-12">
-      {% if section.settings.show_featured_post %}
-        {% capture featured_image_sizes %}
-          {% render 'image-sizes', desktop_x_wide_width: 0.4965714286, desktop_wide_width: 0.5068461538, desktop_width: 0.5163454545, tablet_width: 0.5195888889, width: 0.9608428571 %}
-        {% endcapture %}
-        <div class="featured-blog__blog-featured">
-          {% render 'article-card',
-            classes: 'sticky-offset',
-            article: featured_article,
-            sizes: featured_image_sizes,
-            aspect_ratio: section.settings.aspect_ratio,
-            show_tags: section.settings.show_article_tags,
-            show_date: section.settings.show_article_date,
-            show_author: section.settings.show_article_author,
-            show_excerpt: section.settings.show_article_excerpt,
-            placeholder_tag: 'detailed-apparel-1',
-            animate: section.settings.enable_animations
-          %}
-        </div>
-      {% endif %}
-
-      {% capture image_sizes %}
-        {% if section.settings.show_featured_post %}
-          {% render 'image-sizes', desktop_x_wide_width: 0.3880714286, desktop_wide_width: 0.3950769231, desktop_width: 0.4007636364, tablet_width: 0.4011777778, width: 0.46 %}
-        {% else %}
-          {% render 'image-sizes', desktop_x_wide_width: 0.2888071429, desktop_wide_width: 0.2941, desktop_width: 0.2989444444, tablet_width: 0.2957625, width: 0.46 %}
-        {% endif %}
-      {% endcapture %}
-
-      {% capture articles %}
-        {% assign count = 0 %}
-        {% for article in section.settings.blog.articles limit: max_posts %}
-          {% unless article == featured_article %}
-            {%- liquid
-              assign count = count | plus: 1
-
-              if count > section.settings.max_posts
-                break
-              endif
-            -%}
-            {% render 'article-card',
-              classes: 'swiper-slide',
-              article: article,
-              aspect_ratio: section.settings.aspect_ratio,
-              sizes: image_sizes,
-              show_tags: section.settings.show_article_tags,
-              show_date: section.settings.show_article_date,
-              show_author: section.settings.show_article_author,
-              show_excerpt: section.settings.show_article_excerpt,
-              animate: section.settings.enable_animations
-            %}
-          {% endunless %}
-        {% else %}
-        {%- liquid
-          assign max_onboarding_posts = section.settings.max_posts
-
-          if section.settings.show_featured_post
-            assign max_onboarding_posts = max_onboarding_posts
-          endif
-        -%}
-
-          {% for item in (1..max_onboarding_posts) %}
-            {%- assign placeholder_image_index = forloop.index0 | modulo: 3 | plus: 1 -%}
-            {%- assign placeholder_image = 'blog-apparel-' | append: placeholder_image_index -%}
-            {% render 'article-card',
-              classes: 'swiper-slide',
-              aspect_ratio: section.settings.aspect_ratio,
-              show_tags: section.settings.show_article_tags,
-              show_date: section.settings.show_article_date,
-              show_author: section.settings.show_article_author,
-              show_excerpt: section.settings.show_article_excerpt,
-              placeholder_tag: placeholder_image,
-              animate: section.settings.enable_animations
-            %}
+    <div class="stories-carousel">
+      <component-slider
+        class="stories-carousel__slider swiper"
+        data-mobile-columns="1"
+        data-tablet-columns="3"
+        data-desktop-columns="5"
+        data-enable-loop="true"
+        style="
+          --mobile-columns: 1;
+          --tablet-columns: 3;
+          --desktop-columns: 5;
+        "
+      >
+        <div class="stories-carousel__wrapper swiper-wrapper">
+          {% for block in section.blocks %}
+            {% if block.type == 'story_card' %}
+              <div class="stories-carousel__slide swiper-slide" {{ block.shopify_attributes }}>
+                {% render 'story-card',
+                  image: block.settings.image,
+                  name: block.settings.name,
+                  location: block.settings.location,
+                  quote: block.settings.quote,
+                  link: block.settings.link,
+                  animate: section.settings.enable_animations
+                %}
+              </div>
+            {% endif %}
           {% endfor %}
-        {% endfor %}
-      {% endcapture %}
+        </div>
 
-      {% render 'slider',
-        classes: 'featured-blog__blogs',
-        full_width: true,
-        items: articles,
-        mobile_columns: 2,
-        tablet_columns: 2,
-        desktop_columns: 2,
-        init_only: 'mobile mobile-landscape'
-      %}
+        <button type="button" class="stories-carousel__nav stories-carousel__nav--prev swiper-button-prev" aria-label="{{ 'general.slider.previous_slide' | t }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <rect x="-0.5" y="0.5" width="29" height="29" rx="14.5" transform="matrix(-1 0 0 1 29 0)" stroke="#21262F" stroke-opacity="0.3"/>
+            <path opacity="0.3" d="M21 15H9M9 15L15 9M9 15L15 21" stroke="#21262F"/>
+          </svg>
+        </button>
+        <button type="button" class="stories-carousel__nav stories-carousel__nav--next swiper-button-next" aria-label="{{ 'general.slider.next_slide' | t }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <rect x="0.5" y="0.5" width="29" height="29" rx="14.5" stroke="#21262F" stroke-opacity="0.3"/>
+            <path opacity="0.3" d="M10 15H20M20 15L15 10M20 15L15 20" stroke="#21262F"/>
+          </svg>
+        </button>
+      </component-slider>
+
+      <div class="stories-footer">
+        <div class="stories-footer__track">
+          <div class="stories-footer__line"></div>
+        </div>
+        <div class="stories-footer__nav">
+          <button type="button" class="stories-footer__btn stories-footer__btn--prev" aria-label="{{ 'general.slider.previous_slide' | t }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+              <rect x="-0.5" y="0.5" width="29" height="29" rx="14.5" transform="matrix(-1 0 0 1 29 0)" stroke="#21262F" stroke-opacity="0.3"/>
+              <path opacity="0.3" d="M21 15H9M9 15L15 9M9 15L15 21" stroke="#21262F"/>
+            </svg>
+          </button>
+          <button type="button" class="stories-footer__btn stories-footer__btn--next" aria-label="{{ 'general.slider.next_slide' | t }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+              <rect x="0.5" y="0.5" width="29" height="29" rx="14.5" stroke="#21262F" stroke-opacity="0.3"/>
+              <path opacity="0.3" d="M10 15H20M20 15L15 10M20 15L15 20" stroke="#21262F"/>
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-</section-blog-posts>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const section = document.querySelector('.stories-section');
+    if (!section) return;
+
+    const prevBtn = section.querySelector('.stories-footer__btn--prev');
+    const nextBtn = section.querySelector('.stories-footer__btn--next');
+    const progressLine = section.querySelector('.stories-footer__line');
+    const track = section.querySelector('.stories-footer__track');
+    const slider = section.querySelector('component-slider');
+
+    let currentIndex = 0;
+    let totalSlides = 0;
+
+    // Update progress line position
+    function updateProgress() {
+      if (!progressLine || !track || totalSlides === 0) return;
+      const progress = totalSlides > 1 ? currentIndex / (totalSlides - 1) : 0;
+      const trackWidth = track.offsetWidth;
+      const lineWidth = progressLine.offsetWidth;
+      const maxTranslate = trackWidth - lineWidth;
+      const translateX = progress * maxTranslate;
+      progressLine.style.transform = `translateX(${translateX}px)`;
+    }
+
+    // Navigate to next slide (with loop)
+    function goNext() {
+      if (!slider || !slider.swiper) return;
+      slider.swiper.slideNext();
+    }
+
+    // Navigate to previous slide (with loop)
+    function goPrev() {
+      if (!slider || !slider.swiper) return;
+      slider.swiper.slidePrev();
+    }
+
+    // Set up button listeners
+    if (prevBtn) {
+      prevBtn.addEventListener('click', goPrev);
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', goNext);
+    }
+
+    // Wait for swiper to initialize
+    const checkSwiper = setInterval(() => {
+      if (slider && slider.swiper) {
+        clearInterval(checkSwiper);
+        // Count original slides only (not Swiper's loop duplicates)
+        const originalSlides = section.querySelectorAll('.stories-carousel__slide');
+        totalSlides = originalSlides.length;
+        currentIndex = slider.swiper.realIndex || 0;
+
+        // Get visible slides count from Swiper
+        const visibleSlides = Math.floor(slider.swiper.params.slidesPerView);
+
+        // Disable navigation if all slides are visible
+        if (totalSlides <= visibleSlides) {
+          if (prevBtn) {
+            prevBtn.disabled = true;
+            prevBtn.style.opacity = '0.3';
+            prevBtn.style.cursor = 'default';
+          }
+          if (nextBtn) {
+            nextBtn.disabled = true;
+            nextBtn.style.opacity = '0.3';
+            nextBtn.style.cursor = 'default';
+          }
+        }
+
+        // Listen for slide changes (e.g., from touch/drag)
+        slider.swiper.on('slideChange', () => {
+          currentIndex = slider.swiper.realIndex || 0;
+          updateProgress();
+        });
+
+        updateProgress();
+      }
+    }, 100);
+
+    // Clear interval after 5 seconds to prevent infinite loop
+    setTimeout(() => clearInterval(checkSwiper), 5000);
+  });
+</script>
 
 {% schema %}
 {
-  "name": "t:sections.blog.name",
-  "class": "featured-blog-section",
+  "name": "Stories carousel",
+  "class": "stories-section-wrapper",
   "tag": "section",
   "disabled_on": {
     "groups": [
       "header",
-      "footer",
-      "custom.floating"
+      "footer"
     ],
     "templates": [
       "password"
@@ -145,191 +195,19 @@
     },
     {
       "type": "header",
-      "content": "t:common.prelude.content"
-    },
-    {
-      "type": "text_alignment",
-      "id": "prelude_alignment",
-      "label": "t:common.alignment.label",
-      "default": "left"
+      "content": "Header"
     },
     {
       "type": "text",
-      "id": "prelude_heading",
-      "label": "t:common.heading.label"
+      "id": "stories_accent_text",
+      "label": "Accent text",
+      "default": "Stories"
     },
     {
-      "type": "select",
-      "id": "prelude_heading_text_font",
-      "label": "t:common.heading_font.label",
-      "options": [
-        {
-          "value": "ff-h",
-          "label": "t:common.text_font.option__heading"
-        },
-        {
-          "value": "ff-b",
-          "label": "t:common.text_font.option__body"
-        }
-      ],
-      "default": "ff-h",
-      "visible_if": "{{ section.settings.prelude_heading != blank }}"
-    },
-    {
-      "type": "select",
-      "id": "prelude_heading_text_size",
-      "label": "t:common.heading_size.label",
-      "options": [
-        {
-          "value": "3",
-          "label": "t:common.text_size.option_h4"
-        },
-        {
-          "value": "4",
-          "label": "t:common.text_size.option_h3"
-        },
-        {
-          "value": "5",
-          "label": "t:common.text_size.option_h2"
-        },
-        {
-          "value": "6",
-          "label": "t:common.text_size.option_h1"
-        }
-      ],
-      "default": "4",
-      "visible_if": "{{ section.settings.prelude_heading != blank }}"
-    },
-    {
-      "type": "checkbox",
-      "id": "prelude_heading_text_uppercase",
-      "label": "t:common.heading_uppercase.label",
-      "default": false,
-      "visible_if": "{{ section.settings.prelude_heading != blank }}"
-    },
-    {
-      "type": "richtext",
-      "id": "prelude_text",
-      "label": "t:common.text.label"
-    },
-    {
-      "type": "select",
-      "id": "prelude_text_size",
-      "label": "t:common.text_size.label",
-      "options": [
-        {
-          "value": "1",
-          "label": "t:common.text_size.option_body_small"
-        },
-        {
-          "value": "2",
-          "label": "t:common.text_size.option_body"
-        },
-        {
-          "value": "3",
-          "label": "t:common.text_size.option_h4"
-        }
-      ],
-      "default": "2",
-      "visible_if": "{{ section.settings.prelude_text != blank }}"
-    },
-    {
-      "type": "header",
-      "content": "t:common.header__blogs.content"
-    },
-    {
-      "type": "blog",
-      "id": "blog",
-      "label": "t:sections.blog.settings.blog.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_featured_post",
-      "label": "t:sections.blog.settings.show_featured_post.label",
-      "info": "t:sections.blog.settings.show_featured_post.info",
-      "default": true
-    },
-    {
-      "type": "article",
-      "id": "custom_featured_article",
-      "label": "t:sections.blog.settings.custom_featured_article.label"
-    },
-    {
-      "type": "range",
-      "id": "max_posts",
-      "label": "t:sections.blog.settings.max_posts.label",
-      "min": 3,
-      "max": 8,
-      "step": 1,
-      "default": 3
-    },
-    {
-      "type": "select",
-      "id": "aspect_ratio",
-      "label": "t:sections.blog.settings.article_image_aspect_ratio.label",
-      "options": [
-        {
-          "value": "default",
-          "label": "t:common.aspect_ratio.option__default"
-        },
-        {
-          "value": "3-2",
-          "label": "t:common.aspect_ratio.option__3_2"
-        },
-        {
-          "value": "5-4",
-          "label": "t:common.aspect_ratio.option__5_4"
-        },
-        {
-          "value": "11-10",
-          "label": "t:common.aspect_ratio.option__11_10"
-        },
-        {
-          "value": "1-1",
-          "label": "t:common.aspect_ratio.option__1_1"
-        },
-        {
-          "value": "10-11",
-          "label": "t:common.aspect_ratio.option__10_11"
-        },
-        {
-          "value": "4-5",
-          "label": "t:common.aspect_ratio.option__4_5"
-        },
-        {
-          "value": "2-3",
-          "label": "t:common.aspect_ratio.option__2_3"
-        },
-        {
-          "value": "1-2",
-          "label": "t:common.aspect_ratio.option__1_2"
-        }
-      ],
-      "default": "5-4"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_article_tags",
-      "label": "t:sections.blog.settings.show_article_tags.label",
-      "default": false
-    },
-    {
-      "type": "checkbox",
-      "id": "show_article_date",
-      "label": "t:sections.blog.settings.show_article_date.label",
-      "default": false
-    },
-    {
-      "type": "checkbox",
-      "id": "show_article_author",
-      "label": "t:sections.blog.settings.show_article_author.label",
-      "default": false
-    },
-    {
-      "type": "checkbox",
-      "id": "show_article_excerpt",
-      "label": "t:sections.blog.settings.show_article_excerpt.label",
-      "default": true
+      "type": "text",
+      "id": "stories_heading_text",
+      "label": "Heading text",
+      "default": "FROM THE WALK"
     },
     {
       "type": "header",
@@ -416,9 +294,45 @@
       "default": true
     }
   ],
+  "blocks": [
+    {
+      "type": "story_card",
+      "name": "Story card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Name"
+        },
+        {
+          "type": "text",
+          "id": "location",
+          "label": "Location",
+          "default": "Location"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "I walk to quiet my mind"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (optional)"
+        }
+      ]
+    }
+  ],
   "presets": [
     {
-      "name": "t:sections.blog.presets.name",
+      "name": "Stories carousel",
       "category": "t:categories.other"
     }
   ]
