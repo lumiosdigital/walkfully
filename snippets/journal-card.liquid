@@ -1,0 +1,111 @@
+{% comment %}
+  Journal Card - A card component for the Journal Grid section
+
+  Accepts:
+  - block: {Object} The block object with settings
+  - type: {String} Card type - 'marketplace_pick' or 'field_note'
+  - tall: {Boolean} Whether this card spans 2 rows
+  - animate: {Boolean} Enable animations
+{% endcomment %}
+
+{%- liquid
+  assign type = block.type
+  assign image = block.settings.image
+  assign label = block.settings.label
+  assign title = block.settings.title
+  assign description = block.settings.description
+  assign button_text = block.settings.button_text
+  assign tall = block.settings.tall
+
+  # Determine the link URL based on type
+  if type == 'marketplace_pick'
+    if block.settings.collection != blank
+      assign link_url = block.settings.collection.url
+    endif
+    assign default_label = 'Marketplace Picks'
+    assign default_button = 'Shop Items'
+    assign icon_name = 'shopping-bag'
+  else
+    if block.settings.article != blank
+      assign link_url = block.settings.article.url
+    endif
+    assign default_label = 'Field Notes'
+    assign default_button = 'Read More'
+    assign icon_name = 'book-open'
+  endif
+
+  # Use defaults if not set
+  if label == blank
+    assign label = default_label
+  endif
+  if button_text == blank
+    assign button_text = default_button
+  endif
+
+  # Get title and description from linked content if not manually set
+  if type == 'marketplace_pick' and block.settings.collection != blank
+    if title == blank
+      assign title = block.settings.collection.title
+    endif
+    if description == blank
+      assign description = block.settings.collection.description | strip_html | truncate: 150
+    endif
+    if image == blank
+      assign image = block.settings.collection.image
+    endif
+  elsif type == 'field_note' and block.settings.article != blank
+    if title == blank
+      assign title = block.settings.article.title
+    endif
+    if description == blank
+      assign description = block.settings.article.excerpt | strip_html | truncate: 150
+    endif
+    if image == blank
+      assign image = block.settings.article.image
+    endif
+  endif
+-%}
+
+<div
+  class="
+    journal-card
+    {% if tall %}journal-card--tall{% endif %}
+    {% if animate %}animate animate--slide-in{% endif %}
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="journal-card__image-wrapper">
+    {%- if image != blank -%}
+      {% render 'image',
+        image: image,
+        wrapper_class: 'journal-card__image',
+        sizes: '(max-width: 749px) 100vw, 50vw'
+      %}
+    {%- else -%}
+      <div class="journal-card__image--placeholder" style="aspect-ratio: 669 / 390; background-color: #e0d9cd;"></div>
+    {%- endif -%}
+  </div>
+
+  <div class="journal-card__content">
+    {%- if label != blank -%}
+      <span class="journal-card__label">{{ label }}</span>
+    {%- endif -%}
+
+    {%- if title != blank -%}
+      <h3 class="journal-card__title">{{ title }}</h3>
+    {%- endif -%}
+
+    <div class="journal-card__footer">
+      {%- if description != blank -%}
+        <p class="journal-card__description">{{ description }}</p>
+      {%- endif -%}
+
+      {%- if link_url != blank -%}
+        <a href="{{ link_url }}" class="journal-card__button">
+          {% render 'theme-icon', icon: icon_name %}
+          <span>{{ button_text }}</span>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
