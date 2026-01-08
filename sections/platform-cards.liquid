@@ -1,0 +1,557 @@
+{%- liquid
+  assign circle_size_mobile = section.settings.circle_image_size | times: 0.75 | round
+-%}
+
+<div
+  class="
+    platform-cards
+    section
+    color-{{ section.settings.color_scheme }}
+    {% if section.settings.section_spacing_top != 'none' %}section--spacing-top-{{ section.settings.section_spacing_top }}{% endif %}
+    {% if section.settings.section_spacing_bottom != 'none' %}section--spacing-bottom-{{ section.settings.section_spacing_bottom }}{% endif %}
+    {% if section.settings.section_border_top %}section--border-top{% endif %}
+    {% if section.settings.section_border_bottom %}section--border-bottom{% endif %}
+  "
+  style="
+    --circle-size: {{ section.settings.circle_image_size }}px;
+    --circle-size-mobile: {{ circle_size_mobile }}px;
+  "
+  data-section-id="{{ section.id }}"
+  {% if section.settings.enable_animations %}
+    data-animate-elements-on-scroll
+    data-animate-delay="125"
+  {% endif %}
+>
+  <div class="platform-cards__inner">
+    {%- comment -%} Heading {%- endcomment -%}
+    <div class="platform-cards__heading-wrapper">
+      {% if section.settings.top_text != blank %}
+        <div class="platform-cards__label-text">
+          {{ section.settings.top_text }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.heading_top != blank %}
+        <div class="platform-cards__heading-top">
+          {{ section.settings.heading_top }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.middle_text != blank %}
+        <div class="platform-cards__middle-text">
+          {{ section.settings.middle_text }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.bottom_text != blank %}
+        <div class="platform-cards__bottom-text">
+          {{ section.settings.bottom_text }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.subtitle_text != blank %}
+        <div class="platform-cards__subtitle">
+          {{ section.settings.subtitle_text }}
+        </div>
+      {% endif %}
+    </div>
+
+    {%- comment -%} Cards Container {%- endcomment -%}
+    <div class="platform-cards__container grid__item--span-12">
+      {%- comment -%} Card 1 {%- endcomment -%}
+      {% if section.settings.card_1_link != blank %}
+        <a
+      {% else %}
+        <div
+      {% endif %}
+          class="
+            platform-cards__card
+            {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}
+          "
+          style="--pattern-opacity: {{ section.settings.card_1_pattern_opacity | divided_by: 100.0 }}; background-color: {{ section.settings.card_1_bg_color }};"
+          {% if section.settings.card_1_link != blank %}
+            href="{{ section.settings.card_1_link }}"
+          {% endif %}
+        >
+          {%- comment -%} Background Pattern {%- endcomment -%}
+          {% if section.settings.card_1_pattern != blank %}
+            <div class="platform-cards__card-pattern">
+              {% render 'image',
+                image: section.settings.card_1_pattern,
+                sizes: '100vw',
+                no_radius: true
+              %}
+            </div>
+          {% endif %}
+
+          {%- comment -%} Circular Image {%- endcomment -%}
+          {% if section.settings.card_1_image != blank %}
+            <div class="platform-cards__card-image">
+              {% render 'image',
+                image: section.settings.card_1_image,
+                sizes: '250px',
+                aspect_ratio: '1-1',
+                no_radius: true
+              %}
+            </div>
+          {% endif %}
+
+          {%- comment -%} Text Content {%- endcomment -%}
+          <div class="platform-cards__card-content">
+            {% if section.settings.card_1_title != blank %}
+              <h3 class="platform-cards__card-title rhythm-heading rhythm-heading-size-{{ section.settings.card_title_size }}">
+                {{ section.settings.card_1_title }}
+              </h3>
+            {% endif %}
+
+            {% if section.settings.card_1_description != blank %}
+              <div class="platform-cards__card-description rte">
+                {{ section.settings.card_1_description }}
+              </div>
+            {% endif %}
+          </div>
+      {% if section.settings.card_1_link != blank %}
+        </a>
+      {% else %}
+        </div>
+      {% endif %}
+
+      {%- comment -%} Card 2 {%- endcomment -%}
+      {% if section.settings.card_2_link != blank %}
+        <a
+      {% else %}
+        <div
+      {% endif %}
+          class="
+            platform-cards__card
+            {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}
+          "
+          style="--pattern-opacity: {{ section.settings.card_2_pattern_opacity | divided_by: 100.0 }}; background-color: {{ section.settings.card_2_bg_color }};"
+          {% if section.settings.card_2_link != blank %}
+            href="{{ section.settings.card_2_link }}"
+          {% endif %}
+        >
+          {%- comment -%} Background Pattern {%- endcomment -%}
+          {% if section.settings.card_2_pattern != blank %}
+            <div class="platform-cards__card-pattern">
+              {% render 'image',
+                image: section.settings.card_2_pattern,
+                sizes: '100vw',
+                no_radius: true
+              %}
+            </div>
+          {% endif %}
+
+          {%- comment -%} Circular Image {%- endcomment -%}
+          {% if section.settings.card_2_image != blank %}
+            <div class="platform-cards__card-image">
+              {% render 'image',
+                image: section.settings.card_2_image,
+                sizes: '250px',
+                aspect_ratio: '1-1',
+                no_radius: true
+              %}
+            </div>
+          {% endif %}
+
+          {%- comment -%} Text Content {%- endcomment -%}
+          <div class="platform-cards__card-content">
+            {% if section.settings.card_2_title != blank %}
+              <h3 class="platform-cards__card-title rhythm-heading rhythm-heading-size-{{ section.settings.card_title_size }}">
+                {{ section.settings.card_2_title }}
+              </h3>
+            {% endif %}
+
+            {% if section.settings.card_2_description != blank %}
+              <div class="platform-cards__card-description rte">
+                {{ section.settings.card_2_description }}
+              </div>
+            {% endif %}
+          </div>
+      {% if section.settings.card_2_link != blank %}
+        </a>
+      {% else %}
+        </div>
+      {% endif %}
+
+      {%- comment -%} Card 3 {%- endcomment -%}
+      {% if section.settings.card_3_link != blank %}
+        <a
+      {% else %}
+        <div
+      {% endif %}
+          class="
+            platform-cards__card
+            {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}
+          "
+          style="--pattern-opacity: {{ section.settings.card_3_pattern_opacity | divided_by: 100.0 }}; background-color: {{ section.settings.card_3_bg_color }};"
+          {% if section.settings.card_3_link != blank %}
+            href="{{ section.settings.card_3_link }}"
+          {% endif %}
+        >
+          {%- comment -%} Background Pattern {%- endcomment -%}
+          {% if section.settings.card_3_pattern != blank %}
+            <div class="platform-cards__card-pattern">
+              {% render 'image',
+                image: section.settings.card_3_pattern,
+                sizes: '100vw',
+                no_radius: true
+              %}
+            </div>
+          {% endif %}
+
+          {%- comment -%} Circular Image {%- endcomment -%}
+          {% if section.settings.card_3_image != blank %}
+            <div class="platform-cards__card-image">
+              {% render 'image',
+                image: section.settings.card_3_image,
+                sizes: '250px',
+                aspect_ratio: '1-1',
+                no_radius: true
+              %}
+            </div>
+          {% endif %}
+
+          {%- comment -%} Text Content {%- endcomment -%}
+          <div class="platform-cards__card-content">
+            {% if section.settings.card_3_title != blank %}
+              <h3 class="platform-cards__card-title rhythm-heading rhythm-heading-size-{{ section.settings.card_title_size }}">
+                {{ section.settings.card_3_title }}
+              </h3>
+            {% endif %}
+
+            {% if section.settings.card_3_description != blank %}
+              <div class="platform-cards__card-description rte">
+                {{ section.settings.card_3_description }}
+              </div>
+            {% endif %}
+          </div>
+      {% if section.settings.card_3_link != blank %}
+        </a>
+      {% else %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Platform Cards",
+  "class": "platform-cards-section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"],
+    "templates": ["password"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Section Heading"
+    },
+    {
+      "type": "text",
+      "id": "top_text",
+      "label": "Label text (small)",
+      "default": "THE PLATFORM"
+    },
+    {
+      "type": "text",
+      "id": "heading_top",
+      "label": "Heading - Top text",
+      "default": "WALKING"
+    },
+    {
+      "type": "text",
+      "id": "middle_text",
+      "label": "Heading - Middle text (stylized)",
+      "default": "but",
+      "info": "This text will be displayed in italic with accent color and overlap effect"
+    },
+    {
+      "type": "text",
+      "id": "bottom_text",
+      "label": "Heading - Bottom text",
+      "default": "NOT PEDESTRIAN"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle_text",
+      "label": "Subtitle text",
+      "default": "We bring the physical, mental, emotional, and spiritual benefits of walking into everyday life. Through programs, stories, science, and products that support your practice."
+    },
+    {
+      "type": "header",
+      "content": "Card 1"
+    },
+    {
+      "type": "color",
+      "id": "card_1_bg_color",
+      "label": "Background color",
+      "default": "#8B4F4A"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_1_pattern",
+      "label": "Background pattern image"
+    },
+    {
+      "type": "range",
+      "id": "card_1_pattern_opacity",
+      "label": "Pattern opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 20
+    },
+    {
+      "type": "image_picker",
+      "id": "card_1_image",
+      "label": "Circle image"
+    },
+    {
+      "type": "text",
+      "id": "card_1_title",
+      "label": "t:common.heading.label",
+      "default": "PROGRAMS"
+    },
+    {
+      "type": "richtext",
+      "id": "card_1_description",
+      "label": "t:common.text.label",
+      "default": "<p>Guided resets and simple rituals you can return to.</p>"
+    },
+    {
+      "type": "url",
+      "id": "card_1_link",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Card 2"
+    },
+    {
+      "type": "color",
+      "id": "card_2_bg_color",
+      "label": "Background color",
+      "default": "#6B8EAD"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_2_pattern",
+      "label": "Background pattern image"
+    },
+    {
+      "type": "range",
+      "id": "card_2_pattern_opacity",
+      "label": "Pattern opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 20
+    },
+    {
+      "type": "image_picker",
+      "id": "card_2_image",
+      "label": "Circle image"
+    },
+    {
+      "type": "text",
+      "id": "card_2_title",
+      "label": "t:common.heading.label",
+      "default": "FIELD NOTES"
+    },
+    {
+      "type": "richtext",
+      "id": "card_2_description",
+      "label": "t:common.text.label",
+      "default": "<p>Stories and research that make walking feel personal again.</p>"
+    },
+    {
+      "type": "url",
+      "id": "card_2_link",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Card 3"
+    },
+    {
+      "type": "color",
+      "id": "card_3_bg_color",
+      "label": "Background color",
+      "default": "#3D4654"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_3_pattern",
+      "label": "Background pattern image"
+    },
+    {
+      "type": "range",
+      "id": "card_3_pattern_opacity",
+      "label": "Pattern opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 20
+    },
+    {
+      "type": "image_picker",
+      "id": "card_3_image",
+      "label": "Circle image"
+    },
+    {
+      "type": "text",
+      "id": "card_3_title",
+      "label": "t:common.heading.label",
+      "default": "GEAR + MARKETPLACE"
+    },
+    {
+      "type": "richtext",
+      "id": "card_3_description",
+      "label": "t:common.text.label",
+      "default": "<p>Weighted essentials, plus a curated shop of aligned brands.</p>"
+    },
+    {
+      "type": "url",
+      "id": "card_3_link",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Card styling"
+    },
+    {
+      "type": "select",
+      "id": "card_title_size",
+      "label": "Card title size",
+      "options": [
+        {
+          "value": "3",
+          "label": "H4"
+        },
+        {
+          "value": "4",
+          "label": "H3"
+        },
+        {
+          "value": "5",
+          "label": "H2"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "range",
+      "id": "circle_image_size",
+      "label": "Circle image size",
+      "min": 120,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 200
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "label": "Top spacing",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "compact",
+          "label": "Small"
+        },
+        {
+          "value": "standard",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "x-large",
+          "label": "Extra Large (110px)"
+        }
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "label": "Bottom spacing",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "compact",
+          "label": "Small"
+        },
+        {
+          "value": "standard",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "x-large",
+          "label": "Extra Large (110px)"
+        }
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "header",
+      "content": "Section Border"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_border_top",
+      "label": "Show top border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "section_border_bottom",
+      "label": "Show bottom border",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Animations"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "Enable animations",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Platform Cards"
+    }
+  ]
+}
+{% endschema %}

@@ -342,23 +342,23 @@
     transition: opacity 0.2s ease, transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease !important;
   }
 
-  /* Force header to stay transparent on homepage when not hovering */
-  .header.header--transparent:not(:hover):not(:focus-within) {
+  /* Force header to stay transparent only when over hero section (requires both classes) */
+  .header.header--transparent.header--is-transparent:not(:hover):not(:focus-within) {
     background-color: rgba(0,0,0,0) !important;
   }
 
-  .header.header--transparent:not(:hover):not(:focus-within) .header__menu .fancy-link a,
-  .header.header--transparent:not(:hover):not(:focus-within) .nav-menu a {
+  .header.header--transparent.header--is-transparent:not(:hover):not(:focus-within) .header__menu .fancy-link a,
+  .header.header--transparent.header--is-transparent:not(:hover):not(:focus-within) .nav-menu a {
     color: var(--Cement, #F7F1E5) !important;
   }
 
   /* Keep icons white when transparent */
-  .header.header--transparent:not(:hover):not(:focus-within) .btn-icon {
+  .header.header--transparent.header--is-transparent:not(:hover):not(:focus-within) .btn-icon {
     color: #F7F1E5 !important;
   }
 
   /* Keep subscribe button white when transparent */
-  .header.header--transparent:not(:hover):not(:focus-within) .btn-subscribe {
+  .header.header--transparent.header--is-transparent:not(:hover):not(:focus-within) .btn-subscribe {
     color: #f7f1e5 !important;
     border-color: #f7f1e5 !important;
   }
