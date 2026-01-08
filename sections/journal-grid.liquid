@@ -1,0 +1,305 @@
+<div
+  class="
+    journal-grid
+    section
+    color-{{ section.settings.color_scheme }}
+    {% if section.settings.section_spacing_top != 'none' %}section--spacing-top-{{ section.settings.section_spacing_top }}{% endif %}
+    {% if section.settings.section_spacing_bottom != 'none' %}section--spacing-bottom-{{ section.settings.section_spacing_bottom }}{% endif %}
+    {% if section.settings.show_bottom_border %}section--border-bottom{% endif %}
+  "
+  data-section-id="{{ section.id }}"
+  {% if section.settings.enable_animations %}
+    data-animate-elements-on-scroll
+    data-animate-delay="125"
+  {% endif %}
+>
+  <div class="journal-grid__inner">
+    {%- comment -%} Header {%- endcomment -%}
+    {% if section.settings.show_header %}
+      <div class="journal-grid__header {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
+        {% if section.settings.header_main_text != blank %}
+          <span class="journal-grid__title-main">{{ section.settings.header_main_text }}</span>
+        {% endif %}
+        {% if section.settings.header_accent_text != blank %}
+          <span class="journal-grid__title-accent">{{ section.settings.header_accent_text }}</span>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {%- comment -%} Grid Content {%- endcomment -%}
+    <div class="journal-grid__content">
+      {% for block in section.blocks %}
+        {% render 'journal-card',
+          block: block,
+          animate: section.settings.enable_animations
+        %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Journal Grid",
+  "class": "journal-grid-section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"],
+    "templates": ["password"]
+  },
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header",
+      "label": "Show header",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "header_main_text",
+      "label": "Main text",
+      "default": "WALKFULLY"
+    },
+    {
+      "type": "text",
+      "id": "header_accent_text",
+      "label": "Accent text",
+      "default": "Journal"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "label": "t:common.top_spacing.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:common.sizing.none"
+        },
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "label": "t:common.bottom_spacing.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:common.sizing.none"
+        },
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:common.show_bottom_border.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Animations"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "t:common.enable_animations.label",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "marketplace_pick",
+      "name": "Marketplace Pick",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom image",
+          "info": "Leave blank to use collection image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Marketplace Picks"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "Leave blank to use collection title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "info": "Leave blank to use collection description"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Shop Items"
+        },
+        {
+          "type": "checkbox",
+          "id": "tall",
+          "label": "Make tall (span 2 rows)",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "field_note",
+      "name": "Field Note",
+      "settings": [
+        {
+          "type": "article",
+          "id": "article",
+          "label": "Article"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom image",
+          "info": "Leave blank to use article image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Field Notes"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "Leave blank to use article title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "info": "Leave blank to use article excerpt"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Read More"
+        },
+        {
+          "type": "checkbox",
+          "id": "tall",
+          "label": "Make tall (span 2 rows)",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Journal Grid",
+      "blocks": [
+        {
+          "type": "marketplace_pick",
+          "settings": {
+            "title": "Everyday Carry: Thermoses",
+            "description": "Keep warmth close—tea, coffee, or water that tastes like itself. Our picks prioritize comfort in the hand, leak-proof lids, and easy cleaning."
+          }
+        },
+        {
+          "type": "field_note",
+          "settings": {
+            "title": "Drinking Water on Walks",
+            "description": "A gentle guide to staying hydrated without overthinking it, how much you need, when to sip, and what to carry."
+          }
+        },
+        {
+          "type": "marketplace_pick",
+          "settings": {
+            "tall": true,
+            "title": "Everyday Carry: Comfortable Backpacks",
+            "description": "The right backpack disappears on your shoulders. Look for balanced weight, breathable straps, and a shape that moves with you."
+          }
+        },
+        {
+          "type": "field_note",
+          "settings": {
+            "title": "A Barefoot Ritual",
+            "description": "A small practice for presence: a few minutes barefoot, simple cues for comfort, and when to stop."
+          }
+        },
+        {
+          "type": "marketplace_pick",
+          "settings": {
+            "title": "Headphones for Walks",
+            "description": "For focus when you want it—and awareness when you need it. We like comfortable fit, simple controls, and sound that doesn't isolate you from life."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
