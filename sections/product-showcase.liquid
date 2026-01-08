@@ -1,0 +1,217 @@
+{%- liquid
+  assign product_1 = section.settings.product_1
+  assign product_2 = section.settings.product_2
+-%}
+
+<div
+  class="
+    product-showcase
+    section
+    color-{{ section.settings.color_scheme }}
+  "
+  data-section-id="{{ section.id }}"
+  {% if section.settings.enable_animations %}
+    data-animate-elements-on-scroll
+    data-animate-delay="125"
+  {% endif %}
+>
+  <div class="product-showcase__inner">
+    {%- comment -%} Header Section {%- endcomment -%}
+    {% if section.settings.heading != blank or section.settings.subtitle != blank %}
+      <div class="product-showcase__header {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
+        {% if section.settings.heading != blank %}
+          <h2 class="product-showcase__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+        {% if section.settings.subtitle != blank %}
+          <p class="product-showcase__subtitle">{{ section.settings.subtitle }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {%- comment -%} Product Cards Container {%- endcomment -%}
+    <div class="product-showcase__cards">
+      {%- comment -%} Product Card 1 {%- endcomment -%}
+      {% if product_1 != blank %}
+        <a href="{{ product_1.url }}" class="product-showcase__card {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
+          <div class="product-showcase__card-inner">
+            {%- comment -%} Full-bleed Product Image {%- endcomment -%}
+            <div class="product-showcase__card-media">
+              {% if product_1.featured_image != blank %}
+                {% render 'image',
+                  image: product_1.featured_image,
+                  sizes: '(max-width: 749px) 50vw, 50vw',
+                  no_radius: true
+                %}
+              {% else %}
+                <div class="product-showcase__image-placeholder">
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+              {% endif %}
+            </div>
+
+            {%- comment -%} Gradient Overlay for readability {%- endcomment -%}
+            <div class="product-showcase__card-overlay"></div>
+
+            {%- comment -%} Text Content Overlaid at Bottom {%- endcomment -%}
+            <div class="product-showcase__card-content">
+              <h3 class="product-showcase__card-title">{{ product_1.title }}</h3>
+              {% assign short_desc_1 = product_1.metafields.custom.short_description %}
+              {% if short_desc_1 != blank %}
+                <p class="product-showcase__card-description">{{ short_desc_1 }}</p>
+              {% endif %}
+              <span class="product-showcase__card-link">
+                {{ section.settings.link_text | default: 'Discover now' }}
+              </span>
+            </div>
+          </div>
+        </a>
+      {% else %}
+        {%- comment -%} Placeholder Card 1 {%- endcomment -%}
+        <div class="product-showcase__card product-showcase__card--placeholder {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
+          <div class="product-showcase__card-inner">
+            <div class="product-showcase__card-media">
+              <div class="product-showcase__image-placeholder">
+                {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+            </div>
+            <div class="product-showcase__card-overlay"></div>
+            <div class="product-showcase__card-content">
+              <h3 class="product-showcase__card-title">Product Title</h3>
+              <p class="product-showcase__card-description">Select a product to display</p>
+              <span class="product-showcase__card-link">{{ section.settings.link_text | default: 'Discover now' }}</span>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      {%- comment -%} Product Card 2 {%- endcomment -%}
+      {% if product_2 != blank %}
+        <a href="{{ product_2.url }}" class="product-showcase__card {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
+          <div class="product-showcase__card-inner">
+            <div class="product-showcase__card-media">
+              {% if product_2.featured_image != blank %}
+                {% render 'image',
+                  image: product_2.featured_image,
+                  sizes: '(max-width: 749px) 50vw, 50vw',
+                  no_radius: true
+                %}
+              {% else %}
+                <div class="product-showcase__image-placeholder">
+                  {{ 'product-2' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="product-showcase__card-overlay"></div>
+            <div class="product-showcase__card-content">
+              <h3 class="product-showcase__card-title">{{ product_2.title }}</h3>
+              {% assign short_desc_2 = product_2.metafields.custom.short_description %}
+              {% if short_desc_2 != blank %}
+                <p class="product-showcase__card-description">{{ short_desc_2 }}</p>
+              {% endif %}
+              <span class="product-showcase__card-link">
+                {{ section.settings.link_text | default: 'Discover now' }}
+              </span>
+            </div>
+          </div>
+        </a>
+      {% else %}
+        {%- comment -%} Placeholder Card 2 {%- endcomment -%}
+        <div class="product-showcase__card product-showcase__card--placeholder {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
+          <div class="product-showcase__card-inner">
+            <div class="product-showcase__card-media">
+              <div class="product-showcase__image-placeholder">
+                {{ 'product-2' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+            </div>
+            <div class="product-showcase__card-overlay"></div>
+            <div class="product-showcase__card-content">
+              <h3 class="product-showcase__card-title">Product Title</h3>
+              <p class="product-showcase__card-description">Select a product to display</p>
+              <span class="product-showcase__card-link">{{ section.settings.link_text | default: 'Discover now' }}</span>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product Showcase",
+  "class": "product-showcase-section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"],
+    "templates": ["password"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "WALKING ESSENTIALS"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Coming soon",
+      "info": "Displayed in italic accent font style"
+    },
+    {
+      "type": "header",
+      "content": "Product 1"
+    },
+    {
+      "type": "product",
+      "id": "product_1",
+      "label": "First product"
+    },
+    {
+      "type": "header",
+      "content": "Product 2"
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Second product"
+    },
+    {
+      "type": "header",
+      "content": "Card Settings"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link text",
+      "default": "Discover now"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_animations.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "t:common.enable_animations.label",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Showcase"
+    }
+  ]
+}
+{% endschema %}
