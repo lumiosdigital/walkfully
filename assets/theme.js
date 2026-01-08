@@ -2907,6 +2907,8 @@ var section_header_default = () => {
         }
         initTransparentScroll() {
           this.didTransparentScroll;
+          this.heroSection = document.querySelector('.can-tuck-under-header');
+          this.initiallyTransparent = this.classList.contains(this.classes.isTransparent);
           window.addEventListener("scroll", () => {
             this.didTransparentScroll = true;
           });
@@ -2916,10 +2918,35 @@ var section_header_default = () => {
                 getComputedStyle(document.documentElement).getPropertyValue("--announcement-height") || 0,
                 0
               );
-              this.classList.toggle(
-                this.classes.isTransparent,
-                this.offsetHeight > document.documentElement.scrollTop - announcementBarHeight
-              );
+              const scrollTop = document.documentElement.scrollTop;
+              const headerHeight = this.offsetHeight;
+              const isStuck = document.documentElement.classList.contains('header-is-stuck');
+
+              // Check if we're over the hero section
+              let shouldBeTransparent = false;
+
+              if (this.heroSection && this.initiallyTransparent) {
+                const heroContent = this.heroSection.querySelector('.walkfully-hero__content');
+                const heroRect = this.heroSection.getBoundingClientRect();
+
+                if (isStuck) {
+                  // Header is reappearing on scroll up - only transparent if truly at top over hero
+                  if (heroContent) {
+                    const contentRect = heroContent.getBoundingClientRect();
+                    shouldBeTransparent = contentRect.top > headerHeight;
+                  } else {
+                    shouldBeTransparent = heroRect.top >= 0 && heroRect.bottom > headerHeight;
+                  }
+                } else {
+                  // Scrolling down or at top - stay transparent while hero is still visible
+                  shouldBeTransparent = heroRect.bottom > headerHeight;
+                }
+              } else if (!this.heroSection) {
+                // No hero section, use original behavior
+                shouldBeTransparent = headerHeight > scrollTop - announcementBarHeight;
+              }
+
+              this.classList.toggle(this.classes.isTransparent, shouldBeTransparent);
               this.didTransparentScroll = false;
             }
           }, 250);
