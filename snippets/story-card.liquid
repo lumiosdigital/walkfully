@@ -1,0 +1,71 @@
+{% comment %}
+  Story Card - A card component for the "Stories from the Walk" carousel
+
+  Accepts:
+  - image: {Object} Image object
+  - name: {String} Person's name
+  - location: {String} Location
+  - quote: {String} Quote text
+  - link: {String} Optional link URL
+  - classes: {String} Additional CSS classes
+  - sizes: {String} Image sizes attribute
+  - animate: {Boolean} Enable animations
+{% endcomment %}
+
+{%- liquid
+  assign card_url = link | default: '#'
+  assign has_link = false
+  if link != blank
+    assign has_link = true
+  endif
+-%}
+
+<div
+  class="
+    story-card
+    {{ classes }}
+    {% if animate %}
+      animate
+      animate--slide-in
+    {% endif %}
+  "
+>
+  {% if has_link %}
+    <a href="{{ card_url }}" class="story-card__link" aria-label="{{ quote | escape }}">
+  {% else %}
+    <div class="story-card__link">
+  {% endif %}
+    <div class="story-card__image-wrapper">
+      {%- if image != blank -%}
+        {% render 'image',
+          wrapper_class: 'story-card__image',
+          image: image,
+          sizes: '(max-width: 768px) 90vw, (max-width: 1024px) 33vw, 280px',
+          aspect_ratio: '3-5',
+          prioritize: true,
+          shimmer_disabled: true
+        %}
+      {%- else -%}
+        <div class="story-card__image story-card__image--placeholder" style="--aspect-ratio: 3/5;"></div>
+      {%- endif -%}
+
+      <div class="story-card__overlay"></div>
+
+      <div class="story-card__content">
+        {%- if name != blank -%}
+          <p class="story-card__author">
+            {{ name | upcase }}{% if location != blank %} — {{ location }}{% endif %}
+          </p>
+        {%- endif -%}
+
+        {%- if quote != blank -%}
+          <p class="story-card__quote">{{ quote }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  {% if has_link %}
+    </a>
+  {% else %}
+    </div>
+  {% endif %}
+</div>
