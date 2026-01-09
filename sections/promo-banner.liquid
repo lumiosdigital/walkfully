@@ -1,0 +1,267 @@
+{%- liquid
+  assign has_link = false
+  if section.settings.link != blank
+    assign has_link = true
+  endif
+-%}
+
+{% if has_link %}
+  <a href="{{ section.settings.link }}" class="promo-banner__link">
+{% endif %}
+
+<div
+  class="
+    promo-banner
+    section
+    color-{{ section.settings.color_scheme }}
+    {% if section.settings.section_spacing_top != 'none' %}section--spacing-top-{{ section.settings.section_spacing_top }}{% endif %}
+    {% if section.settings.section_spacing_bottom != 'none' %}section--spacing-bottom-{{ section.settings.section_spacing_bottom }}{% endif %}
+    {% if section.settings.section_border_top %}section--border-top{% endif %}
+    {% if section.settings.section_border_bottom %}section--border-bottom{% endif %}
+  "
+  style="
+    --pattern-opacity: {{ section.settings.pattern_opacity | divided_by: 100.0 }};
+  "
+  data-section-id="{{ section.id }}"
+>
+  {%- comment -%} Background Pattern {%- endcomment -%}
+  {% if section.settings.pattern_image != blank %}
+    <div class="promo-banner__pattern">
+      {% render 'image',
+        image: section.settings.pattern_image,
+        sizes: '100vw',
+        no_radius: true
+      %}
+    </div>
+  {% endif %}
+
+  {%- comment -%} Content {%- endcomment -%}
+  <div class="promo-banner__content">
+    {% if section.settings.top_text != blank %}
+      <span class="promo-banner__top-text">
+        {{ section.settings.top_text }}
+      </span>
+    {% endif %}
+
+    {% if section.settings.main_text != blank %}
+      <span class="promo-banner__main-text">
+        {{ section.settings.main_text }}
+      </span>
+    {% endif %}
+  </div>
+</div>
+
+{% if has_link %}
+  </a>
+{% endif %}
+
+<style>
+  .promo-banner__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .promo-banner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 40px 45px;
+    overflow: hidden;
+  }
+
+  .promo-banner__pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: var(--pattern-opacity, 0.2);
+    pointer-events: none;
+  }
+
+  .promo-banner__pattern .image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .promo-banner__content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .promo-banner__top-text {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 3vw, 2.3rem);
+    line-height: normal;
+    letter-spacing: -0.02em;
+    color: #F7F1E5;
+  }
+
+  .promo-banner__main-text {
+    font-family: 'Alte Haas Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 3.75rem);
+    font-style: normal;
+    line-height: 90%;
+    text-transform: uppercase;
+    color: #F7F1E5;
+  }
+
+  @media screen and (max-width: 749px) {
+    .promo-banner {
+      padding: 24px 20px 36px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Promo Banner",
+  "class": "promo-banner-section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"],
+    "templates": ["password"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "pattern_image",
+      "label": "Background pattern image"
+    },
+    {
+      "type": "range",
+      "id": "pattern_opacity",
+      "label": "Pattern opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "top_text",
+      "label": "Top text (italic)",
+      "default": "Now"
+    },
+    {
+      "type": "text",
+      "id": "main_text",
+      "label": "Main text (large)",
+      "default": "UP TO 50% OFF"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Makes the entire banner clickable"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "label": "Top spacing",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "compact",
+          "label": "Small"
+        },
+        {
+          "value": "standard",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "x-large",
+          "label": "Extra Large"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "label": "Bottom spacing",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "compact",
+          "label": "Small"
+        },
+        {
+          "value": "standard",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "x-large",
+          "label": "Extra Large"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "Section Border"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_border_top",
+      "label": "Show top border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "section_border_bottom",
+      "label": "Show bottom border",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo Banner"
+    }
+  ]
+}
+{% endschema %}
