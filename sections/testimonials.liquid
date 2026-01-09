@@ -1,195 +1,747 @@
+{%- comment -%}
+  Reviews/Testimonials Section
+  Displays customer reviews in a horizontal carousel
+  Adaptable for future review app integrations
+{%- endcomment -%}
+
 <section-testimonials
   class="
     testimonials
     color-{{ section.settings.color_scheme }}
-    grid
     {% render 'section-classes', settings: section.settings -%}
   "
+  data-section-id="{{ section.id }}"
   {% if section.settings.enable_animations %}
     data-animate-elements-on-scroll
     data-animate-delay="125"
   {% endif %}
 >
-  <div class="grid__content grid__content--plus-row-gap">
-    {% render 'prelude',
-      wrapper_classes: 'grid__item--span-12',
-      settings: section.settings,
-      animate: section.settings.enable_animations
-    %}
-    <div class="grid__item--span-12">
-      <div class="testimonials__items-wrapper swiper">
+  <div class="testimonials__container">
+    {%- comment -%} Section Heading {%- endcomment -%}
+    {% if section.settings.heading != blank %}
+      <h2 class="testimonials__heading {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
+        {{ section.settings.heading }}
+      </h2>
+    {% endif %}
+
+    {%- comment -%} Reviews Carousel {%- endcomment -%}
+    <div class="testimonials__carousel">
+      <div class="testimonials__items-wrapper swiper" data-testimonials-swiper>
         <div class="testimonials__items swiper-wrapper">
           {% for block in section.blocks %}
-            {%- liquid
-              assign product_image = block.settings.product_image | default: block.settings.testimonial_product.featured_media
+            {% if block.type == 'review' %}
+              <div
+                class="testimonials__item swiper-slide {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}"
+                {{ block.shopify_attributes }}
+                data-index="{{ forloop.index0 }}"
+              >
+                {%- comment -%} Card Header: Author Image + Name/Date {%- endcomment -%}
+                <div class="testimonials__item-header">
+                  {% if block.settings.author_image != blank %}
+                    <div class="testimonials__item-avatar">
+                      {% render 'image',
+                        image: block.settings.author_image,
+                        sizes: '70px',
+                        aspect_ratio: '1-1',
+                        no_radius: true
+                      %}
+                    </div>
+                  {% endif %}
 
-              capture tag
-                if block.settings.testimonial_product != blank
-                  echo 'a'
-                else
-                  echo 'div'
-                endif
-              endcapture
+                  <div class="testimonials__item-meta">
+                    {% if block.settings.author_name != blank %}
+                      <span class="testimonials__item-name">{{ block.settings.author_name }}</span>
+                    {% endif %}
+                    {% if block.settings.review_date != blank %}
+                      <span class="testimonials__item-date">{{ block.settings.review_date }}</span>
+                    {% endif %}
+                  </div>
+                </div>
 
-              capture attributes
-                if block.settings.testimonial_product != blank
-                  echo 'href="' | append: block.settings.testimonial_product.url | append: '"'
-                endif
-              endcapture
-            -%}
-            <div
-              class="testimonials__item swiper-slide{% if section.settings.enable_animations %} animate animate--slide-in{% endif %}"
-              {{ block.shopify_attributes }}
-              data-index="{{ forloop.index0 }}"
-            >
-              {% if product_image != blank %}
-                {% capture product_image_sizes %}
-                  {%- render 'image-sizes', width: 0.86362, tablet_width: 0.4406463415, desktop_width: 0.2928333333 -%}
-                {% endcapture %}
-
-                <{{ tag }} {{ attributes }} class="testimonials__item-image">
-                  {% render 'image',
-                    image: product_image,
-                    sizes: product_image_sizes,
-                    aspect_ratio: section.settings.aspect_ratio
-                  %}
-                </{{ tag }}>
-              {% endif %}
-
-              <div class="testimonials__item-details fs--1">
-                {% if block.settings.author_image != blank %}
-                  {% render 'image',
-                    image: block.settings.author_image,
-                    sizes: '45px',
-                    aspect_ratio: '1-1',
-                    wrapper_class: 'testimonials__item-author-image',
-                    no_radius: true
-                  %}
-                {% endif %}
-
-                {% if block.settings.author_name != blank %}
-                  <span>{{ block.settings.author_name }}</span>
-                {% endif %}
-
+                {%- comment -%} Star Rating {%- endcomment -%}
                 {% if block.settings.show_rating %}
-                  {%- liquid
-                    case section.settings.star_color
-                      when 'text'
-                        assign star_color = null
-                      when 'accent'
-                        assign star_color = settings.accent
-                      when 'custom'
-                        assign star_color = section.settings.star_color_custom
-                    endcase
-                  -%}
-                  {% render 'star-rating',
-                    type: 'stars',
-                    max_rating: 5,
-                    star_rating: block.settings.star_rating,
-                    size: '1.25em',
-                    star_color: star_color
-                  %}
+                  <div class="testimonials__item-rating">
+                    {%- liquid
+                      assign rating = block.settings.star_rating | floor
+                      assign has_half = block.settings.star_rating | modulo: 1
+                      assign half_star_position = rating | plus: 1
+                    -%}
+                    {% for i in (1..5) %}
+                      {% if i <= rating %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="13" viewBox="0 0 14 13" fill="none">
+                          <path d="M6.3512 0.196596C6.38042 0.13757 6.42555 0.087884 6.4815 0.0531459C6.53746 0.0184078 6.60201 0 6.66787 0C6.73373 0 6.79828 0.0184078 6.85423 0.0531459C6.91019 0.087884 6.95532 0.13757 6.98453 0.196596L8.52453 3.31593C8.62599 3.52124 8.77574 3.69887 8.96095 3.83356C9.14616 3.96826 9.36129 4.056 9.58787 4.08926L13.0319 4.59326C13.0971 4.60272 13.1584 4.63024 13.2089 4.67273C13.2593 4.71521 13.2968 4.77096 13.3172 4.83367C13.3376 4.89637 13.34 4.96353 13.3243 5.02755C13.3085 5.09157 13.2751 5.1499 13.2279 5.19593L10.7372 7.62126C10.5729 7.78133 10.45 7.97892 10.3791 8.19701C10.3081 8.41511 10.2912 8.64719 10.3299 8.87326L10.9179 12.2999C10.9294 12.3652 10.9223 12.4323 10.8975 12.4937C10.8727 12.5551 10.8312 12.6083 10.7776 12.6473C10.724 12.6862 10.6605 12.7093 10.5944 12.7139C10.5284 12.7185 10.4623 12.7044 10.4039 12.6733L7.3252 11.0546C7.12235 10.9481 6.89665 10.8924 6.66753 10.8924C6.43841 10.8924 6.21272 10.9481 6.00987 11.0546L2.93187 12.6733C2.87342 12.7042 2.80746 12.7181 2.7415 12.7134C2.67554 12.7087 2.61221 12.6856 2.55873 12.6467C2.50525 12.6078 2.46376 12.5547 2.43897 12.4934C2.41419 12.4321 2.40711 12.3651 2.41853 12.2999L3.00587 8.87393C3.04466 8.64775 3.02786 8.41553 2.95689 8.19729C2.88593 7.97906 2.76294 7.78137 2.59853 7.62126L0.107866 5.1966C0.0602624 5.15062 0.0265286 5.09219 0.0105081 5.02798C-0.00551242 4.96376 -0.00317558 4.89634 0.0172523 4.83339C0.0376802 4.77044 0.0753778 4.71449 0.126051 4.67192C0.176724 4.62935 0.238335 4.60186 0.303866 4.5926L3.7472 4.08926C3.97404 4.05626 4.18946 3.96863 4.37492 3.83392C4.56039 3.69921 4.71034 3.52144 4.81187 3.31593L6.3512 0.196596Z" fill="#D14626"/>
+                        </svg>
+                      {% elsif i == half_star_position and has_half > 0 %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="13" viewBox="0 0 14 13" fill="none">
+                          <path d="M6.3512 0.196596C6.38042 0.13757 6.42555 0.087884 6.4815 0.0531459C6.53746 0.0184078 6.60201 0 6.66787 0C6.73373 0 6.79828 0.0184078 6.85423 0.0531459C6.91019 0.087884 6.95532 0.13757 6.98453 0.196596L8.52453 3.31593C8.62599 3.52124 8.77574 3.69887 8.96095 3.83356C9.14616 3.96826 9.36129 4.056 9.58787 4.08926L13.0319 4.59326C13.0971 4.60272 13.1584 4.63024 13.2089 4.67273C13.2593 4.71521 13.2968 4.77096 13.3172 4.83367C13.3376 4.89637 13.34 4.96353 13.3243 5.02755C13.3085 5.09157 13.2751 5.1499 13.2279 5.19593L10.7372 7.62126C10.5729 7.78133 10.45 7.97892 10.3791 8.19701C10.3081 8.41511 10.2912 8.64719 10.3299 8.87326L10.9179 12.2999C10.9294 12.3652 10.9223 12.4323 10.8975 12.4937C10.8727 12.5551 10.8312 12.6083 10.7776 12.6473C10.724 12.6862 10.6605 12.7093 10.5944 12.7139C10.5284 12.7185 10.4623 12.7044 10.4039 12.6733L7.3252 11.0546C7.12235 10.9481 6.89665 10.8924 6.66753 10.8924C6.43841 10.8924 6.21272 10.9481 6.00987 11.0546L2.93187 12.6733C2.87342 12.7042 2.80746 12.7181 2.7415 12.7134C2.67554 12.7087 2.61221 12.6856 2.55873 12.6467C2.50525 12.6078 2.46376 12.5547 2.43897 12.4934C2.41419 12.4321 2.40711 12.3651 2.41853 12.2999L3.00587 8.87393C3.04466 8.64775 3.02786 8.41553 2.95689 8.19729C2.88593 7.97906 2.76294 7.78137 2.59853 7.62126L0.107866 5.1966C0.0602624 5.15062 0.0265286 5.09219 0.0105081 5.02798C-0.00551242 4.96376 -0.00317558 4.89634 0.0172523 4.83339C0.0376802 4.77044 0.0753778 4.71449 0.126051 4.67192C0.176724 4.62935 0.238335 4.60186 0.303866 4.5926L3.7472 4.08926C3.97404 4.05626 4.18946 3.96863 4.37492 3.83392C4.56039 3.69921 4.71034 3.52144 4.81187 3.31593L6.3512 0.196596Z" fill="rgba(209, 70, 38, 0.3)"/>
+                        </svg>
+                      {% else %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="13" viewBox="0 0 14 13" fill="none">
+                          <path d="M6.3512 0.196596C6.38042 0.13757 6.42555 0.087884 6.4815 0.0531459C6.53746 0.0184078 6.60201 0 6.66787 0C6.73373 0 6.79828 0.0184078 6.85423 0.0531459C6.91019 0.087884 6.95532 0.13757 6.98453 0.196596L8.52453 3.31593C8.62599 3.52124 8.77574 3.69887 8.96095 3.83356C9.14616 3.96826 9.36129 4.056 9.58787 4.08926L13.0319 4.59326C13.0971 4.60272 13.1584 4.63024 13.2089 4.67273C13.2593 4.71521 13.2968 4.77096 13.3172 4.83367C13.3376 4.89637 13.34 4.96353 13.3243 5.02755C13.3085 5.09157 13.2751 5.1499 13.2279 5.19593L10.7372 7.62126C10.5729 7.78133 10.45 7.97892 10.3791 8.19701C10.3081 8.41511 10.2912 8.64719 10.3299 8.87326L10.9179 12.2999C10.9294 12.3652 10.9223 12.4323 10.8975 12.4937C10.8727 12.5551 10.8312 12.6083 10.7776 12.6473C10.724 12.6862 10.6605 12.7093 10.5944 12.7139C10.5284 12.7185 10.4623 12.7044 10.4039 12.6733L7.3252 11.0546C7.12235 10.9481 6.89665 10.8924 6.66753 10.8924C6.43841 10.8924 6.21272 10.9481 6.00987 11.0546L2.93187 12.6733C2.87342 12.7042 2.80746 12.7181 2.7415 12.7134C2.67554 12.7087 2.61221 12.6856 2.55873 12.6467C2.50525 12.6078 2.46376 12.5547 2.43897 12.4934C2.41419 12.4321 2.40711 12.3651 2.41853 12.2999L3.00587 8.87393C3.04466 8.64775 3.02786 8.41553 2.95689 8.19729C2.88593 7.97906 2.76294 7.78137 2.59853 7.62126L0.107866 5.1966C0.0602624 5.15062 0.0265286 5.09219 0.0105081 5.02798C-0.00551242 4.96376 -0.00317558 4.89634 0.0172523 4.83339C0.0376802 4.77044 0.0753778 4.71449 0.126051 4.67192C0.176724 4.62935 0.238335 4.60186 0.303866 4.5926L3.7472 4.08926C3.97404 4.05626 4.18946 3.96863 4.37492 3.83392C4.56039 3.69921 4.71034 3.52144 4.81187 3.31593L6.3512 0.196596Z" fill="rgba(209, 70, 38, 0.3)"/>
+                        </svg>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+
+                {%- comment -%} Review Text {%- endcomment -%}
+                {% if block.settings.review_text != blank %}
+                  <div class="testimonials__item-text">
+                    {{ block.settings.review_text }}
+                  </div>
                 {% endif %}
               </div>
-
-              {% if block.settings.author_title != blank %}
-                <div class="testimonials__item-title fs--1 o-7">
-                  <i>
-                    {{ block.settings.author_title }}
-                  </i>
-                </div>
-              {% endif %}
-
-              {% if block.settings.quote != blank %}
-                <div class="testimonials__item-quote rte">
-                  {{ block.settings.quote }}
-                </div>
-              {% endif %}
-
-              {% if block.settings.testimonial_product != blank %}
-                <div class="testimonials__item-button-wrapper">
-                  {% render 'button',
-                    button_style: section.settings.button_style,
-                    button_size: section.settings.button_size,
-                    button_link: block.settings.testimonial_product.url,
-                    button_text: section.settings.shop_button_text
-                  %}
-                </div>
-              {% endif %}
-            </div>
+            {% endif %}
           {% else %}
+            {%- comment -%} Placeholder reviews when no blocks exist {%- endcomment -%}
             {%- liquid
-              assign names = 'Morgan Blake, Alex Carter, Jamie Reynolds, Taylor Bennett, Jordan Ellis' | split: ', '
+              assign placeholder_names = 'Mia T., Elena P., Jordan K., Sarah M.' | split: ', '
+              assign placeholder_dates = '06/2025, 04/2025, 05/2025, 03/2025' | split: ', '
+              assign placeholder_reviews = "I thought I needed motivation. Turns out I just needed a walk I could actually return to.|The simplest change that made the biggest difference in my daily routine.|Finally found something that actually fits into my lifestyle without forcing it.|This has genuinely changed how I approach my day. Small steps, big impact." | split: '|'
             -%}
-            {% for i in (i..4) %}
-              <div class="testimonials__item swiper-slide{% if section.settings.enable_animations %} animate animate--slide-in{% endif %}">
-                <div class="testimonials__item-image">
-                  {%- capture placeholder_name -%}product-apparel-{% cycle "1", "2", "3" %}{%- endcapture -%}
-                  {% render 'image',
-                    include_placeholder: true,
-                    aspect_ratio: section.settings.aspect_ratio,
-                    placeholder_tag: placeholder_name
-                  %}
+            {% for i in (1..4) %}
+              <div class="testimonials__item swiper-slide {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
+                <div class="testimonials__item-header">
+                  <div class="testimonials__item-avatar testimonials__item-avatar--placeholder">
+                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                  </div>
+                  <div class="testimonials__item-meta">
+                    <span class="testimonials__item-name">{{ placeholder_names[forloop.index0] }}</span>
+                    <span class="testimonials__item-date">{{ placeholder_dates[forloop.index0] }}</span>
+                  </div>
                 </div>
-                <div class="testimonials__item-details fs--1">
-                  <span>{{ names[forloop.index0] }}</span>
-
-                  {%- liquid
-                    case section.settings.star_color
-                      when 'text'
-                        assign star_color = null
-                      when 'accent'
-                        assign star_color = settings.accent
-                      when 'custom'
-                        assign star_color = section.settings.star_color_custom
-                    endcase
-                  -%}
-                  {% render 'star-rating',
-                    type: 'stars',
-                    max_rating: 5,
-                    star_rating: 5,
-                    size: '1.25em',
-                    star_color: star_color
-                  %}
+                <div class="testimonials__item-rating">
+                  {% for star in (1..5) %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="13" viewBox="0 0 14 13" fill="none">
+                      <path d="M6.3512 0.196596C6.38042 0.13757 6.42555 0.087884 6.4815 0.0531459C6.53746 0.0184078 6.60201 0 6.66787 0C6.73373 0 6.79828 0.0184078 6.85423 0.0531459C6.91019 0.087884 6.95532 0.13757 6.98453 0.196596L8.52453 3.31593C8.62599 3.52124 8.77574 3.69887 8.96095 3.83356C9.14616 3.96826 9.36129 4.056 9.58787 4.08926L13.0319 4.59326C13.0971 4.60272 13.1584 4.63024 13.2089 4.67273C13.2593 4.71521 13.2968 4.77096 13.3172 4.83367C13.3376 4.89637 13.34 4.96353 13.3243 5.02755C13.3085 5.09157 13.2751 5.1499 13.2279 5.19593L10.7372 7.62126C10.5729 7.78133 10.45 7.97892 10.3791 8.19701C10.3081 8.41511 10.2912 8.64719 10.3299 8.87326L10.9179 12.2999C10.9294 12.3652 10.9223 12.4323 10.8975 12.4937C10.8727 12.5551 10.8312 12.6083 10.7776 12.6473C10.724 12.6862 10.6605 12.7093 10.5944 12.7139C10.5284 12.7185 10.4623 12.7044 10.4039 12.6733L7.3252 11.0546C7.12235 10.9481 6.89665 10.8924 6.66753 10.8924C6.43841 10.8924 6.21272 10.9481 6.00987 11.0546L2.93187 12.6733C2.87342 12.7042 2.80746 12.7181 2.7415 12.7134C2.67554 12.7087 2.61221 12.6856 2.55873 12.6467C2.50525 12.6078 2.46376 12.5547 2.43897 12.4934C2.41419 12.4321 2.40711 12.3651 2.41853 12.2999L3.00587 8.87393C3.04466 8.64775 3.02786 8.41553 2.95689 8.19729C2.88593 7.97906 2.76294 7.78137 2.59853 7.62126L0.107866 5.1966C0.0602624 5.15062 0.0265286 5.09219 0.0105081 5.02798C-0.00551242 4.96376 -0.00317558 4.89634 0.0172523 4.83339C0.0376802 4.77044 0.0753778 4.71449 0.126051 4.67192C0.176724 4.62935 0.238335 4.60186 0.303866 4.5926L3.7472 4.08926C3.97404 4.05626 4.18946 3.96863 4.37492 3.83392C4.56039 3.69921 4.71034 3.52144 4.81187 3.31593L6.3512 0.196596Z" fill="#D14626"/>
+                    </svg>
+                  {% endfor %}
                 </div>
-
-                <div class="testimonials__item-quote">
-                  {% assign review_string = 'sections.testimonials.review_' | append: forloop.index %}
-                  {{ review_string | t }}
-                </div>
-
-                <div class="testimonials__item-button-wrapper">
-                  {% render 'button',
-                    button_style: section.settings.button_style,
-                    button_size: section.settings.button_size,
-                    button_text: section.settings.shop_button_text
-                  %}
+                <div class="testimonials__item-text">
+                  {{ placeholder_reviews[forloop.index0] }}
                 </div>
               </div>
             {% endfor %}
           {% endfor %}
         </div>
-        <button type="button" class="swiper-button-prev" aria-label="{{ 'general.slider.previous_slide' | t }}">
-          {% render 'theme-icon', icon: 'arrow-left' %}
+      </div>
+    </div>
+
+    {%- comment -%} Footer Navigation: Progress Line + Arrows {%- endcomment -%}
+    <div class="testimonials__footer">
+      <div class="testimonials__footer-track">
+        <div class="testimonials__footer-line"></div>
+      </div>
+      <div class="testimonials__footer-nav">
+        <button type="button" class="testimonials__footer-btn testimonials__footer-btn--prev" aria-label="{{ 'general.slider.previous_slide' | t }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <rect x="-0.5" y="0.5" width="29" height="29" rx="14.5" transform="matrix(-1 0 0 1 29 0)" stroke="#21262F" stroke-opacity="0.3"/>
+            <path opacity="0.3" d="M21 15H9M9 15L15 9M9 15L15 21" stroke="#21262F"/>
+          </svg>
         </button>
-        <button type="button" class="swiper-button-next" aria-label="{{ 'general.slider.next_slide' | t }}">
-          {% render 'theme-icon', icon: 'arrow-right' %}
+        <button type="button" class="testimonials__footer-btn testimonials__footer-btn--next" aria-label="{{ 'general.slider.next_slide' | t }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <rect x="0.5" y="0.5" width="29" height="29" rx="14.5" stroke="#21262F" stroke-opacity="0.3"/>
+            <path opacity="0.3" d="M10 15H20M20 15L15 10M20 15L15 20" stroke="#21262F"/>
+          </svg>
         </button>
       </div>
     </div>
   </div>
 </section-testimonials>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const section = document.querySelector('[data-section-id="{{ section.id }}"]');
+    if (!section) return;
+
+    const prevBtn = section.querySelector('.testimonials__footer-btn--prev');
+    const nextBtn = section.querySelector('.testimonials__footer-btn--next');
+    const progressLine = section.querySelector('.testimonials__footer-line');
+    const track = section.querySelector('.testimonials__footer-track');
+    const slider = section.querySelector('[data-testimonials-swiper]');
+
+    let currentIndex = 0;
+    let totalSlides = 0;
+
+    // Update progress line position
+    function updateProgress() {
+      if (!progressLine || !track || totalSlides === 0) return;
+      const progress = totalSlides > 1 ? currentIndex / (totalSlides - 1) : 0;
+      const trackWidth = track.offsetWidth;
+      const lineWidth = progressLine.offsetWidth;
+      const maxTranslate = trackWidth - lineWidth;
+      const translateX = progress * maxTranslate;
+      progressLine.style.transform = `translateX(${translateX}px)`;
+    }
+
+    // Navigate to next slide (with loop)
+    function goNext() {
+      if (!slider || !slider.swiper) return;
+      slider.swiper.slideNext();
+    }
+
+    // Navigate to previous slide (with loop)
+    function goPrev() {
+      if (!slider || !slider.swiper) return;
+      slider.swiper.slidePrev();
+    }
+
+    // Set up button listeners
+    if (prevBtn) {
+      prevBtn.addEventListener('click', goPrev);
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', goNext);
+    }
+
+    // Wait for swiper to initialize
+    const checkSwiper = setInterval(() => {
+      if (slider && slider.swiper) {
+        clearInterval(checkSwiper);
+        // Count original slides only (not Swiper's loop duplicates)
+        const originalSlides = section.querySelectorAll('.testimonials__item');
+        totalSlides = originalSlides.length;
+        currentIndex = slider.swiper.realIndex || 0;
+
+        // Get visible slides count from Swiper
+        const visibleSlides = Math.floor(slider.swiper.params.slidesPerView);
+
+        // Disable navigation if all slides are visible
+        if (totalSlides <= visibleSlides) {
+          if (prevBtn) {
+            prevBtn.disabled = true;
+            prevBtn.style.opacity = '0.3';
+            prevBtn.style.cursor = 'default';
+          }
+          if (nextBtn) {
+            nextBtn.disabled = true;
+            nextBtn.style.opacity = '0.3';
+            nextBtn.style.cursor = 'default';
+          }
+        }
+
+        // Listen for slide changes (e.g., from touch/drag)
+        slider.swiper.on('slideChange', () => {
+          currentIndex = slider.swiper.realIndex || 0;
+          updateProgress();
+        });
+
+        updateProgress();
+      }
+    }, 100);
+
+    // Clear interval after 5 seconds to prevent infinite loop
+    setTimeout(() => clearInterval(checkSwiper), 5000);
+  });
+</script>
+
+{% style %}
+  .testimonials {
+    background-color: #F7F1E5;
+    overflow: hidden;
+  }
+
+  .testimonials__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Section Heading */
+  .testimonials__heading {
+    font-family: "Crimson Pro", var(--font-accent), serif;
+    font-size: 56px;
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: -1.12px;
+    color: #21262F;
+    text-align: center;
+    margin: 0 0 60px;
+    text-transform: none;
+  }
+
+  /* Carousel Container */
+  .testimonials__carousel {
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
+  }
+
+  .testimonials__items-wrapper.swiper {
+    overflow: hidden;
+    min-height: 180px;
+  }
+
+  /* Hide default swiper navigation */
+  .testimonials__items-wrapper .swiper-button-prev,
+  .testimonials__items-wrapper .swiper-button-next {
+    display: none !important;
+  }
+
+  .testimonials__items {
+    display: flex;
+    gap: 60px;
+    min-height: 180px;
+  }
+
+  .testimonials__items-wrapper.swiper:not(.swiper-initialized) .testimonials__items {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .testimonials__items-wrapper.swiper:not(.swiper-initialized) .testimonials__items::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Individual Review Card */
+  .testimonials__item {
+    flex: 0 0 367px;
+    width: 367px;
+    min-height: 180px;
+    height: auto;
+    border-left: 1px solid rgba(37, 43, 54, 0.26);
+    padding: 10px 0 15px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: transparent;
+  }
+
+  /* Card Header: Avatar + Name/Date */
+  .testimonials__item-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .testimonials__item-avatar {
+    width: 70px;
+    height: 70px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .testimonials__item-avatar .image,
+  .testimonials__item-avatar .image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50% !important;
+  }
+
+  .testimonials__item-avatar--placeholder {
+    background: rgba(33, 38, 47, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .testimonials__item-avatar--placeholder svg {
+    width: 50%;
+    height: 50%;
+    opacity: 0.4;
+  }
+
+  .testimonials__item-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .testimonials__item-name {
+    font-family: "Alte Haas Grotesk", var(--font-body), sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: 0.56px;
+    text-transform: uppercase;
+    color: #21262F;
+  }
+
+  .testimonials__item-date {
+    font-family: "Work Sans", var(--font-body), sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #21262F;
+    opacity: 0.4;
+  }
+
+  /* Star Rating */
+  .testimonials__item-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .testimonials__item-rating svg {
+    width: 14px;
+    height: 13px;
+    flex-shrink: 0;
+  }
+
+  /* Review Text */
+  .testimonials__item-text {
+    font-family: "Work Sans", var(--font-body), sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.16px;
+    color: #21262F;
+    margin: 0;
+  }
+
+  /* Footer Navigation */
+  .testimonials__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 50px;
+    padding: 0 40px;
+    overflow: visible;
+    height: 34px;
+  }
+
+  .testimonials__footer-track {
+    position: relative;
+    flex: 1;
+    height: 1px;
+    background-color: rgba(33, 38, 47, 0.3);
+    margin-right: 16px;
+  }
+
+  .testimonials__footer-line {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    height: 2px;
+    background-color: var(--color-canyon-clay, #D14626);
+    width: 120px;
+    transition: transform 0.3s ease;
+  }
+
+  .testimonials__footer-nav {
+    display: flex;
+    gap: 5px;
+    flex-shrink: 0;
+    overflow: visible;
+  }
+
+  .testimonials__footer-btn {
+    background: transparent;
+    border: none;
+    padding: 2px;
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .testimonials__footer-btn:hover svg rect {
+    stroke-opacity: 0.6;
+  }
+
+  .testimonials__footer-btn:hover svg path {
+    opacity: 0.6;
+  }
+
+  .testimonials__footer-btn svg {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;
+    display: block;
+    overflow: visible;
+  }
+
+  /* Responsive - Small Desktop / Theme Editor */
+  @media screen and (max-width: 1250px) {
+    .testimonials__container {
+      padding: 60px var(--page-gutter, 40px);
+    }
+
+    .testimonials__heading {
+      font-size: 44px;
+      margin-bottom: 45px;
+    }
+
+    .testimonials__carousel {
+      min-height: 180px;
+    }
+
+    .testimonials__items {
+      gap: 35px;
+    }
+
+    .testimonials__item {
+      flex: 0 0 300px;
+      width: 300px;
+      min-height: 170px;
+      padding-left: 25px;
+    }
+
+    .testimonials__item-avatar {
+      width: 60px;
+      height: 60px;
+    }
+
+    .testimonials__item-header {
+      gap: 16px;
+    }
+
+    .testimonials__item-text {
+      font-size: 15px;
+    }
+
+    .testimonials__footer {
+      margin-top: 40px;
+      padding: 0;
+    }
+
+    .testimonials__footer-line {
+      width: 100px;
+    }
+  }
+
+  /* Tablet */
+  @media screen and (max-width: 989px) {
+    .testimonials__container {
+      padding: 50px var(--page-gutter, 32px);
+    }
+
+    .testimonials__heading {
+      font-size: 38px;
+      margin-bottom: 35px;
+      letter-spacing: -0.76px;
+    }
+
+    .testimonials__carousel {
+      min-height: 165px;
+    }
+
+    .testimonials__items-wrapper.swiper {
+      min-height: 155px;
+    }
+
+    .testimonials__items {
+      gap: 28px;
+      min-height: 155px;
+    }
+
+    .testimonials__item {
+      flex: 0 0 270px;
+      width: 270px;
+      min-height: 155px;
+      padding: 8px 0 12px 22px;
+      gap: 12px;
+    }
+
+    .testimonials__item-avatar {
+      width: 55px;
+      height: 55px;
+    }
+
+    .testimonials__item-header {
+      gap: 14px;
+    }
+
+    .testimonials__item-name {
+      font-size: 13px;
+      letter-spacing: 0.4px;
+    }
+
+    .testimonials__item-date {
+      font-size: 13px;
+    }
+
+    .testimonials__item-rating svg {
+      width: 12px;
+      height: 11px;
+    }
+
+    .testimonials__item-text {
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .testimonials__footer {
+      margin-top: 32px;
+      padding: 0;
+    }
+
+    .testimonials__footer-line {
+      width: 80px;
+    }
+  }
+
+  /* Mobile */
+  @media screen and (max-width: 749px) {
+    .testimonials__container {
+      padding: 35px var(--page-gutter, 24px);
+    }
+
+    .testimonials__heading {
+      font-size: 28px;
+      margin-bottom: 25px;
+      letter-spacing: -0.56px;
+    }
+
+    .testimonials__carousel {
+      min-height: 150px;
+    }
+
+    .testimonials__items-wrapper.swiper {
+      min-height: 140px;
+    }
+
+    .testimonials__items {
+      gap: 20px;
+      min-height: 140px;
+    }
+
+    .testimonials__item {
+      flex: 0 0 260px;
+      width: 260px;
+      min-height: 140px;
+      padding: 6px 0 10px 18px;
+      gap: 10px;
+    }
+
+    .testimonials__item-avatar {
+      width: 46px;
+      height: 46px;
+    }
+
+    .testimonials__item-header {
+      gap: 12px;
+    }
+
+    .testimonials__item-name {
+      font-size: 11px;
+      letter-spacing: 0.3px;
+    }
+
+    .testimonials__item-date {
+      font-size: 11px;
+    }
+
+    .testimonials__item-rating {
+      gap: 3px;
+    }
+
+    .testimonials__item-rating svg {
+      width: 11px;
+      height: 10px;
+    }
+
+    .testimonials__item-text {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .testimonials__footer {
+      margin-top: 25px;
+      padding: 0;
+    }
+
+    .testimonials__footer-line {
+      width: 60px;
+    }
+
+    .testimonials__footer-btn {
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      min-height: 30px;
+    }
+
+    .testimonials__footer-btn svg {
+      width: 26px;
+      height: 26px;
+      min-width: 26px;
+      min-height: 26px;
+    }
+  }
+
+  /* Small Mobile */
+  @media screen and (max-width: 479px) {
+    .testimonials__container {
+      padding: 30px var(--page-gutter, 16px);
+    }
+
+    .testimonials__heading {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .testimonials__items {
+      gap: 16px;
+    }
+
+    .testimonials__item {
+      flex: 0 0 240px;
+      width: 240px;
+      padding: 5px 0 8px 15px;
+      gap: 8px;
+    }
+
+    .testimonials__item-avatar {
+      width: 40px;
+      height: 40px;
+    }
+
+    .testimonials__item-header {
+      gap: 10px;
+    }
+
+    .testimonials__item-name {
+      font-size: 10px;
+    }
+
+    .testimonials__item-date {
+      font-size: 10px;
+    }
+
+    .testimonials__item-rating svg {
+      width: 10px;
+      height: 9px;
+    }
+
+    .testimonials__item-text {
+      font-size: 12px;
+    }
+
+    .testimonials__footer {
+      margin-top: 20px;
+      padding: 0;
+    }
+
+    .testimonials__footer-line {
+      width: 50px;
+    }
+  }
+{% endstyle %}
+
 {% schema %}
 {
-  "name": "t:sections.testimonials.name",
+  "name": "Reviews",
   "class": "testimonials-section",
   "tag": "section",
   "disabled_on": {
     "groups": [
       "header",
-      "footer",
-      "custom.floating"
+      "footer"
     ],
     "templates": [
       "password"
@@ -204,229 +756,13 @@
     },
     {
       "type": "header",
-      "content": "t:common.prelude.content"
-    },
-    {
-      "type": "text_alignment",
-      "id": "prelude_alignment",
-      "label": "t:common.alignment.label",
-      "default": "left"
+      "content": "Content"
     },
     {
       "type": "text",
-      "id": "prelude_heading",
-      "label": "t:common.heading.label",
-      "default": "What people are saying"
-    },
-    {
-      "type": "select",
-      "id": "prelude_heading_text_font",
-      "label": "t:common.heading_font.label",
-      "options": [
-        {
-          "value": "ff-h",
-          "label": "t:common.text_font.option__heading"
-        },
-        {
-          "value": "ff-b",
-          "label": "t:common.text_font.option__body"
-        }
-      ],
-      "default": "ff-h",
-      "visible_if": "{{ section.settings.prelude_heading != blank }}"
-    },
-    {
-      "type": "select",
-      "id": "prelude_heading_text_size",
-      "label": "t:common.heading_size.label",
-      "options": [
-        {
-          "value": "3",
-          "label": "t:common.text_size.option_h4"
-        },
-        {
-          "value": "4",
-          "label": "t:common.text_size.option_h3"
-        },
-        {
-          "value": "5",
-          "label": "t:common.text_size.option_h2"
-        },
-        {
-          "value": "6",
-          "label": "t:common.text_size.option_h1"
-        }
-      ],
-      "default": "4",
-      "visible_if": "{{ section.settings.prelude_heading != blank }}"
-    },
-    {
-      "type": "checkbox",
-      "id": "prelude_heading_text_uppercase",
-      "label": "t:common.heading_uppercase.label",
-      "default": false,
-      "visible_if": "{{ section.settings.prelude_heading != blank }}"
-    },
-    {
-      "type": "richtext",
-      "id": "prelude_text",
-      "label": "t:common.text.label"
-    },
-    {
-      "type": "select",
-      "id": "prelude_text_size",
-      "label": "t:common.text_size.label",
-      "options": [
-        {
-          "value": "1",
-          "label": "t:common.text_size.option_body_small"
-        },
-        {
-          "value": "2",
-          "label": "t:common.text_size.option_body"
-        },
-        {
-          "value": "3",
-          "label": "t:common.text_size.option_h4"
-        }
-      ],
-      "default": "2",
-      "visible_if": "{{ section.settings.prelude_text != blank }}"
-    },
-    {
-      "type": "header",
-      "content": "t:common.header__testimonials.content"
-    },
-    {
-      "type": "select",
-      "id": "aspect_ratio",
-      "label": "t:sections.testimonials.settings.product_image_aspect.label",
-      "options": [
-        {
-          "value": "default",
-          "label": "t:common.aspect_ratio.option__default"
-        },
-        {
-          "value": "3-2",
-          "label": "t:common.aspect_ratio.option__3_2"
-        },
-        {
-          "value": "5-4",
-          "label": "t:common.aspect_ratio.option__5_4"
-        },
-        {
-          "value": "11-10",
-          "label": "t:common.aspect_ratio.option__11_10"
-        },
-        {
-          "value": "1-1",
-          "label": "t:common.aspect_ratio.option__1_1"
-        },
-        {
-          "value": "10-11",
-          "label": "t:common.aspect_ratio.option__10_11"
-        },
-        {
-          "value": "4-5",
-          "label": "t:common.aspect_ratio.option__4_5"
-        },
-        {
-          "value": "2-3",
-          "label": "t:common.aspect_ratio.option__2_3"
-        },
-        {
-          "value": "1-2",
-          "label": "t:common.aspect_ratio.option__1_2"
-        }
-      ],
-      "default": "10-11"
-    },
-    {
-      "type": "select",
-      "id": "star_color",
-      "label": "t:common.star_color.label",
-      "options": [
-        {
-          "value": "text",
-          "label": "t:common.star_color.option__text"
-        },
-        {
-          "value": "accent",
-          "label": "t:common.star_color.option__accent"
-        },
-        {
-          "value": "custom",
-          "label": "t:common.star_color.option__custom"
-        }
-      ],
-      "default": "accent"
-    },
-    {
-      "type": "color",
-      "id": "star_color_custom",
-      "label": "t:common.star_color_custom.label",
-      "default": "#dbc30d",
-      "visible_if": "{{ section.settings.star_color == \"custom\" }}"
-    },
-    {
-      "type": "text",
-      "id": "shop_button_text",
-      "label": "t:sections.testimonials.settings.shop_button_text.label",
-      "default": "Shop now"
-    },
-    {
-      "type": "select",
-      "id": "button_size",
-      "label": "t:sections.testimonials.settings.shop_button_size.label",
-      "options": [
-        {
-          "value": "compact",
-          "label": "t:common.sizing.compact"
-        },
-        {
-          "value": "standard",
-          "label": "t:common.sizing.standard"
-        },
-        {
-          "value": "large",
-          "label": "t:common.sizing.large"
-        }
-      ],
-      "default": "compact",
-      "visible_if": "{{ section.settings.shop_button_text != blank }}"
-    },
-    {
-      "type": "select",
-      "id": "button_style",
-      "label": "t:sections.testimonials.settings.shop_button_style.label",
-      "options": [
-        {
-          "value": "primary",
-          "label": "t:common.button_style.option__primary"
-        },
-        {
-          "value": "secondary",
-          "label": "t:common.button_style.option__secondary"
-        },
-        {
-          "value": "accent-primary",
-          "label": "t:common.button_style.option__accent_primary"
-        },
-        {
-          "value": "accent-secondary",
-          "label": "t:common.button_style.option__accent_secondary"
-        },
-        {
-          "value": "accent-text-link",
-          "label": "t:common.button_style.option__accent_text"
-        },
-        {
-          "value": "text-link",
-          "label": "t:common.button_style.option__text"
-        }
-      ],
-      "default": "accent-primary",
-      "visible_if": "{{ section.settings.shop_button_text != blank }}"
+      "id": "heading",
+      "label": "Heading",
+      "default": "Reviews"
     },
     {
       "type": "header",
@@ -515,64 +851,99 @@
   ],
   "blocks": [
     {
-      "type": "testimonial",
-      "name": "t:sections.testimonials.blocks.testimonial.name",
+      "type": "review",
+      "name": "Review",
       "settings": [
         {
-          "type": "product",
-          "id": "testimonial_product",
-          "label": "t:common.product.label"
+          "type": "image_picker",
+          "id": "author_image",
+          "label": "Author image",
+          "info": "Circular avatar image (recommended: square, min 140x140px)"
         },
         {
-          "type": "image_picker",
-          "id": "product_image",
-          "label": "t:sections.testimonials.blocks.testimonial.settings.product_image.label"
+          "type": "text",
+          "id": "author_name",
+          "label": "Author name",
+          "default": "Reviewer Name"
+        },
+        {
+          "type": "text",
+          "id": "review_date",
+          "label": "Review date",
+          "default": "06/2025",
+          "info": "Format: MM/YYYY"
         },
         {
           "type": "checkbox",
           "id": "show_rating",
-          "label": "t:sections.testimonials.blocks.testimonial.settings.show_rating.label",
+          "label": "Show star rating",
           "default": true
         },
         {
           "type": "range",
           "id": "star_rating",
-          "label": "t:sections.testimonials.blocks.testimonial.settings.star_rating.label",
-          "min": 0,
+          "label": "Star rating",
+          "min": 1,
           "max": 5,
           "step": 0.5,
           "default": 5,
           "visible_if": "{{ block.settings.show_rating }}"
         },
         {
-          "type": "image_picker",
-          "id": "author_image",
-          "label": "t:sections.testimonials.blocks.testimonial.settings.author_image.label"
-        },
-        {
-          "type": "text",
-          "id": "author_name",
-          "label": "t:sections.testimonials.blocks.testimonial.settings.author_name.label",
-          "default": "Jane Doe"
-        },
-        {
-          "type": "text",
-          "id": "author_title",
-          "label": "t:sections.testimonials.blocks.testimonial.settings.author_title.label"
-        },
-        {
-          "type": "inline_richtext",
-          "id": "quote",
-          "label": "t:sections.testimonials.blocks.testimonial.settings.quote.label",
-          "default": "\"I couldn’t be happier with my purchase. It was exactly what I needed!\""
+          "type": "textarea",
+          "id": "review_text",
+          "label": "Review text",
+          "default": "I thought I needed motivation. Turns out I just needed a walk I could actually return to."
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "t:sections.testimonials.presets.name",
-      "category": "t:categories.products"
+      "name": "Reviews",
+      "category": "t:categories.informative",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "author_name": "Mia T.",
+            "review_date": "06/2025",
+            "show_rating": true,
+            "star_rating": 5,
+            "review_text": "I thought I needed motivation. Turns out I just needed a walk I could actually return to."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "author_name": "Elena P.",
+            "review_date": "04/2025",
+            "show_rating": true,
+            "star_rating": 5,
+            "review_text": "The simplest change that made the biggest difference in my daily routine."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "author_name": "Jordan K.",
+            "review_date": "05/2025",
+            "show_rating": true,
+            "star_rating": 5,
+            "review_text": "Finally found something that actually fits into my lifestyle without forcing it."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "author_name": "Sarah M.",
+            "review_date": "03/2025",
+            "show_rating": true,
+            "star_rating": 5,
+            "review_text": "This has genuinely changed how I approach my day. Small steps, big impact."
+          }
+        }
+      ]
     }
   ]
 }
