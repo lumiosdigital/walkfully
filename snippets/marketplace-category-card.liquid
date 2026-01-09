@@ -1,0 +1,65 @@
+{% comment %}
+  Marketplace Category Card - A card component for the Marketplace Categories carousel
+
+  Accepts:
+  - collection: {Object} Shopify collection object
+  - image: {Object} Override image (optional, falls back to collection image)
+  - title: {String} Override title (optional, falls back to collection title)
+  - animate: {Boolean} Enable animations
+{% endcomment %}
+
+{%- liquid
+  assign card_image = image
+  assign card_title = title
+
+  # Fallback to collection data if not provided
+  if card_image == blank and collection != blank
+    assign card_image = collection.image
+  endif
+
+  if card_title == blank and collection != blank
+    assign card_title = collection.title
+  endif
+
+  # Determine link URL
+  assign link_url = blank
+  if collection != blank
+    assign link_url = collection.url
+  endif
+-%}
+
+<div
+  class="
+    marketplace-category-card
+    {% if animate %}animate animate--slide-in{% endif %}
+  "
+>
+  {% if link_url != blank %}
+    <a href="{{ link_url }}" class="marketplace-category-card__link" aria-label="{{ card_title | escape }}">
+  {% else %}
+    <div class="marketplace-category-card__link">
+  {% endif %}
+
+    <div class="marketplace-category-card__image-wrapper">
+      {%- if card_image != blank -%}
+        {% render 'image',
+          image: card_image,
+          wrapper_class: 'marketplace-category-card__image',
+          sizes: '(max-width: 749px) 80vw, (max-width: 1024px) 40vw, 370px',
+          aspect_ratio: '2-3'
+        %}
+      {%- else -%}
+        <div class="marketplace-category-card__image marketplace-category-card__image--placeholder"></div>
+      {%- endif -%}
+    </div>
+
+    {%- if card_title != blank -%}
+      <h3 class="marketplace-category-card__title">{{ card_title }}</h3>
+    {%- endif -%}
+
+  {% if link_url != blank %}
+    </a>
+  {% else %}
+    </div>
+  {% endif %}
+</div>

@@ -1,0 +1,355 @@
+<div
+  class="
+    marketplace-categories
+    color-{{ section.settings.color_scheme }}
+    {% render 'section-classes', settings: section.settings %}
+  "
+  {% if section.settings.enable_animations %}
+    data-animate-elements-on-scroll
+    data-animate-delay="125"
+  {% endif %}
+>
+  <div class="marketplace-categories__inner page-width">
+    <div class="marketplace-categories__content">
+      {%- comment -%} Left Header Area {%- endcomment -%}
+      <div class="marketplace-categories__header {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
+        {%- if section.settings.label_text != blank -%}
+          <span class="marketplace-categories__label">{{ section.settings.label_text }}</span>
+        {%- endif -%}
+
+        {%- if section.settings.brand_text != blank -%}
+          <span class="marketplace-categories__brand">{{ section.settings.brand_text }}</span>
+        {%- endif -%}
+
+        {%- if section.settings.description != blank -%}
+          <p class="marketplace-categories__description">{{ section.settings.description }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.button_text != blank and section.settings.button_url != blank -%}
+          <a href="{{ section.settings.button_url }}" class="marketplace-categories__button button button--primary">
+            {{ section.settings.button_text }}
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Right Carousel Area {%- endcomment -%}
+      <div class="marketplace-categories__carousel">
+        <component-slider
+          class="marketplace-categories__slider swiper"
+          data-mobile-columns="1"
+          data-tablet-columns="2"
+          data-desktop-columns="3"
+          data-enable-loop="true"
+          data-auto-space-slides="true"
+          style="
+            --mobile-columns: 1;
+            --tablet-columns: 2;
+            --desktop-columns: 3;
+          "
+        >
+          <div class="marketplace-categories__wrapper swiper-wrapper">
+            {% for block in section.blocks %}
+              {% if block.type == 'category_card' %}
+                <div class="marketplace-categories__slide swiper-slide" {{ block.shopify_attributes }}>
+                  {% render 'marketplace-category-card',
+                    collection: block.settings.collection,
+                    image: block.settings.image,
+                    title: block.settings.title,
+                    animate: section.settings.enable_animations
+                  %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+        </component-slider>
+
+        <div class="marketplace-categories__footer">
+          <div class="marketplace-categories__footer-track">
+            <div class="marketplace-categories__footer-line"></div>
+          </div>
+          <div class="marketplace-categories__footer-nav">
+            <button type="button" class="marketplace-categories__footer-btn marketplace-categories__footer-btn--prev" aria-label="{{ 'general.slider.previous_slide' | t }}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                <rect x="-0.5" y="0.5" width="29" height="29" rx="14.5" transform="matrix(-1 0 0 1 29 0)" stroke="#21262F" stroke-opacity="0.3"/>
+                <path opacity="0.3" d="M21 15H9M9 15L15 9M9 15L15 21" stroke="#21262F"/>
+              </svg>
+            </button>
+            <button type="button" class="marketplace-categories__footer-btn marketplace-categories__footer-btn--next" aria-label="{{ 'general.slider.next_slide' | t }}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                <rect x="0.5" y="0.5" width="29" height="29" rx="14.5" stroke="#21262F" stroke-opacity="0.3"/>
+                <path opacity="0.3" d="M10 15H20M20 15L15 10M20 15L15 20" stroke="#21262F"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const section = document.querySelector('.marketplace-categories');
+    if (!section) return;
+
+    const prevBtn = section.querySelector('.marketplace-categories__footer-btn--prev');
+    const nextBtn = section.querySelector('.marketplace-categories__footer-btn--next');
+    const progressLine = section.querySelector('.marketplace-categories__footer-line');
+    const track = section.querySelector('.marketplace-categories__footer-track');
+    const slider = section.querySelector('component-slider');
+
+    let currentIndex = 0;
+    let totalSlides = 0;
+
+    function updateProgress() {
+      if (!progressLine || !track || totalSlides === 0) return;
+      const progress = totalSlides > 1 ? currentIndex / (totalSlides - 1) : 0;
+      const trackWidth = track.offsetWidth;
+      const lineWidth = progressLine.offsetWidth;
+      const maxTranslate = trackWidth - lineWidth;
+      const translateX = progress * maxTranslate;
+      progressLine.style.transform = `translateX(${translateX}px)`;
+    }
+
+    function goNext() {
+      if (!slider || !slider.swiper) return;
+      slider.swiper.slideNext();
+    }
+
+    function goPrev() {
+      if (!slider || !slider.swiper) return;
+      slider.swiper.slidePrev();
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', goPrev);
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', goNext);
+    }
+
+    const checkSwiper = setInterval(() => {
+      if (slider && slider.swiper) {
+        clearInterval(checkSwiper);
+        const originalSlides = section.querySelectorAll('.marketplace-categories__slide');
+        totalSlides = originalSlides.length;
+        currentIndex = slider.swiper.realIndex || 0;
+
+        // Get visible slides count from Swiper
+        const visibleSlides = Math.floor(slider.swiper.params.slidesPerView);
+
+        // Disable navigation if all slides are visible
+        if (totalSlides <= visibleSlides) {
+          if (prevBtn) {
+            prevBtn.disabled = true;
+            prevBtn.style.opacity = '0.3';
+            prevBtn.style.cursor = 'default';
+          }
+          if (nextBtn) {
+            nextBtn.disabled = true;
+            nextBtn.style.opacity = '0.3';
+            nextBtn.style.cursor = 'default';
+          }
+        }
+
+        slider.swiper.on('slideChange', () => {
+          currentIndex = slider.swiper.realIndex || 0;
+          updateProgress();
+        });
+
+        updateProgress();
+      }
+    }, 100);
+
+    setTimeout(() => clearInterval(checkSwiper), 5000);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Marketplace Categories",
+  "class": "marketplace-categories-section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"],
+    "templates": ["password"]
+  },
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Header Content"
+    },
+    {
+      "type": "text",
+      "id": "label_text",
+      "label": "Label text",
+      "default": "CURATED BY"
+    },
+    {
+      "type": "text",
+      "id": "brand_text",
+      "label": "Brand text",
+      "default": "WalkFully"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Designed to bring you back to your walk"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "EXPLORE MARKETPLACE"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_spacing_and_border.content"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "label": "t:common.top_spacing.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:common.sizing.none"
+        },
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "x-large"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "label": "t:common.bottom_spacing.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:common.sizing.none"
+        },
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "x-large"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:common.show_bottom_border.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_animations.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "t:common.enable_animations.label",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category_card",
+      "name": "Category Card",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom image",
+          "info": "Leave blank to use collection image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Custom title",
+          "info": "Leave blank to use collection title"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marketplace Categories",
+      "blocks": [
+        {
+          "type": "category_card",
+          "settings": {
+            "title": "Backpacks"
+          }
+        },
+        {
+          "type": "category_card",
+          "settings": {
+            "title": "Thermoses and Water Bottles"
+          }
+        },
+        {
+          "type": "category_card",
+          "settings": {
+            "title": "Shoes"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

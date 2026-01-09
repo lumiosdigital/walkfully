@@ -28,7 +28,7 @@
       <div id="{{ sub_id | append: '-heading' }}">{{ heading }}</div>
       <div class="panel__header-close-wrapper">
         <button type="button" class="btn-icon" data-close-overlay aria-label="{{ 'accessibility.close' | t }}">
-          {% render 'theme-icon', icon: 'x', size: '0.6em' %}
+          {% render 'theme-icon', icon: 'x', size: '1em', stroke_override: '2' %}
         </button>
       </div>
       <p class="panel__description" id="{{ sub_id | append: '-description' }}">{{ description }}</p>
