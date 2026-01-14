@@ -14,84 +14,42 @@
     "footer": {
       "type": "footer",
       "blocks": {
-        "branding": {
-          "type": "branding",
-          "settings": {
-            "column_span": 2,
-            "image": "shopify://shop_images/walkfully_primary-03.png",
-            "max_width": 100,
-            "layout": "logo-above",
-            "alignment": "left",
-            "vertical_alignment": "top",
-            "heading": "",
-            "heading_text_font": "ff-b",
-            "heading_text_size": "4",
-            "text": "<p>Unlocking the power and promise of the most essential form of human movement – walking.</p>",
-            "text_size": "1"
-          }
-        },
-        "spacer_bXDamc": {
-          "type": "spacer",
-          "settings": {
-            "column_span": 3
-          }
-        },
         "menu_1": {
           "type": "menu",
           "settings": {
-            "column_span": 2,
-            "alignment": "left",
-            "vertical_alignment": "top",
-            "heading": "",
-            "heading_text_font": "ff-h",
-            "heading_text_size": "3",
-            "menu": "",
-            "menu_layout": "column",
-            "menu_text_size": "2"
+            "heading": "START HERE",
+            "menu": ""
           }
         },
         "menu_2": {
           "type": "menu",
-          "disabled": true,
           "settings": {
-            "column_span": 2,
-            "alignment": "left",
-            "vertical_alignment": "top",
-            "heading": "WalkFully",
-            "heading_text_font": "ff-h",
-            "heading_text_size": "3",
-            "menu": "footer",
-            "menu_layout": "column",
-            "menu_text_size": "2"
+            "heading": "OUR PRODUCTS",
+            "menu": ""
+          }
+        },
+        "menu_3": {
+          "type": "menu",
+          "settings": {
+            "heading": "CUSTOMER CARE",
+            "menu": ""
           }
         },
         "newsletter": {
           "type": "newsletter",
           "settings": {
-            "column_span": 7,
-            "alignment": "right",
-            "vertical_alignment": "top",
-            "heading": "Step Into Your Best Self",
-            "heading_text_font": "ff-h",
-            "heading_text_size": "3",
-            "text": "<p>Sign up for simple tips, inspiring stories, and research you can trust.</p>",
-            "text_size": "1",
-            "disclaimer": ""
+            "heading": "STAY CONNECTED",
+            "text": "Join our nest to receive exclusive offers, seasonal drops, and tips straight to your inbox."
           }
         }
       },
       "block_order": [
-        "branding",
-        "spacer_bXDamc",
         "menu_1",
         "menu_2",
+        "menu_3",
         "newsletter"
       ],
-      "custom_css": [
-        ".footer__inner .grid__content {grid-template-columns: 2fr !important; display: grid; row-gap: 10px;}",
-        ".footer__footer-copyright-wrapper {display: flex; gap: 5px; align-items: center; line-height: 1; padding-top: 20px;}",
-        "@media (max-width: 768px) {.footer__branding.f.fd-column.fa-left.fj-top.ta-left.grid__item--span-12.grid__item--span-2-tablet {max-width: 85%; row-gap: 5px; line-height: 103%; }}"
-      ],
+      "custom_css": [],
       "settings": {
         "show_follow_on_shop": false,
         "enable_country_selector": false,

@@ -11,75 +11,8 @@
   "sections": {
     "main": {
       "type": "main-404",
-      "disabled": true,
-      "settings": {
-        "color_scheme": "",
-        "section_spacing_top": "2x-large",
-        "section_spacing_bottom": "2x-large",
-        "show_bottom_border": false
-      }
-    },
-    "rich_text_8Hripp": {
-      "type": "rich-text",
-      "blocks": {
-        "heading_arWcQC": {
-          "type": "heading",
-          "settings": {
-            "heading": "<strong>404 - Page not found</strong>",
-            "text_font": "ff-h",
-            "text_size": "5",
-            "text_uppercase": false
-          },
-          "blocks": {}
-        },
-        "text_HRnXin": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Not all paths lead where we expect. This one just happens to end here.</p>",
-            "text_size": "2"
-          },
-          "blocks": {}
-        },
-        "buttons_n8GgUG": {
-          "type": "buttons",
-          "settings": {},
-          "blocks": {
-            "button_AMdVhx": {
-              "type": "_button",
-              "settings": {
-                "button_text": "Return Home",
-                "button_link": "/walkfully.com",
-                "button_size": "standard",
-                "button_style": "primary"
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "button_AMdVhx"
-          ]
-        }
-      },
-      "block_order": [
-        "heading_arWcQC",
-        "text_HRnXin",
-        "buttons_n8GgUG"
-      ],
-      "name": "t:sections.rich-text.presets.name",
-      "settings": {
-        "color_scheme": "",
-        "content_alignment": "center",
-        "content_width": "custom",
-        "custom_content_width": 700,
-        "section_spacing_top": "2x-large",
-        "section_spacing_bottom": "2x-large",
-        "show_bottom_border": true,
-        "enable_animations": true
-      }
+      "settings": {}
     }
   },
-  "order": [
-    "main",
-    "rich_text_8Hripp"
-  ]
+  "order": ["main"]
 }
