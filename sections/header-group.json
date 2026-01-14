@@ -13,7 +13,16 @@
   "sections": {
     "header": {
       "type": "header",
-      "settings": {}
+      "settings": {
+        "display_mode": "sticky-on-scroll",
+        "cart_icon": "bag",
+        "show_border": false,
+        "border_color": "text",
+        "border_weight": "1",
+        "border_opacity": 30,
+        "logo_alignment": "left",
+        "logo_alignment_mobile": "left"
+      }
     }
   },
   "order": ["header"]

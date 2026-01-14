@@ -51,6 +51,8 @@
       ],
       "custom_css": [],
       "settings": {
+        "footer_icon": "shopify://shop_images/walkfully-circular-logo.png",
+        "watermark_image": "shopify://shop_images/large-walkfully-logo.png",
         "show_follow_on_shop": false,
         "enable_country_selector": false,
         "enable_language_selector": false,
