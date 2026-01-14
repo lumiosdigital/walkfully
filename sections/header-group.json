@@ -16,7 +16,7 @@
       "settings": {
         "display_mode": "sticky-on-scroll",
         "cart_icon": "bag",
-        "show_border": false,
+        "show_border": true,
         "border_color": "text",
         "border_weight": "1",
         "border_opacity": 30,
