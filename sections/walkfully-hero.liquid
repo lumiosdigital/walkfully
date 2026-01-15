@@ -74,7 +74,7 @@
 
     {% if section.settings.bottom_text != blank %}
       <h2 class="walkfully-hero__bottom-text">
-        {{ section.settings.bottom_text }}
+        {{ section.settings.bottom_text | newline_to_br }}
       </h2>
     {% endif %}
   </div>
@@ -83,7 +83,7 @@
     <div class="walkfully-hero__footer-left">
       {% if section.settings.description_text != blank %}
         <p class="walkfully-hero__description">
-          {{ section.settings.description_text }}
+          {{ section.settings.description_text | newline_to_br }}
         </p>
       {% endif %}
     </div>

@@ -8,6 +8,127 @@
  * ------------------------------------------------------------
  */
 {
-  "sections": {},
-  "order": []
+  "sections": {
+    "walkfully_hero": {
+      "type": "walkfully-hero",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "use_video": true,
+        "image_overlay_opacity": 0,
+        "top_text": "YOU BECOME",
+        "middle_text": "alive",
+        "bottom_text": "WHEN YOU\nWALK",
+        "description_text": "WalkFully is a walking platform.\nCommunity programs, editorial, and weighted essentials built for daily use, for years to come.",
+        "cta_text": "Join the Free 14-Day Reset",
+        "cta_link": ""
+      }
+    },
+    "platform_cards": {
+      "type": "platform-cards",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "top_text": "THE PLATFORM",
+        "heading_top": "WALKING",
+        "middle_text": "but",
+        "bottom_text": "NOT PEDESTRIAN",
+        "subtitle_text": "We bring the physical, mental, emotional, and spiritual benefits of walking into everyday life. Through programs, stories, science, and products that support your practice.",
+        "card_1_bg_color": "#642823",
+        "card_1_pattern": "shopify://shop_images/programs.png",
+        "card_1_pattern_opacity": 100,
+        "card_1_title": "PROGRAMS",
+        "card_1_description": "<p>Guided resets and simple rituals you can return to.</p>",
+        "card_1_link": "",
+        "card_2_bg_color": "#6A93D7",
+        "card_2_pattern": "shopify://shop_images/field-notes.png",
+        "card_2_pattern_opacity": 100,
+        "card_2_title": "FIELD NOTES",
+        "card_2_description": "<p>Stories and research that make walking feel personal again.</p>",
+        "card_2_link": "",
+        "card_3_bg_color": "#2B3039",
+        "card_3_pattern": "shopify://shop_images/gear-marketplace.png",
+        "card_3_pattern_opacity": 100,
+        "card_3_title": "GEAR + MARKETPLACE",
+        "card_3_description": "<p>Weighted essentials, plus a curated shop of aligned brands.</p>",
+        "card_3_link": "",
+        "card_title_size": "h4",
+        "circle_image_size": 300,
+        "section_spacing_top": "x-large",
+        "section_spacing_bottom": "x-large"
+      }
+    },
+    "program_promo": {
+      "type": "program-promo",
+      "settings": {
+        "content_bg_color": "#D14626",
+        "pattern_image": "shopify://shop_images/free-program-promo-background.png",
+        "pattern_opacity": 100,
+        "section_spacing_top": "x-large",
+        "section_spacing_bottom": "x-large"
+      }
+    },
+    "stories_carousel": {
+      "type": "featured-blog",
+      "settings": {
+        "section_spacing_top": "2x-large",
+        "section_spacing_bottom": "2x-large"
+      }
+    },
+    "journal_grid": {
+      "type": "journal-grid",
+      "settings": {
+        "section_spacing_top": "x-large",
+        "section_spacing_bottom": "2x-large"
+      }
+    },
+    "product_showcase": {
+      "type": "product-showcase",
+      "settings": {}
+    },
+    "marketplace_categories": {
+      "type": "marketplace-categories",
+      "settings": {
+        "section_spacing_top": "2x-large",
+        "section_spacing_bottom": "2x-large"
+      }
+    },
+    "promo_banner": {
+      "type": "promo-banner",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "background_color": "#D14626",
+        "top_text_color": "#F7F1E5",
+        "main_text_color": "#F7F1E5",
+        "pattern_image": "shopify://shop_images/announcement-banner-pattern.png",
+        "pattern_opacity": 100
+      }
+    },
+    "ugc_gallery": {
+      "type": "ugc-gallery",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "logo": "shopify://shop_images/walkfully-circular-logo.png",
+        "heading": "Walk every day.\nWalk everywhere.\nWalk with us.",
+        "subtext": "Share your walk with #walkfully",
+        "section_height": 900,
+        "section_spacing_top": "2x-large",
+        "section_spacing_bottom": "2x-large"
+      }
+    },
+    "reviews": {
+      "type": "testimonials",
+      "settings": {}
+    }
+  },
+  "order": [
+    "walkfully_hero",
+    "platform_cards",
+    "program_promo",
+    "stories_carousel",
+    "journal_grid",
+    "product_showcase",
+    "marketplace_categories",
+    "promo_banner",
+    "ugc_gallery",
+    "reviews"
+  ]
 }
