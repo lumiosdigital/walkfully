@@ -1,0 +1,200 @@
+{%- liquid
+  assign line_color = section.settings.line_color | default: '#D14626'
+  assign line_width = section.settings.line_width | default: 21
+  assign vertical_offset = section.settings.vertical_offset | default: 0
+  assign z_index = section.settings.z_index | default: 5
+-%}
+
+<scroll-line-animation
+  class="scroll-line"
+  data-section-id="{{ section.id }}"
+  style="
+    --scroll-line-color: {{ line_color }};
+    --scroll-line-width: {{ line_width }}px;
+    --scroll-line-vertical-offset: {{ vertical_offset }}px;
+    --scroll-line-z-index: {{ z_index }};
+  "
+>
+  <svg
+    class="scroll-line__svg"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 1440 576"
+    fill="none"
+    preserveAspectRatio="xMidYMid slice"
+  >
+    <path
+      class="scroll-line__path"
+      d="M1447 310.122C1352.5 214.029 1249.48 292.734 1202.43 362.171C1179.99 395.282 1157.63 447.383 1118.87 436.946C1067.43 423.095 1114.66 355.97 1118.87 310.122C1123.08 264.275 1116.74 224.629 1080.65 187.11C1061.6 167.309 1023.53 159.4 1003.84 179.374C967.367 216.386 990.548 287.356 971.408 336.741C965.149 352.89 943.93 384.304 930.934 395.4C865.985 450.856 737.443 439.658 694 388.5C632.788 316.418 960.43 309.944 881.996 214.029C849.877 174.751 798.572 189.431 769.78 212.469C729.059 245.052 686.744 121.259 773.522 98.7011C797.596 92.4431 900.128 105.932 903.317 78.05C908.268 34.7627 824.514 19.5064 793.398 14.6709C754.356 8.60381 714.314 8.99472 675.624 16.9039C629.412 26.3506 584.483 45.1776 579.219 85.9401C570.924 150.176 606.904 202.56 510.5 248.122C379 310.272 392.5 187.11 250 187.11C155.5 187.11 170.5 282.5 -10 291.5V565.5"
+      stroke="var(--scroll-line-color, #D14626)"
+      stroke-width="var(--scroll-line-width, 21)"
+      stroke-linecap="round"
+      fill="none"
+    />
+  </svg>
+</scroll-line-animation>
+
+<style>
+  .scroll-line-section {
+    position: relative;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .scroll-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    z-index: var(--scroll-line-z-index, 5);
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  .scroll-line__svg {
+    position: absolute;
+    top: var(--scroll-line-vertical-offset, 0px);
+    left: 0;
+    width: 100vw;
+    min-width: 1440px;
+    height: 576px;
+    overflow: visible;
+  }
+
+  .scroll-line__path {
+    stroke-dasharray: var(--path-length, 5000);
+    stroke-dashoffset: calc(-1 * var(--path-length, 5000));
+    transition: stroke-dashoffset 0.05s ease-out;
+  }
+
+  @media screen and (max-width: 749px) {
+    .scroll-line__svg {
+      height: 400px;
+    }
+  }
+
+  @media screen and (max-width: 400px) {
+    .scroll-line__svg {
+      height: 300px;
+    }
+  }
+</style>
+
+<script>
+  if (!customElements.get('scroll-line-animation')) {
+    class ScrollLineAnimation extends HTMLElement {
+      constructor() {
+        super();
+        this.path = null;
+        this.pathLength = 0;
+        this.rafId = null;
+      }
+
+      connectedCallback() {
+        this.path = this.querySelector('.scroll-line__path');
+        if (!this.path) return;
+
+        this.pathLength = this.path.getTotalLength();
+        this.style.setProperty('--path-length', this.pathLength);
+        this.path.style.strokeDasharray = this.pathLength;
+        this.path.style.strokeDashoffset = -this.pathLength;
+
+        this.handleScroll = this.handleScroll.bind(this);
+        this.onScroll = this.onScroll.bind(this);
+
+        window.addEventListener('scroll', this.onScroll, { passive: true });
+        window.addEventListener('resize', this.onScroll, { passive: true });
+
+        this.handleScroll();
+      }
+
+      disconnectedCallback() {
+        window.removeEventListener('scroll', this.onScroll);
+        window.removeEventListener('resize', this.onScroll);
+        if (this.rafId) cancelAnimationFrame(this.rafId);
+      }
+
+      onScroll() {
+        if (this.rafId) cancelAnimationFrame(this.rafId);
+        this.rafId = requestAnimationFrame(this.handleScroll);
+      }
+
+      handleScroll() {
+        const elementOffsetTop = this.getBoundingClientRect().top + window.scrollY;
+        const scrollY = window.scrollY;
+
+        let progress = scrollY / elementOffsetTop;
+        progress = Math.max(0, Math.min(1, progress));
+
+        const dashOffset = -this.pathLength * (1 - progress);
+        this.path.style.strokeDashoffset = dashOffset;
+      }
+    }
+
+    customElements.define('scroll-line-animation', ScrollLineAnimation);
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Scroll line",
+  "tag": "section",
+  "class": "scroll-line-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Line appearance"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Line color",
+      "default": "#D14626"
+    },
+    {
+      "type": "range",
+      "id": "line_width",
+      "label": "Line thickness",
+      "min": 5,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 21
+    },
+    {
+      "type": "header",
+      "content": "Positioning"
+    },
+    {
+      "type": "range",
+      "id": "vertical_offset",
+      "label": "Vertical position",
+      "info": "Adjust to position the line between sections. Negative moves up, positive moves down.",
+      "min": -400,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "z_index",
+      "label": "Layer order",
+      "info": "Higher values appear on top of other content",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 5
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scroll line"
+    }
+  ]
+}
+{% endschema %}
