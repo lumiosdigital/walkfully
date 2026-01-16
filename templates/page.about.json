@@ -1,18 +1,174 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "main": {
-      "type": "main-page",
-      "settings": {}
+    "story_intro": {
+      "type": "about-story",
+      "settings": {
+        "background_color": "#F7F1E5",
+        "text_color_scheme": "light",
+        "show_eyebrow": false,
+        "eyebrow_text": "",
+        "heading_size": "large",
+        "heading_line_1": "The world is\nmoving faster.",
+        "heading_line_2_prefix": "You",
+        "heading_accent": "don't have to",
+        "heading_line_3": "",
+        "show_subheading": false,
+        "subheading_text": "",
+        "description_text": "<p>Somewhere along the way, \"wellness\" became another thing to optimize – measured in metrics, screens, and stress. We've been told to do more, move faster, and track everything.</p><p>WalkFully is a rebellion against that noise. It's a movement for people who want to live slower, deeper, and more human lives – starting with the most natural act we have: walking.</p><p>Because walking isn't just movement. It's medicine. It's meaning. It's how we return to ourselves.</p>",
+        "show_button": false,
+        "button_text": "",
+        "button_link": "",
+        "image_position": "right",
+        "image_rounded": false,
+        "show_footer": false,
+        "footer_eyebrow": "",
+        "footer_heading": ""
+      }
+    },
+    "founder_story": {
+      "type": "about-story",
+      "settings": {
+        "background_color": "#6F2C26",
+        "text_color_scheme": "dark",
+        "show_eyebrow": true,
+        "eyebrow_text": "Our Story",
+        "heading_size": "medium",
+        "heading_line_1": "It started with",
+        "heading_line_2_prefix": "",
+        "heading_accent": "a walk",
+        "heading_line_3": "and a question",
+        "show_subheading": true,
+        "subheading_text": "What if the thing we've been searching for has been under our feet all along?",
+        "description_text": "<p>After decades leading change in wellness and sustainability, Christopher Gavigan realized something profound on his daily walks: clarity doesn't come from chasing; it comes from moving with intention.</p><p>Walking became his way to think, breathe, and reconnect – a quiet counterculture to burnout and speed. From that realization, WalkFully was born: a movement built to restore rhythm to modern life.</p><p>This isn't about counting steps. It's about reclaiming your stride: physically, mentally, and collectively.</p>",
+        "show_button": true,
+        "button_text": "Join the Movement",
+        "button_link": "",
+        "image_position": "right",
+        "image_rounded": true,
+        "show_footer": true,
+        "footer_eyebrow": "Our Ethos",
+        "footer_heading": "These are the principles we walk by"
+      }
+    },
+    "our_values": {
+      "type": "program-promo",
+      "settings": {
+        "layout_style": "benefits",
+        "image_position": "left",
+        "content_bg_color": "#D14626",
+        "show_label": true,
+        "label_text": "How we live",
+        "label_position": "below",
+        "label_color": "#FFCD68",
+        "heading_text": "Our Values",
+        "show_description": false,
+        "description_text": "",
+        "show_benefits": true,
+        "benefit_1_title": "Presence over performance",
+        "benefit_1_description": "We measure our days in moments, not metrics.",
+        "benefit_2_title": "Simplicity is strength",
+        "benefit_2_description": "Remove the excess. What's left is what matters.",
+        "benefit_3_title": "Connection is the cure",
+        "benefit_3_description": "Walking brings us back—to ourselves, to each other, to the world beneath our feet.",
+        "benefit_4_title": "Consistency beats intensity",
+        "benefit_4_description": "Small, steady steps create lasting change.",
+        "benefit_5_title": "Integrity in motion",
+        "benefit_5_description": "We walk our talk. Literally.",
+        "show_cta": false,
+        "button_text": "",
+        "button_link": "",
+        "feature_icon_color": "#FFCD68",
+        "section_spacing_top": "none",
+        "section_spacing_bottom": "none"
+      }
+    },
+    "our_standards": {
+      "type": "program-promo",
+      "settings": {
+        "layout_style": "benefits",
+        "image_position": "right",
+        "content_bg_color": "#21262F",
+        "show_label": true,
+        "label_text": "How we build and create",
+        "label_position": "below",
+        "label_color": "#E6E974",
+        "heading_text": "Our Standards",
+        "show_description": false,
+        "description_text": "",
+        "show_benefits": true,
+        "benefit_1_title": "Human first. Always",
+        "benefit_1_description": "Every product and piece of content must serve a real person—not a performance metric.",
+        "benefit_2_title": "Built to last",
+        "benefit_2_description": "We make what endures. Materials, ideas, and impact must stand the test of time.",
+        "benefit_3_title": "Conscious by default",
+        "benefit_3_description": "We take the slower path if it means less harm and more meaning.",
+        "benefit_4_title": "Transparent in practice",
+        "benefit_4_description": "We show our work, our data, and our trade-offs. Honesty isn't optional.",
+        "benefit_5_title": "Purpose over noise",
+        "benefit_5_description": "If it doesn't make life better, clearer, or more human, it doesn't make it out the door.",
+        "show_cta": false,
+        "button_text": "",
+        "button_link": "",
+        "feature_icon_color": "#FFCD68",
+        "section_spacing_top": "none",
+        "section_spacing_bottom": "none"
+      }
+    },
+    "advisory_council": {
+      "type": "featured-blog",
+      "settings": {
+        "background_color": "#21262F",
+        "show_eyebrow": true,
+        "eyebrow_text": "Advisory Council",
+        "eyebrow_style": "small",
+        "eyebrow_color": "#E1E571",
+        "show_heading": true,
+        "heading_text": "GUIDED BY EVIDENCE.\nGROUNDED IN HUMANITY.",
+        "heading_color": "#F7F1E5",
+        "show_description": true,
+        "description_text": "WalkFully's Advisory Council blends science and soul — bringing together leaders in neuroscience, biomechanics, behavioral psychology, and sustainability.",
+        "description_color": "#F7F1E5",
+        "card_text_color": "#F7F1E5",
+        "nav_color": "#F7F1E5",
+        "section_spacing_top": "none",
+        "section_spacing_bottom": "none"
+      },
+      "blocks": {
+        "member_1": {
+          "type": "team_member",
+          "settings": {
+            "member_name": "Dr. Jordan Lee",
+            "member_title": "Neuroscientist",
+            "member_description": "The science of motion and mental clarity"
+          }
+        },
+        "member_2": {
+          "type": "team_member",
+          "settings": {
+            "member_name": "Dr. Maya Torres",
+            "member_title": "Physical Therapist",
+            "member_description": "Movement mechanics and longevity"
+          }
+        },
+        "member_3": {
+          "type": "team_member",
+          "settings": {
+            "member_name": "Dr. Riley Chen",
+            "member_title": "Design Ethicist",
+            "member_description": "Sustainability and systems integrity"
+          }
+        },
+        "member_4": {
+          "type": "team_member",
+          "settings": {
+            "member_name": "Dr. Maya Torres",
+            "member_title": "Behavioral Scientist",
+            "member_description": "Habit formation and motivation"
+          }
+        }
+      },
+      "block_order": ["member_1", "member_2", "member_3", "member_4"]
     }
   },
-  "order": ["main"]
+  "order": ["story_intro", "founder_story", "our_values", "our_standards", "advisory_council"]
 }

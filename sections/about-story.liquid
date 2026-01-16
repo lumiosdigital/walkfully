@@ -1,0 +1,913 @@
+{%- liquid
+  assign show_eyebrow = section.settings.show_eyebrow
+  assign eyebrow = section.settings.eyebrow_text
+  assign heading_line_1 = section.settings.heading_line_1
+  assign heading_line_2_prefix = section.settings.heading_line_2_prefix
+  assign heading_accent = section.settings.heading_accent
+  assign heading_line_3 = section.settings.heading_line_3
+  assign show_subheading = section.settings.show_subheading
+  assign subheading = section.settings.subheading_text
+  assign description = section.settings.description_text
+  assign show_button = section.settings.show_button
+  assign button_text = section.settings.button_text
+  assign button_link = section.settings.button_link
+  assign image = section.settings.image
+  assign mobile_image = section.settings.mobile_image
+  assign image_alt = section.settings.image_alt | default: image.alt
+  assign image_position = section.settings.image_position | default: 'right'
+  assign image_rounded = section.settings.image_rounded
+  assign show_footer = section.settings.show_footer
+  assign footer_eyebrow = section.settings.footer_eyebrow
+  assign footer_heading = section.settings.footer_heading
+  assign text_scheme = section.settings.text_color_scheme | default: 'light'
+  assign bg_color = section.settings.background_color | default: '#F7F1E5'
+  assign heading_size = section.settings.heading_size | default: 'large'
+
+  assign has_heading = false
+  if heading_line_1 != blank or heading_line_2_prefix != blank or heading_accent != blank or heading_line_3 != blank
+    assign has_heading = true
+  endif
+
+  assign has_footer = false
+  if show_footer and footer_eyebrow != blank or footer_heading != blank
+    assign has_footer = true
+  endif
+-%}
+
+<div
+  class="about-story about-story--{{ text_scheme }} about-story--heading-{{ heading_size }}{% if image_position == 'left' %} about-story--image-left{% endif %} section{% if section.settings.section_spacing_top != 'none' %} section--spacing-top-{{ section.settings.section_spacing_top }}{% endif %}{% if section.settings.section_spacing_bottom != 'none' %} section--spacing-bottom-{{ section.settings.section_spacing_bottom }}{% endif %}"
+  style="--about-story-bg: {{ bg_color }};"
+  data-section-id="{{ section.id }}"
+>
+  <div class="about-story__container">
+    <div class="about-story__header">
+      {% if show_eyebrow and eyebrow != blank %}
+        <p class="about-story__eyebrow">{{ eyebrow }}</p>
+      {% endif %}
+
+      {% if has_heading %}
+        <h2 class="about-story__heading">
+          {%- if heading_line_1 != blank -%}
+            <span class="about-story__heading-text">{{ heading_line_1 }}</span>
+          {%- endif -%}
+          {%- if heading_line_2_prefix != blank or heading_accent != blank -%}
+            <span class="about-story__heading-line">
+              {%- if heading_line_2_prefix != blank -%}
+                <span class="about-story__heading-text about-story__heading-text--inline">{{ heading_line_2_prefix }}</span>
+              {%- endif -%}
+              {%- if heading_accent != blank -%}
+                <em class="about-story__heading-accent about-story__heading-accent--inline">{{ heading_accent }}</em>
+              {%- endif -%}
+            </span>
+          {%- endif -%}
+          {%- if heading_line_3 != blank -%}
+            <span class="about-story__heading-text">{{ heading_line_3 }}</span>
+          {%- endif -%}
+        </h2>
+      {% endif %}
+
+      {% if show_subheading and subheading != blank %}
+        <p class="about-story__subheading">{{ subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="about-story__main">
+      <div class="about-story__content">
+        {% if description != blank %}
+          <div class="about-story__body">
+            {{ description }}
+          </div>
+        {% endif %}
+
+        {% if show_button and button_text != blank %}
+          {% if button_link != blank %}
+            <a href="{{ button_link }}" class="about-story__button">
+              {{ button_text }}
+            </a>
+          {% else %}
+            <button type="button" class="about-story__button about-story__button--disabled" disabled>
+              {{ button_text }}
+            </button>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      <div class="about-story__media{% if image_rounded %} about-story__media--rounded{% endif %}">
+        {% if image != blank %}
+          {% render 'image',
+            image: image,
+            sizes: '(min-width: 990px) 50vw, 100vw',
+            wrapper_class: 'about-story__image about-story__image--desktop',
+            no_radius: true
+          %}
+        {% endif %}
+
+        {% if mobile_image != blank %}
+          {% render 'image',
+            image: mobile_image,
+            sizes: '100vw',
+            wrapper_class: 'about-story__image about-story__image--mobile',
+            no_radius: true
+          %}
+        {% elsif image != blank %}
+          {% render 'image',
+            image: image,
+            sizes: '100vw',
+            wrapper_class: 'about-story__image about-story__image--mobile',
+            no_radius: true
+          %}
+        {% endif %}
+      </div>
+    </div>
+
+    {% if has_footer %}
+      <div class="about-story__footer">
+        {% if footer_eyebrow != blank %}
+          <p class="about-story__footer-eyebrow">{{ footer_eyebrow }}</p>
+        {% endif %}
+        {% if footer_heading != blank %}
+          <h3 class="about-story__footer-heading">{{ footer_heading }}</h3>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .about-story {
+    width: 100%;
+    background-color: var(--about-story-bg, #F7F1E5);
+    padding: 60px 40px;
+  }
+
+  .about-story__container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: 40px;
+  }
+
+  .about-story__header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .about-story__eyebrow {
+    font-family: 'Alte Haas Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.72px;
+    text-transform: uppercase;
+    color: #D14626;
+    margin: 0 0 10px;
+  }
+
+  .about-story__heading {
+    font-family: 'Alte Haas Grotesk', sans-serif;
+    font-weight: 700;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin: 0;
+    text-align: center;
+  }
+
+  .about-story--heading-large .about-story__heading {
+    font-size: 87.801px;
+    letter-spacing: -0.878px;
+  }
+
+  .about-story--heading-medium .about-story__heading {
+    font-size: 60px;
+    letter-spacing: -0.6px;
+  }
+
+  .about-story--dark .about-story__heading {
+    color: #F7F1E5;
+  }
+
+  .about-story--light .about-story__heading {
+    color: #21262F;
+  }
+
+  .about-story__heading-text {
+    display: block;
+    white-space: pre-line;
+  }
+
+  .about-story__heading-line {
+    display: block;
+    margin-top: -0.5em;
+  }
+
+  .about-story__heading-text--inline {
+    display: inline;
+    margin-right: 0.25em;
+  }
+
+  .about-story__heading-accent {
+    display: block;
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1;
+    text-transform: none;
+    color: #D14626;
+  }
+
+  .about-story__heading-accent--inline {
+    display: inline;
+    vertical-align: baseline;
+    position: relative;
+    top: 0.1em;
+  }
+
+  .about-story__heading-line + .about-story__heading-text {
+    margin-top: -0.15em;
+  }
+
+  .about-story--heading-large .about-story__heading-accent {
+    font-size: 146px;
+    letter-spacing: -5.84px;
+  }
+
+  .about-story--heading-medium .about-story__heading-accent {
+    font-size: 96px;
+    letter-spacing: -3.84px;
+  }
+
+  .about-story__subheading {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 32px;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.2;
+    letter-spacing: -1.28px;
+    color: #D14626;
+    margin: 32px auto 0;
+    max-width: 510px;
+    text-align: center;
+  }
+
+  .about-story__main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+    margin-bottom: 120px;
+  }
+
+  .about-story--image-left .about-story__content {
+    order: 2;
+  }
+
+  .about-story--image-left .about-story__media {
+    order: 1;
+  }
+
+  .about-story__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    max-width: 580px;
+  }
+
+  .about-story__body {
+    font-family: 'Work Sans', Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.18px;
+  }
+
+  .about-story--dark .about-story__body {
+    color: #F7F1E5;
+  }
+
+  .about-story--light .about-story__body {
+    color: #21262F;
+  }
+
+  .about-story__body p {
+    margin: 0 0 24px;
+  }
+
+  .about-story__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .about-story__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 40px;
+    height: 50px;
+    background-color: #D14626;
+    border: none;
+    border-radius: 3px;
+    font-family: 'Work Sans', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: #F7F1E5;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .about-story__button:hover {
+    opacity: 0.9;
+  }
+
+  .about-story--light .about-story__button:focus-visible {
+    outline: 2px solid #21262F;
+    outline-offset: 3px;
+  }
+
+  .about-story--dark .about-story__button:focus-visible {
+    outline: 2px solid #F7F1E5;
+    outline-offset: 3px;
+  }
+
+  .about-story__button--disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  .about-story__button--disabled:hover {
+    opacity: 0.7;
+  }
+
+  .about-story__media {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-story__media--rounded {
+    border-radius: 12px;
+  }
+
+  .about-story__image {
+    width: 100%;
+  }
+
+  .about-story__image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .about-story__image--mobile {
+    display: none;
+  }
+
+  .about-story__image--desktop {
+    display: block;
+  }
+
+  .about-story__footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+    margin-top: 80px;
+  }
+
+  .about-story__footer-eyebrow {
+    font-family: 'Alte Haas Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.72px;
+    text-transform: uppercase;
+    color: #D14626;
+    margin: 0;
+  }
+
+  .about-story__footer-heading {
+    font-family: 'Alte Haas Grotesk', sans-serif;
+    font-size: 60px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.6px;
+    text-transform: uppercase;
+    margin: 0;
+    max-width: 877px;
+  }
+
+  .about-story--dark .about-story__footer-heading {
+    color: #F7F1E5;
+  }
+
+  .about-story--light .about-story__footer-heading {
+    color: #21262F;
+  }
+
+  @media screen and (max-width: 1200px) {
+    .about-story--heading-large .about-story__heading {
+      font-size: 72px;
+      letter-spacing: -0.72px;
+    }
+
+    .about-story--heading-large .about-story__heading-accent {
+      font-size: 120px;
+      letter-spacing: -4.8px;
+    }
+
+    .about-story--heading-medium .about-story__heading-accent {
+      font-size: 80px;
+      letter-spacing: -3.2px;
+    }
+  }
+
+  @media screen and (max-width: 990px) {
+    .about-story {
+      padding: 48px 30px;
+    }
+
+    .about-story__container {
+      padding-top: 24px;
+    }
+
+    .about-story__header {
+      margin-bottom: 40px;
+    }
+
+    .about-story__main {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .about-story__content,
+    .about-story--image-left .about-story__content {
+      order: 1;
+      max-width: 100%;
+    }
+
+    .about-story__media,
+    .about-story--image-left .about-story__media {
+      order: 2;
+    }
+
+    .about-story__image--mobile {
+      display: block;
+    }
+
+    .about-story__image--desktop {
+      display: none;
+    }
+
+    .about-story--heading-large .about-story__heading {
+      font-size: 56px;
+      letter-spacing: -0.56px;
+    }
+
+    .about-story--heading-medium .about-story__heading {
+      font-size: 44px;
+      letter-spacing: -0.44px;
+    }
+
+    .about-story--heading-large .about-story__heading-accent {
+      font-size: 90px;
+      letter-spacing: -3.6px;
+    }
+
+    .about-story--heading-medium .about-story__heading-accent {
+      font-size: 64px;
+      letter-spacing: -2.56px;
+    }
+
+    .about-story__subheading {
+      font-size: 26px;
+      letter-spacing: -1.04px;
+      margin-top: 24px;
+    }
+
+    .about-story__body {
+      font-size: 16px;
+    }
+
+    .about-story__footer {
+      margin-top: 48px;
+      gap: 14px;
+    }
+
+    .about-story__footer-eyebrow {
+      font-size: 14px;
+      letter-spacing: 0.56px;
+    }
+
+    .about-story__footer-heading {
+      font-size: 36px;
+      letter-spacing: -0.36px;
+      line-height: 1.15;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .about-story {
+      padding: 40px 20px;
+    }
+
+    .about-story__container {
+      padding-top: 0;
+    }
+
+    .about-story__header {
+      margin-bottom: 32px;
+    }
+
+    .about-story__main {
+      gap: 24px;
+    }
+
+    .about-story__eyebrow {
+      font-size: 14px;
+      letter-spacing: 0.56px;
+    }
+
+    .about-story--heading-large .about-story__heading {
+      font-size: 36px;
+      letter-spacing: -0.36px;
+    }
+
+    .about-story--heading-medium .about-story__heading {
+      font-size: 28px;
+      letter-spacing: -0.28px;
+    }
+
+    .about-story--heading-large .about-story__heading-accent {
+      font-size: 56px;
+      letter-spacing: -2.24px;
+    }
+
+    .about-story--heading-medium .about-story__heading-accent {
+      font-size: 42px;
+      letter-spacing: -1.68px;
+    }
+
+    .about-story__subheading {
+      font-size: 20px;
+      letter-spacing: -0.8px;
+      margin-top: 16px;
+    }
+
+    .about-story__body {
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .about-story__body p {
+      margin: 0 0 16px;
+    }
+
+    .about-story__button {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .about-story__footer {
+      margin-top: 32px;
+      gap: 12px;
+    }
+
+    .about-story__footer-eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.48px;
+    }
+
+    .about-story__footer-heading {
+      font-size: 24px;
+      letter-spacing: -0.24px;
+      line-height: 1.2;
+    }
+  }
+
+  @media screen and (max-width: 400px) {
+    .about-story {
+      padding: 32px 16px;
+    }
+
+    .about-story--heading-large .about-story__heading {
+      font-size: 28px;
+      letter-spacing: -0.28px;
+    }
+
+    .about-story--heading-large .about-story__heading-accent {
+      font-size: 44px;
+      letter-spacing: -1.76px;
+    }
+
+    .about-story--heading-medium .about-story__heading-accent {
+      font-size: 36px;
+      letter-spacing: -1.44px;
+    }
+
+    .about-story__footer {
+      margin-top: 24px;
+      gap: 8px;
+    }
+
+    .about-story__footer-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.44px;
+    }
+
+    .about-story__footer-heading {
+      font-size: 20px;
+      letter-spacing: -0.2px;
+      line-height: 1.2;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "t:sections.about-story.name",
+  "tag": "section",
+  "class": "about-story-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.about-story.settings.header__colors.content"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.about-story.settings.background_color.label",
+      "default": "#F7F1E5"
+    },
+    {
+      "type": "select",
+      "id": "text_color_scheme",
+      "label": "t:sections.about-story.settings.text_color_scheme.label",
+      "options": [
+        {
+          "value": "light",
+          "label": "t:sections.about-story.settings.text_color_scheme.option__light"
+        },
+        {
+          "value": "dark",
+          "label": "t:sections.about-story.settings.text_color_scheme.option__dark"
+        }
+      ],
+      "default": "light",
+      "info": "t:sections.about-story.settings.text_color_scheme.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.about-story.settings.header__eyebrow.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "t:sections.about-story.settings.show_eyebrow.label",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "t:sections.about-story.settings.eyebrow_text.label",
+      "default": "Our Story"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.about-story.settings.header__heading.content"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "t:sections.about-story.settings.heading_size.label",
+      "options": [
+        {
+          "value": "large",
+          "label": "t:sections.about-story.settings.heading_size.option__large"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.about-story.settings.heading_size.option__medium"
+        }
+      ],
+      "default": "large",
+      "info": "t:sections.about-story.settings.heading_size.info"
+    },
+    {
+      "type": "textarea",
+      "id": "heading_line_1",
+      "label": "t:sections.about-story.settings.heading_line_1.label",
+      "info": "t:sections.about-story.settings.heading_line_1.info",
+      "default": "The world is\nmoving faster."
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2_prefix",
+      "label": "t:sections.about-story.settings.heading_line_2_prefix.label",
+      "info": "t:sections.about-story.settings.heading_line_2_prefix.info",
+      "default": "You"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "t:sections.about-story.settings.heading_accent.label",
+      "info": "t:sections.about-story.settings.heading_accent.info",
+      "default": "don't have to"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_3",
+      "label": "t:sections.about-story.settings.heading_line_3.label",
+      "info": "t:sections.about-story.settings.heading_line_3.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.about-story.settings.header__subheading.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subheading",
+      "label": "t:sections.about-story.settings.show_subheading.label",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "subheading_text",
+      "label": "t:sections.about-story.settings.subheading_text.label",
+      "default": "What if the thing we've been searching for has been under our feet all along?"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.about-story.settings.header__body.content"
+    },
+    {
+      "type": "richtext",
+      "id": "description_text",
+      "label": "t:sections.about-story.settings.description_text.label",
+      "default": "<p>Somewhere along the way, \"wellness\" became another thing to optimize – measured in metrics, screens, and stress. We've been told to do more, move faster, and track everything.</p><p>WalkFully is a rebellion against that noise. It's a movement for people who want to live slower, deeper, and more human lives – starting with the most natural act we have: walking.</p><p>Because walking isn't just movement. It's medicine. It's meaning. It's how we return to ourselves.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.about-story.settings.header__button.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "t:sections.about-story.settings.show_button.label",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "t:sections.about-story.settings.button_text.label",
+      "default": "Join the Movement"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.about-story.settings.button_link.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.about-story.settings.header__image.content"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.about-story.settings.image.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "t:sections.about-story.settings.mobile_image.label",
+      "info": "t:sections.about-story.settings.mobile_image.info"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "t:sections.about-story.settings.image_alt.label",
+      "info": "t:sections.about-story.settings.image_alt.info"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "t:sections.about-story.settings.image_position.label",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.about-story.settings.image_position.option__left"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.about-story.settings.image_position.option__right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "checkbox",
+      "id": "image_rounded",
+      "label": "t:sections.about-story.settings.image_rounded.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.about-story.settings.header__footer.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_footer",
+      "label": "t:sections.about-story.settings.show_footer.label",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "footer_eyebrow",
+      "label": "t:sections.about-story.settings.footer_eyebrow.label",
+      "default": "Our Ethos"
+    },
+    {
+      "type": "textarea",
+      "id": "footer_heading",
+      "label": "t:sections.about-story.settings.footer_heading.label",
+      "default": "These are the principles we walk by"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.about-story.settings.header__spacing.content"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "label": "t:sections.about-story.settings.section_spacing_top.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.about-story.settings.section_spacing.option__none"
+        },
+        {
+          "value": "small",
+          "label": "t:sections.about-story.settings.section_spacing.option__small"
+        },
+        {
+          "value": "standard",
+          "label": "t:sections.about-story.settings.section_spacing.option__standard"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.about-story.settings.section_spacing.option__large"
+        },
+        {
+          "value": "xl",
+          "label": "t:sections.about-story.settings.section_spacing.option__xl"
+        },
+        {
+          "value": "xxl",
+          "label": "t:sections.about-story.settings.section_spacing.option__xxl"
+        }
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "label": "t:sections.about-story.settings.section_spacing_bottom.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.about-story.settings.section_spacing.option__none"
+        },
+        {
+          "value": "small",
+          "label": "t:sections.about-story.settings.section_spacing.option__small"
+        },
+        {
+          "value": "standard",
+          "label": "t:sections.about-story.settings.section_spacing.option__standard"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.about-story.settings.section_spacing.option__large"
+        },
+        {
+          "value": "xl",
+          "label": "t:sections.about-story.settings.section_spacing.option__xl"
+        },
+        {
+          "value": "xxl",
+          "label": "t:sections.about-story.settings.section_spacing.option__xxl"
+        }
+      ],
+      "default": "standard"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.about-story.presets.name"
+    }
+  ]
+}
+{% endschema %}

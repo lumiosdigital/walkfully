@@ -1420,6 +1420,100 @@
         "name": "Testimonials"
       }
     },
+    "stories_carousel": {
+      "name": "Stories carousel",
+      "settings": {
+        "background_color": {
+          "label": "Background color"
+        },
+        "header_content": {
+          "content": "Header"
+        },
+        "show_eyebrow": {
+          "label": "Show eyebrow"
+        },
+        "eyebrow_text": {
+          "label": "Eyebrow text"
+        },
+        "eyebrow_style": {
+          "label": "Eyebrow style",
+          "option__stylized": "Stylized (large italic)",
+          "option__small": "Small (uppercase)"
+        },
+        "eyebrow_color": {
+          "label": "Eyebrow color"
+        },
+        "show_heading": {
+          "label": "Show heading"
+        },
+        "heading_text": {
+          "label": "Heading text"
+        },
+        "heading_color": {
+          "label": "Heading color"
+        },
+        "show_description": {
+          "label": "Show description"
+        },
+        "description_text": {
+          "label": "Description text"
+        },
+        "description_color": {
+          "label": "Description color"
+        },
+        "header_cards": {
+          "content": "Cards"
+        },
+        "card_text_color": {
+          "label": "Card text color"
+        },
+        "nav_color": {
+          "label": "Navigation color"
+        }
+      },
+      "blocks": {
+        "story_card": {
+          "name": "Story card",
+          "settings": {
+            "image": {
+              "label": "Image"
+            },
+            "name": {
+              "label": "Name"
+            },
+            "location": {
+              "label": "Location"
+            },
+            "quote": {
+              "label": "Quote"
+            },
+            "link": {
+              "label": "Link"
+            }
+          }
+        },
+        "team_member": {
+          "name": "Team member",
+          "settings": {
+            "image": {
+              "label": "Portrait image"
+            },
+            "name": {
+              "label": "Name"
+            },
+            "title": {
+              "label": "Title / Role"
+            },
+            "description": {
+              "label": "Description"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Stories carousel"
+      }
+    },
     "video-hero": {
       "name": "Video hero",
       "settings": {
@@ -2814,20 +2908,88 @@
           "option__homepage": "Homepage (with label and CTA)",
           "option__benefits": "Benefits (with benefit items)"
         },
+        "header__image": {
+          "content": "Image"
+        },
+        "image": {
+          "label": "Desktop image"
+        },
+        "mobile_image": {
+          "label": "Mobile image",
+          "info": "Optional. Uses desktop image if not set."
+        },
+        "image_position": {
+          "label": "Image position"
+        },
+        "header__content_background": {
+          "content": "Content background"
+        },
+        "content_bg_color": {
+          "label": "Background color"
+        },
+        "pattern_image": {
+          "label": "Background pattern image"
+        },
+        "pattern_opacity": {
+          "label": "Pattern opacity"
+        },
+        "header__label": {
+          "content": "Label"
+        },
         "show_label": {
           "label": "Show label"
         },
-        "show_cta": {
-          "label": "Show CTA button"
+        "label_text": {
+          "label": "Label text"
+        },
+        "label_position": {
+          "label": "Label position",
+          "option__above": "Above heading",
+          "option__below": "Below heading"
+        },
+        "label_color": {
+          "label": "Label color"
+        },
+        "header__heading": {
+          "content": "Heading"
+        },
+        "heading_text": {
+          "label": "Heading text"
+        },
+        "header__description": {
+          "content": "Description"
+        },
+        "show_description": {
+          "label": "Show description"
+        },
+        "description_text": {
+          "label": "Description text"
+        },
+        "header__features": {
+          "content": "Features (homepage layout)"
         },
         "show_features": {
-          "label": "Show features list"
+          "label": "Show features list",
+          "info": "Only displays when using homepage layout"
         },
-        "show_benefits": {
-          "label": "Show benefits list"
+        "feature_1_text": {
+          "label": "Feature 1"
+        },
+        "feature_2_text": {
+          "label": "Feature 2"
+        },
+        "feature_3_text": {
+          "label": "Feature 3"
+        },
+        "feature_icon_color": {
+          "label": "Icon color"
         },
         "header__benefits": {
           "content": "Benefits (for benefits layout)"
+        },
+        "show_benefits": {
+          "label": "Show benefits list",
+          "info": "Only displays when using benefits layout"
         },
         "benefits_info": {
           "content": "These items only display when using the benefits layout style."
@@ -2861,10 +3023,160 @@
         },
         "benefit_5_description": {
           "label": "Benefit 5 description"
+        },
+        "header__button": {
+          "content": "Button"
+        },
+        "show_cta": {
+          "label": "Show CTA button"
+        },
+        "button_text": {
+          "label": "Button text"
+        },
+        "button_link": {
+          "label": "Button link"
+        },
+        "header__animations": {
+          "content": "Animations"
+        },
+        "enable_animations": {
+          "label": "Enable animations"
         }
       },
       "presets": {
         "name": "Program promo"
+      }
+    },
+    "about-story": {
+      "name": "About story",
+      "settings": {
+        "header__colors": {
+          "content": "Colors"
+        },
+        "background_color": {
+          "label": "Background color"
+        },
+        "text_color_scheme": {
+          "label": "Text color scheme",
+          "option__light": "Dark text (for light backgrounds)",
+          "option__dark": "Light text (for dark backgrounds)",
+          "info": "Choose based on your background color"
+        },
+        "header__eyebrow": {
+          "content": "Eyebrow"
+        },
+        "show_eyebrow": {
+          "label": "Show eyebrow"
+        },
+        "eyebrow_text": {
+          "label": "Eyebrow text"
+        },
+        "header__heading": {
+          "content": "Heading"
+        },
+        "heading_size": {
+          "label": "Heading size",
+          "option__large": "Large (88px heading, 146px accent)",
+          "option__medium": "Medium (60px heading, 96px accent)",
+          "info": "Large for intro sections, medium for story sections"
+        },
+        "heading_line_1": {
+          "label": "Line 1 (unstyled)",
+          "info": "Use line breaks for multiple lines"
+        },
+        "heading_line_2_prefix": {
+          "label": "Line 2 prefix (unstyled)",
+          "info": "Unstyled text before accent, on same line"
+        },
+        "heading_accent": {
+          "label": "Line 2 accent (styled)",
+          "info": "Displays in stylized italic, on same line as prefix"
+        },
+        "heading_line_3": {
+          "label": "Line 3 (unstyled)",
+          "info": "Optional text after accent"
+        },
+        "header__subheading": {
+          "content": "Subheading"
+        },
+        "show_subheading": {
+          "label": "Show subheading"
+        },
+        "subheading_text": {
+          "label": "Subheading text"
+        },
+        "header__body": {
+          "content": "Body content"
+        },
+        "description_text": {
+          "label": "Description"
+        },
+        "header__button": {
+          "content": "Button"
+        },
+        "show_button": {
+          "label": "Show button"
+        },
+        "button_text": {
+          "label": "Button text"
+        },
+        "button_link": {
+          "label": "Button link"
+        },
+        "header__image": {
+          "content": "Image"
+        },
+        "image": {
+          "label": "Desktop image"
+        },
+        "mobile_image": {
+          "label": "Mobile image",
+          "info": "Optional. Uses desktop image if not set."
+        },
+        "image_alt": {
+          "label": "Image alt text",
+          "info": "Describe the image for accessibility and SEO. Falls back to the image's alt text in Shopify."
+        },
+        "image_position": {
+          "label": "Image position",
+          "option__left": "Left",
+          "option__right": "Right"
+        },
+        "image_rounded": {
+          "label": "Rounded corners"
+        },
+        "header__footer": {
+          "content": "Footer section"
+        },
+        "show_footer": {
+          "label": "Show footer section"
+        },
+        "footer_eyebrow": {
+          "label": "Footer eyebrow"
+        },
+        "footer_heading": {
+          "label": "Footer heading"
+        },
+        "header__spacing": {
+          "content": "Section spacing"
+        },
+        "section_spacing_top": {
+          "label": "Top spacing"
+        },
+        "section_spacing_bottom": {
+          "label": "Bottom spacing"
+        },
+        "section_spacing": {
+          "option__none": "None",
+          "option__small": "Small",
+          "option__standard": "Standard",
+          "option__large": "Large",
+          "option__xl": "Extra large",
+          "option__xxl": "Extra extra large"
+        }
+      },
+      "presets": {
+        "name": "About story"
       }
     },
     "platform-cards": {
@@ -2922,6 +3234,12 @@
         "main_text_color": {
           "label": "Main text color"
         },
+        "accent_color": {
+          "label": "Accent text color"
+        },
+        "description_color": {
+          "label": "Description text color"
+        },
         "header__pattern": {
           "content": "Background pattern"
         },
@@ -2949,6 +3267,27 @@
         "main_text": {
           "label": "Main text"
         },
+        "header__secondary_heading": {
+          "content": "Secondary heading"
+        },
+        "show_secondary_heading": {
+          "label": "Show secondary heading"
+        },
+        "secondary_heading_prefix": {
+          "label": "Prefix text"
+        },
+        "secondary_heading_accent": {
+          "label": "Accent text"
+        },
+        "header__description": {
+          "content": "Description"
+        },
+        "show_description": {
+          "label": "Show description"
+        },
+        "description_text": {
+          "label": "Description text"
+        },
         "header__cta": {
           "content": "Call to action"
         },
@@ -2967,6 +3306,14 @@
         },
         "cta_text_color": {
           "label": "Button text color"
+        },
+        "cta_border_color": {
+          "label": "Button border color"
+        },
+        "button_style": {
+          "label": "Button style",
+          "option__filled": "Filled",
+          "option__outline": "Outline"
         },
         "header__banner_link": {
           "content": "Banner link"

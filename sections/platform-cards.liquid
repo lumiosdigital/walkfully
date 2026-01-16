@@ -98,11 +98,12 @@
         >
           {%- comment -%} Background Pattern {%- endcomment -%}
           {% if section.settings.card_1_pattern != blank %}
-            <div class="platform-cards__card-pattern">
+            <div class="platform-cards__card-pattern" aria-hidden="true">
               {% render 'image',
                 image: section.settings.card_1_pattern,
                 sizes: '100vw',
-                no_radius: true
+                no_radius: true,
+                alt: ''
               %}
             </div>
           {% endif %}
@@ -156,11 +157,12 @@
         >
           {%- comment -%} Background Pattern {%- endcomment -%}
           {% if section.settings.card_2_pattern != blank %}
-            <div class="platform-cards__card-pattern">
+            <div class="platform-cards__card-pattern" aria-hidden="true">
               {% render 'image',
                 image: section.settings.card_2_pattern,
                 sizes: '100vw',
-                no_radius: true
+                no_radius: true,
+                alt: ''
               %}
             </div>
           {% endif %}
@@ -214,11 +216,12 @@
         >
           {%- comment -%} Background Pattern {%- endcomment -%}
           {% if section.settings.card_3_pattern != blank %}
-            <div class="platform-cards__card-pattern">
+            <div class="platform-cards__card-pattern" aria-hidden="true">
               {% render 'image',
                 image: section.settings.card_3_pattern,
                 sizes: '100vw',
-                no_radius: true
+                no_radius: true,
+                alt: ''
               %}
             </div>
           {% endif %}
