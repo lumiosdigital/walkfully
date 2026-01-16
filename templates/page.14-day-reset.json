@@ -1,0 +1,24 @@
+{
+  "sections": {
+    "hero": {
+      "type": "walkfully-hero",
+      "settings": {
+        "layout_style": "page_hero",
+        "show_footer": false,
+        "show_centered_description": true,
+        "show_cta_button": true,
+        "cta_button_color": "#d14626",
+        "top_text": "14-DAY MIND & BODY REFRESH",
+        "middle_text": "Free",
+        "description_text": "A guided walking program to reset your daily rhythm, reconnect with your body, and build a sustainable movement practice.",
+        "cta_text": "Start Your Reset",
+        "cta_link": ""
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "settings": {}
+    }
+  },
+  "order": ["hero", "main"]
+}
