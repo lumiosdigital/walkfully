@@ -1,8 +1,23 @@
+{%- liquid
+  assign show_eyebrow = section.settings.show_eyebrow
+  assign show_heading = section.settings.show_heading
+  assign show_description = section.settings.show_description
+-%}
+
 <div
   class="
     stories-section
     color-{{ section.settings.color_scheme }}
     {% render 'section-classes', settings: section.settings -%}
+  "
+  style="
+    --stories-bg: {{ section.settings.background_color | default: '#F7F1E5' }};
+    --stories-eyebrow-color: {{ section.settings.eyebrow_color | default: '#D14626' }};
+    --stories-heading-color: {{ section.settings.heading_color | default: '#21262F' }};
+    --stories-description-color: {{ section.settings.description_color | default: '#21262F' }};
+    --stories-card-text-color: {{ section.settings.card_text_color | default: '#F7F1E5' }};
+    --stories-nav-color: {{ section.settings.nav_color | default: '#21262F' }};
+    --stories-track-color: {{ section.settings.nav_color | default: '#21262F' }};
   "
   {% if section.settings.enable_animations %}
     data-animate-elements-on-scroll
@@ -11,25 +26,28 @@
 >
   <div class="stories-section__container page-width">
     <div class="stories-header {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
-      {%- if section.settings.stories_accent_text != blank -%}
-        <p class="stories-header__accent">{{ section.settings.stories_accent_text }}</p>
+      {%- if show_eyebrow and section.settings.eyebrow_text != blank -%}
+        <p class="stories-header__eyebrow stories-header__eyebrow--{{ section.settings.eyebrow_style | default: 'stylized' }}">{{ section.settings.eyebrow_text }}</p>
       {%- endif -%}
-      {%- if section.settings.stories_heading_text != blank -%}
-        <h2 class="stories-header__title">{{ section.settings.stories_heading_text }}</h2>
+      {%- if show_heading and section.settings.heading_text != blank -%}
+        <h2 class="stories-header__title">{{ section.settings.heading_text | newline_to_br }}</h2>
+      {%- endif -%}
+      {%- if show_description and section.settings.description_text != blank -%}
+        <p class="stories-header__description">{{ section.settings.description_text }}</p>
       {%- endif -%}
     </div>
 
     <div class="stories-carousel">
       <component-slider
         class="stories-carousel__slider swiper"
-        data-mobile-columns="1"
-        data-tablet-columns="3"
-        data-desktop-columns="5"
+        data-mobile-columns="1.2"
+        data-tablet-columns="2.5"
+        data-desktop-columns="4"
         data-enable-loop="true"
         style="
-          --mobile-columns: 1;
-          --tablet-columns: 3;
-          --desktop-columns: 5;
+          --mobile-columns: 1.2;
+          --tablet-columns: 2.5;
+          --desktop-columns: 4;
         "
       >
         <div class="stories-carousel__wrapper swiper-wrapper">
@@ -45,20 +63,51 @@
                   animate: section.settings.enable_animations
                 %}
               </div>
+            {% elsif block.type == 'team_member' %}
+              <div class="stories-carousel__slide stories-carousel__slide--team swiper-slide" {{ block.shopify_attributes }}>
+                <div class="team-card {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
+                  <div class="team-card__image-wrapper">
+                    {%- if block.settings.member_image != blank -%}
+                      {% render 'image',
+                        wrapper_class: 'team-card__image',
+                        image: block.settings.member_image,
+                        sizes: '(max-width: 749px) 280px, (max-width: 989px) 33vw, 320px',
+                        aspect_ratio: '3-4',
+                        no_radius: true
+                      %}
+                    {%- else -%}
+                      <div class="team-card__image team-card__image--placeholder" style="--aspect-ratio: 3/4;">
+                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                      </div>
+                    {%- endif -%}
+                  </div>
+                  <div class="team-card__content">
+                    {%- if block.settings.member_name != blank -%}
+                      <p class="team-card__name">{{ block.settings.member_name | upcase }}</p>
+                    {%- endif -%}
+                    {%- if block.settings.member_title != blank -%}
+                      <p class="team-card__title">{{ block.settings.member_title }}</p>
+                    {%- endif -%}
+                    {%- if block.settings.member_description != blank -%}
+                      <p class="team-card__description">{{ block.settings.member_description }}</p>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
             {% endif %}
           {% endfor %}
         </div>
 
         <button type="button" class="stories-carousel__nav stories-carousel__nav--prev swiper-button-prev" aria-label="{{ 'general.slider.previous_slide' | t }}">
           <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-            <rect x="-0.5" y="0.5" width="29" height="29" rx="14.5" transform="matrix(-1 0 0 1 29 0)" stroke="#21262F" stroke-opacity="0.3"/>
-            <path opacity="0.3" d="M21 15H9M9 15L15 9M9 15L15 21" stroke="#21262F"/>
+            <rect x="-0.5" y="0.5" width="29" height="29" rx="14.5" transform="matrix(-1 0 0 1 29 0)" stroke="currentColor" stroke-opacity="0.3"/>
+            <path opacity="0.3" d="M21 15H9M9 15L15 9M9 15L15 21" stroke="currentColor"/>
           </svg>
         </button>
         <button type="button" class="stories-carousel__nav stories-carousel__nav--next swiper-button-next" aria-label="{{ 'general.slider.next_slide' | t }}">
           <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-            <rect x="0.5" y="0.5" width="29" height="29" rx="14.5" stroke="#21262F" stroke-opacity="0.3"/>
-            <path opacity="0.3" d="M10 15H20M20 15L15 10M20 15L15 20" stroke="#21262F"/>
+            <rect x="0.5" y="0.5" width="29" height="29" rx="14.5" stroke="currentColor" stroke-opacity="0.3"/>
+            <path opacity="0.3" d="M10 15H20M20 15L15 10M20 15L15 20" stroke="currentColor"/>
           </svg>
         </button>
       </component-slider>
@@ -70,14 +119,14 @@
         <div class="stories-footer__nav">
           <button type="button" class="stories-footer__btn stories-footer__btn--prev" aria-label="{{ 'general.slider.previous_slide' | t }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-              <rect x="-0.5" y="0.5" width="29" height="29" rx="14.5" transform="matrix(-1 0 0 1 29 0)" stroke="#21262F" stroke-opacity="0.3"/>
-              <path opacity="0.3" d="M21 15H9M9 15L15 9M9 15L15 21" stroke="#21262F"/>
+              <rect x="-0.5" y="0.5" width="29" height="29" rx="14.5" transform="matrix(-1 0 0 1 29 0)" stroke="currentColor" stroke-opacity="0.3"/>
+              <path opacity="0.3" d="M21 15H9M9 15L15 9M9 15L15 21" stroke="currentColor"/>
             </svg>
           </button>
           <button type="button" class="stories-footer__btn stories-footer__btn--next" aria-label="{{ 'general.slider.next_slide' | t }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-              <rect x="0.5" y="0.5" width="29" height="29" rx="14.5" stroke="#21262F" stroke-opacity="0.3"/>
-              <path opacity="0.3" d="M10 15H20M20 15L15 10M20 15L15 20" stroke="#21262F"/>
+              <rect x="0.5" y="0.5" width="29" height="29" rx="14.5" stroke="currentColor" stroke-opacity="0.3"/>
+              <path opacity="0.3" d="M10 15H20M20 15L15 10M20 15L15 20" stroke="currentColor"/>
             </svg>
           </button>
         </div>
@@ -174,7 +223,7 @@
 
 {% schema %}
 {
-  "name": "Stories carousel",
+  "name": "t:sections.stories_carousel.name",
   "class": "stories-section-wrapper",
   "tag": "section",
   "disabled_on": {
@@ -194,20 +243,99 @@
       "default": "scheme-1"
     },
     {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.stories_carousel.settings.background_color.label",
+      "default": "#F7F1E5"
+    },
+    {
       "type": "header",
-      "content": "Header"
+      "content": "t:sections.stories_carousel.settings.header_content.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "t:sections.stories_carousel.settings.show_eyebrow.label",
+      "default": true
     },
     {
       "type": "text",
-      "id": "stories_accent_text",
-      "label": "Accent text",
+      "id": "eyebrow_text",
+      "label": "t:sections.stories_carousel.settings.eyebrow_text.label",
       "default": "Stories"
     },
     {
-      "type": "text",
-      "id": "stories_heading_text",
-      "label": "Heading text",
+      "type": "select",
+      "id": "eyebrow_style",
+      "label": "t:sections.stories_carousel.settings.eyebrow_style.label",
+      "options": [
+        {
+          "value": "stylized",
+          "label": "t:sections.stories_carousel.settings.eyebrow_style.option__stylized"
+        },
+        {
+          "value": "small",
+          "label": "t:sections.stories_carousel.settings.eyebrow_style.option__small"
+        }
+      ],
+      "default": "stylized"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "t:sections.stories_carousel.settings.eyebrow_color.label",
+      "default": "#E1E571"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "t:sections.stories_carousel.settings.show_heading.label",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "heading_text",
+      "label": "t:sections.stories_carousel.settings.heading_text.label",
       "default": "FROM THE WALK"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "t:sections.stories_carousel.settings.heading_color.label",
+      "default": "#21262F"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "t:sections.stories_carousel.settings.show_description.label",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "description_text",
+      "label": "t:sections.stories_carousel.settings.description_text.label"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "t:sections.stories_carousel.settings.description_color.label",
+      "default": "#21262F"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.stories_carousel.settings.header_cards.content"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "t:sections.stories_carousel.settings.card_text_color.label",
+      "default": "#F7F1E5"
+    },
+    {
+      "type": "color",
+      "id": "nav_color",
+      "label": "t:sections.stories_carousel.settings.nav_color.label",
+      "default": "#21262F"
     },
     {
       "type": "header",
@@ -297,43 +425,86 @@
   "blocks": [
     {
       "type": "story_card",
-      "name": "Story card",
+      "name": "t:sections.stories_carousel.blocks.story_card.name",
       "settings": [
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Image"
+          "label": "t:sections.stories_carousel.blocks.story_card.settings.image.label"
         },
         {
           "type": "text",
           "id": "name",
-          "label": "Name",
+          "label": "t:sections.stories_carousel.blocks.story_card.settings.name.label",
           "default": "Name"
         },
         {
           "type": "text",
           "id": "location",
-          "label": "Location",
+          "label": "t:sections.stories_carousel.blocks.story_card.settings.location.label",
           "default": "Location"
         },
         {
           "type": "textarea",
           "id": "quote",
-          "label": "Quote",
+          "label": "t:sections.stories_carousel.blocks.story_card.settings.quote.label",
           "default": "I walk to quiet my mind"
         },
         {
           "type": "url",
           "id": "link",
-          "label": "Link (optional)"
+          "label": "t:sections.stories_carousel.blocks.story_card.settings.link.label"
+        }
+      ]
+    },
+    {
+      "type": "team_member",
+      "name": "t:sections.stories_carousel.blocks.team_member.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "member_image",
+          "label": "t:sections.stories_carousel.blocks.team_member.settings.image.label"
+        },
+        {
+          "type": "text",
+          "id": "member_name",
+          "label": "t:sections.stories_carousel.blocks.team_member.settings.name.label",
+          "default": "Dr. Jane Smith"
+        },
+        {
+          "type": "text",
+          "id": "member_title",
+          "label": "t:sections.stories_carousel.blocks.team_member.settings.title.label",
+          "default": "Neuroscientist"
+        },
+        {
+          "type": "textarea",
+          "id": "member_description",
+          "label": "t:sections.stories_carousel.blocks.team_member.settings.description.label",
+          "default": "The science of motion and mental clarity"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Stories carousel",
-      "category": "t:categories.other"
+      "name": "t:sections.stories_carousel.presets.name",
+      "category": "t:categories.other",
+      "settings": {
+        "background_color": "#F7F1E5",
+        "show_eyebrow": true,
+        "eyebrow_text": "Stories",
+        "eyebrow_style": "stylized",
+        "eyebrow_color": "#D14626",
+        "show_heading": true,
+        "heading_text": "FROM THE WALK",
+        "heading_color": "#21262F",
+        "show_description": false,
+        "description_color": "#21262F",
+        "card_text_color": "#F7F1E5",
+        "nav_color": "#21262F"
+      }
     }
   ]
 }

@@ -5,7 +5,9 @@
     assign is_benefits = true
   endif
   assign show_label = section.settings.show_label
+  assign label_position = section.settings.label_position | default: 'above'
   assign show_cta = section.settings.show_cta
+  assign show_description = section.settings.show_description
   assign show_features = section.settings.show_features
   assign show_benefits = section.settings.show_benefits
   assign image_position = section.settings.image_position | default: 'left'
@@ -17,6 +19,7 @@
     program-promo
     program-promo--{{ layout_style }}
     {% if image_position == 'right' %}program-promo--image-right{% endif %}
+    {% if label_position == 'below' %}program-promo--label-below{% endif %}
     color-{{ section.settings.color_scheme }}
   "
   style="
@@ -63,17 +66,18 @@
 
   <div class="program-promo__content-wrapper">
     {% if section.settings.pattern_image != blank %}
-      <div class="program-promo__pattern">
+      <div class="program-promo__pattern" aria-hidden="true">
         {% render 'image',
           image: section.settings.pattern_image,
           sizes: '50vw',
-          no_radius: true
+          no_radius: true,
+          alt: ''
         %}
       </div>
     {% endif %}
 
     <div class="program-promo__content">
-      {% if show_label and section.settings.label_text != blank %}
+      {% if show_label and section.settings.label_text != blank and label_position == 'above' %}
         <div class="program-promo__label">
           {{ section.settings.label_text }}
         </div>
@@ -85,7 +89,13 @@
         </h2>
       {% endif %}
 
-      {% if section.settings.description_text != blank %}
+      {% if show_label and section.settings.label_text != blank and label_position == 'below' %}
+        <div class="program-promo__label program-promo__label--below">
+          {{ section.settings.label_text }}
+        </div>
+      {% endif %}
+
+      {% if show_description and section.settings.description_text != blank %}
         <p class="program-promo__description">
           {{ section.settings.description_text | newline_to_br }}
         </p>
@@ -194,9 +204,9 @@
             {{ section.settings.button_text }}
           </a>
         {% else %}
-          <span class="program-promo__cta program-promo__cta--disabled" aria-disabled="true">
+          <button type="button" class="program-promo__cta program-promo__cta--disabled" disabled>
             {{ section.settings.button_text }}
-          </span>
+          </button>
         {% endif %}
       {% endif %}
     </div>
@@ -236,6 +246,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center 20%;
   }
 
   .program-promo__placeholder {
@@ -315,7 +326,20 @@
     letter-spacing: -0.6px;
     text-transform: uppercase;
     color: #F7F1E5;
-    margin: -20px 0 0 0;
+    margin: -25px 0 0 0;
+  }
+
+  .program-promo--label-below .program-promo__heading {
+    margin-top: 0;
+  }
+
+  .program-promo__label:not(.program-promo__label--below) + .program-promo__heading {
+    margin-top: -25px;
+    transform: translateY(-20px);
+  }
+
+  .program-promo__label--below {
+    margin-top: -30px;
   }
 
   .program-promo__description {
@@ -507,6 +531,10 @@
       margin-top: -12px;
     }
 
+    .program-promo__label--below {
+      margin-top: -18px;
+    }
+
     .program-promo__description {
       font-size: 16px;
     }
@@ -541,11 +569,11 @@
 
   @media screen and (max-width: 749px) {
     .program-promo__image-wrapper {
-      min-height: 40vh;
+      min-height: 30vh;
     }
 
     .program-promo__content-wrapper {
-      padding: 40px 20px;
+      padding: 32px 20px;
     }
 
     .program-promo__content {
@@ -560,6 +588,10 @@
     .program-promo__heading {
       font-size: 32px;
       margin-top: -8px;
+    }
+
+    .program-promo__label--below {
+      margin-top: -12px;
     }
 
     .program-promo__description {
@@ -614,20 +646,29 @@
   }
 
   @media screen and (max-width: 400px) {
+    .program-promo__image-wrapper {
+      min-height: 25vh;
+    }
+
     .program-promo__content-wrapper {
-      padding: 32px 16px;
+      padding: 24px 16px;
     }
 
     .program-promo__content {
-      gap: 20px;
+      gap: 16px;
     }
 
     .program-promo__label {
-      font-size: 28px;
+      font-size: 24px;
+      letter-spacing: -0.96px;
     }
 
     .program-promo__heading {
-      font-size: 28px;
+      font-size: 24px;
+    }
+
+    .program-promo__label--below {
+      margin-top: -8px;
     }
 
     .program-promo__description {
@@ -704,67 +745,55 @@
       "default": "homepage"
     },
     {
-      "type": "checkbox",
-      "id": "show_label",
-      "label": "t:sections.program-promo.settings.show_label.label",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_cta",
-      "label": "t:sections.program-promo.settings.show_cta.label",
-      "default": true
-    },
-    {
       "type": "header",
-      "content": "Image"
+      "content": "t:sections.program-promo.settings.header__image.content"
     },
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Desktop image"
+      "label": "t:sections.program-promo.settings.image.label"
     },
     {
       "type": "image_picker",
       "id": "mobile_image",
-      "label": "Mobile image",
-      "info": "Optional. Uses desktop image if not set."
+      "label": "t:sections.program-promo.settings.mobile_image.label",
+      "info": "t:sections.program-promo.settings.mobile_image.info"
     },
     {
       "type": "select",
       "id": "image_position",
-      "label": "Image position",
+      "label": "t:sections.program-promo.settings.image_position.label",
       "options": [
         {
           "value": "left",
-          "label": "Left"
+          "label": "t:settings_schema.direction.left"
         },
         {
           "value": "right",
-          "label": "Right"
+          "label": "t:settings_schema.direction.right"
         }
       ],
       "default": "left"
     },
     {
       "type": "header",
-      "content": "Content Background"
+      "content": "t:sections.program-promo.settings.header__content_background.content"
     },
     {
       "type": "color",
       "id": "content_bg_color",
-      "label": "Background color",
+      "label": "t:sections.program-promo.settings.content_bg_color.label",
       "default": "#7C7A2E"
     },
     {
       "type": "image_picker",
       "id": "pattern_image",
-      "label": "Background pattern image"
+      "label": "t:sections.program-promo.settings.pattern_image.label"
     },
     {
       "type": "range",
       "id": "pattern_opacity",
-      "label": "Pattern opacity",
+      "label": "t:sections.program-promo.settings.pattern_opacity.label",
       "min": 0,
       "max": 100,
       "step": 5,
@@ -773,73 +802,101 @@
     },
     {
       "type": "header",
-      "content": "Label"
+      "content": "t:sections.program-promo.settings.header__label.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_label",
+      "label": "t:sections.program-promo.settings.show_label.label",
+      "default": true
     },
     {
       "type": "text",
       "id": "label_text",
-      "label": "Label text",
+      "label": "t:sections.program-promo.settings.label_text.label",
       "default": "free program"
+    },
+    {
+      "type": "select",
+      "id": "label_position",
+      "label": "t:sections.program-promo.settings.label_position.label",
+      "options": [
+        {
+          "value": "above",
+          "label": "t:sections.program-promo.settings.label_position.option__above"
+        },
+        {
+          "value": "below",
+          "label": "t:sections.program-promo.settings.label_position.option__below"
+        }
+      ],
+      "default": "above"
     },
     {
       "type": "color",
       "id": "label_color",
-      "label": "Label color",
+      "label": "t:sections.program-promo.settings.label_color.label",
       "default": "#FFCD68"
     },
     {
       "type": "header",
-      "content": "Heading"
+      "content": "t:sections.program-promo.settings.header__heading.content"
     },
     {
       "type": "textarea",
       "id": "heading_text",
-      "label": "Heading text",
+      "label": "t:sections.program-promo.settings.heading_text.label",
       "default": "The 14-Day\nWalking Reset"
     },
     {
       "type": "header",
-      "content": "Description"
+      "content": "t:sections.program-promo.settings.header__description.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "t:sections.program-promo.settings.show_description.label",
+      "default": true
     },
     {
       "type": "textarea",
       "id": "description_text",
-      "label": "Description text",
+      "label": "t:sections.program-promo.settings.description_text.label",
       "default": "A simple daily prompt. A moment of reflection.\nA steady return to your body, your breath, and your day."
     },
     {
       "type": "header",
-      "content": "Features (Homepage Layout)"
+      "content": "t:sections.program-promo.settings.header__features.content"
     },
     {
       "type": "checkbox",
       "id": "show_features",
-      "label": "Show features list",
+      "label": "t:sections.program-promo.settings.show_features.label",
       "default": true,
-      "info": "Only displays when using homepage layout"
+      "info": "t:sections.program-promo.settings.show_features.info"
     },
     {
       "type": "text",
       "id": "feature_1_text",
-      "label": "Feature 1",
+      "label": "t:sections.program-promo.settings.feature_1_text.label",
       "default": "Daily walking prompt"
     },
     {
       "type": "text",
       "id": "feature_2_text",
-      "label": "Feature 2",
+      "label": "t:sections.program-promo.settings.feature_2_text.label",
       "default": "Mini check-ins that build awareness"
     },
     {
       "type": "text",
       "id": "feature_3_text",
-      "label": "Feature 3",
+      "label": "t:sections.program-promo.settings.feature_3_text.label",
       "default": "Supportive community"
     },
     {
       "type": "color",
       "id": "feature_icon_color",
-      "label": "Icon color",
+      "label": "t:sections.program-promo.settings.feature_icon_color.label",
       "default": "#FFCD68"
     },
     {
@@ -849,9 +906,9 @@
     {
       "type": "checkbox",
       "id": "show_benefits",
-      "label": "Show benefits list",
+      "label": "t:sections.program-promo.settings.show_benefits.label",
       "default": true,
-      "info": "Only displays when using benefits layout"
+      "info": "t:sections.program-promo.settings.show_benefits.info"
     },
     {
       "type": "paragraph",
@@ -909,47 +966,53 @@
     },
     {
       "type": "header",
-      "content": "Button"
+      "content": "t:sections.program-promo.settings.header__button.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "t:sections.program-promo.settings.show_cta.label",
+      "default": true
     },
     {
       "type": "text",
       "id": "button_text",
-      "label": "Button text",
+      "label": "t:sections.program-promo.settings.button_text.label",
       "default": "Get on the list"
     },
     {
       "type": "url",
       "id": "button_link",
-      "label": "Button link"
+      "label": "t:sections.program-promo.settings.button_link.label"
     },
     {
       "type": "header",
-      "content": "Section Spacing"
+      "content": "t:settings_schema.header__section_spacing.content"
     },
     {
       "type": "select",
       "id": "section_spacing_top",
-      "label": "Top spacing",
+      "label": "t:settings_schema.top_spacing.label",
       "options": [
         {
           "value": "none",
-          "label": "None"
+          "label": "t:settings_schema.sizing.none"
         },
         {
           "value": "compact",
-          "label": "Small"
+          "label": "t:settings_schema.sizing.small"
         },
         {
           "value": "standard",
-          "label": "Medium"
+          "label": "t:settings_schema.sizing.medium"
         },
         {
           "value": "large",
-          "label": "Large"
+          "label": "t:settings_schema.sizing.large"
         },
         {
           "value": "x-large",
-          "label": "Extra Large"
+          "label": "t:settings_schema.sizing.x_large"
         }
       ],
       "default": "none"
@@ -957,45 +1020,45 @@
     {
       "type": "select",
       "id": "section_spacing_bottom",
-      "label": "Bottom spacing",
+      "label": "t:settings_schema.bottom_spacing.label",
       "options": [
         {
           "value": "none",
-          "label": "None"
+          "label": "t:settings_schema.sizing.none"
         },
         {
           "value": "compact",
-          "label": "Small"
+          "label": "t:settings_schema.sizing.small"
         },
         {
           "value": "standard",
-          "label": "Medium"
+          "label": "t:settings_schema.sizing.medium"
         },
         {
           "value": "large",
-          "label": "Large"
+          "label": "t:settings_schema.sizing.large"
         },
         {
           "value": "x-large",
-          "label": "Extra Large"
+          "label": "t:settings_schema.sizing.x_large"
         }
       ],
       "default": "none"
     },
     {
       "type": "header",
-      "content": "Animations"
+      "content": "t:sections.program-promo.settings.header__animations.content"
     },
     {
       "type": "checkbox",
       "id": "enable_animations",
-      "label": "Enable animations",
+      "label": "t:sections.program-promo.settings.enable_animations.label",
       "default": true
     }
   ],
   "presets": [
     {
-      "name": "Program Promo"
+      "name": "t:sections.program-promo.presets.name"
     }
   ]
 }

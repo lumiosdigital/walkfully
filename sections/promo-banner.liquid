@@ -6,6 +6,8 @@
 
   assign show_eyebrow = section.settings.show_eyebrow
   assign show_main_text = section.settings.show_main_text
+  assign show_secondary_heading = section.settings.show_secondary_heading
+  assign show_description = section.settings.show_description
   assign show_cta = section.settings.show_cta
 
   assign has_cta_link = false
@@ -17,6 +19,8 @@
   if show_cta and section.settings.cta_text != blank and has_cta_link and has_link == false
     assign show_cta_button = true
   endif
+
+  assign button_style = section.settings.button_style | default: 'filled'
 -%}
 
 {% if has_link %}
@@ -39,8 +43,11 @@
     --promo-banner-height: {{ section.settings.banner_height }}px;
     --promo-banner-eyebrow-color: {{ section.settings.eyebrow_color }};
     --promo-banner-main-text-color: {{ section.settings.main_text_color }};
+    --promo-banner-accent-color: {{ section.settings.accent_color | default: '#FFCD68' }};
+    --promo-banner-description-color: {{ section.settings.description_color | default: '#F7F1E5' }};
     --promo-banner-cta-bg: {{ section.settings.cta_background_color }};
     --promo-banner-cta-text: {{ section.settings.cta_text_color }};
+    --promo-banner-cta-border: {{ section.settings.cta_border_color | default: 'transparent' }};
   "
   data-section-id="{{ section.id }}"
 >
@@ -63,13 +70,30 @@
     {% endif %}
 
     {% if show_main_text and section.settings.main_text != blank %}
-      <p class="promo-banner__main-text">
-        {{ section.settings.main_text }}
+      <h2 class="promo-banner__main-text">
+        {{ section.settings.main_text | newline_to_br }}
+      </h2>
+    {% endif %}
+
+    {% if show_secondary_heading %}
+      <h3 class="promo-banner__secondary-heading">
+        {% if section.settings.secondary_heading_prefix != blank %}
+          <span class="promo-banner__secondary-text">{{ section.settings.secondary_heading_prefix | newline_to_br }}</span>
+        {% endif %}
+        {% if section.settings.secondary_heading_accent != blank %}
+          <span class="promo-banner__accent">{{ section.settings.secondary_heading_accent }}</span>
+        {% endif %}
+      </h3>
+    {% endif %}
+
+    {% if show_description and section.settings.description_text != blank %}
+      <p class="promo-banner__description">
+        {{ section.settings.description_text | newline_to_br }}
       </p>
     {% endif %}
 
     {% if show_cta_button %}
-      <a href="{{ section.settings.cta_link }}" class="promo-banner__cta">
+      <a href="{{ section.settings.cta_link }}" class="promo-banner__cta promo-banner__cta--{{ button_style }}">
         {{ section.settings.cta_text }}
       </a>
     {% endif %}
@@ -146,11 +170,51 @@
     font-weight: 700;
     font-size: 60px;
     font-style: normal;
-    line-height: 1;
+    line-height: 0.9;
     letter-spacing: -0.6px;
     text-transform: uppercase;
     color: var(--promo-banner-main-text-color, #F7F1E5);
     margin: 0;
+  }
+
+  .promo-banner__secondary-heading {
+    font-family: 'Alte Haas Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 60px;
+    font-style: normal;
+    line-height: 0.9;
+    letter-spacing: -0.6px;
+    text-transform: uppercase;
+    color: var(--promo-banner-main-text-color, #F7F1E5);
+    margin: -26px 0 0 0;
+    text-align: center;
+  }
+
+  .promo-banner__secondary-text {
+    color: var(--promo-banner-main-text-color, #F7F1E5);
+  }
+
+  .promo-banner__accent {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 96px;
+    line-height: 1;
+    letter-spacing: -3.84px;
+    text-transform: none;
+    color: var(--promo-banner-accent-color, #FFCD68);
+    margin-left: 0.08em;
+  }
+
+  .promo-banner__description {
+    font-family: 'Work Sans', Arial, sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.2px;
+    color: var(--promo-banner-description-color, #F7F1E5);
+    margin: 20px 0;
+    max-width: 700px;
   }
 
   .promo-banner__cta {
@@ -159,19 +223,35 @@
     justify-content: center;
     font-family: 'Work Sans', Arial, sans-serif;
     font-size: 13px;
+    font-style: normal;
     font-weight: 500;
+    line-height: normal;
     text-transform: uppercase;
     text-decoration: none;
-    color: var(--promo-banner-cta-text, #21262F);
+    color: var(--promo-banner-cta-text, #F7F1E5);
     background-color: var(--promo-banner-cta-bg, #F7F1E5);
     padding: 10px 40px;
-    min-height: 48px;
+    min-height: 40px;
     border-radius: 3px;
-    transition: opacity 0.2s ease;
+    border: 1px solid var(--promo-banner-cta-border, transparent);
+    transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .promo-banner__cta--outline {
+    background-color: transparent;
+    color: var(--promo-banner-cta-text, #F7F1E5);
+    border-color: var(--promo-banner-cta-border, #F7F1E5);
   }
 
   .promo-banner__cta:hover {
     opacity: 0.9;
+  }
+
+  .promo-banner__cta--outline:hover {
+    opacity: 1;
+    background-color: var(--promo-banner-cta-text, #F7F1E5);
+    color: var(--promo-banner-cta-bg, #D14626);
+    border-color: var(--promo-banner-cta-text, #F7F1E5);
   }
 
   .promo-banner__cta:focus-visible {
@@ -190,6 +270,21 @@
       letter-spacing: -0.42px;
     }
 
+    .promo-banner__secondary-heading {
+      font-size: 42px;
+      letter-spacing: -0.42px;
+      margin-top: -20px;
+    }
+
+    .promo-banner__accent {
+      font-size: 64px;
+      letter-spacing: -2.56px;
+    }
+
+    .promo-banner__description {
+      font-size: 18px;
+    }
+
     .promo-banner__content {
       gap: 16px;
     }
@@ -198,6 +293,7 @@
   @media screen and (max-width: 749px) {
     .promo-banner {
       padding: 24px 20px;
+      min-height: max(150px, calc(var(--promo-banner-height, 200px) * 0.65));
     }
 
     .promo-banner__eyebrow {
@@ -208,6 +304,21 @@
     .promo-banner__main-text {
       font-size: 32px;
       letter-spacing: -0.32px;
+    }
+
+    .promo-banner__secondary-heading {
+      font-size: 32px;
+      letter-spacing: -0.32px;
+      margin-top: -18px;
+    }
+
+    .promo-banner__accent {
+      font-size: 48px;
+      letter-spacing: -1.92px;
+    }
+
+    .promo-banner__description {
+      font-size: 16px;
     }
 
     .promo-banner__content {
@@ -222,6 +333,10 @@
   }
 
   @media screen and (max-width: 400px) {
+    .promo-banner {
+      min-height: max(120px, calc(var(--promo-banner-height, 200px) * 0.5));
+    }
+
     .promo-banner__eyebrow {
       font-size: 20px;
       letter-spacing: -0.4px;
@@ -230,6 +345,17 @@
     .promo-banner__main-text {
       font-size: 28px;
       letter-spacing: -0.28px;
+    }
+
+    .promo-banner__secondary-heading {
+      font-size: 28px;
+      letter-spacing: -0.28px;
+      margin-top: -16px;
+    }
+
+    .promo-banner__accent {
+      font-size: 40px;
+      letter-spacing: -1.6px;
     }
 
     .promo-banner__cta {
@@ -264,7 +390,7 @@
       "id": "banner_height",
       "label": "t:sections.promo-banner.settings.banner_height.label",
       "min": 100,
-      "max": 400,
+      "max": 600,
       "step": 10,
       "unit": "px",
       "default": 200
@@ -289,6 +415,18 @@
       "type": "color",
       "id": "main_text_color",
       "label": "t:sections.promo-banner.settings.main_text_color.label",
+      "default": "#F7F1E5"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "t:sections.promo-banner.settings.accent_color.label",
+      "default": "#FFCD68"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "t:sections.promo-banner.settings.description_color.label",
       "default": "#F7F1E5"
     },
     {
@@ -334,13 +472,50 @@
       "type": "checkbox",
       "id": "show_main_text",
       "label": "t:sections.promo-banner.settings.show_main_text.label",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "main_text",
+      "label": "t:sections.promo-banner.settings.main_text.label",
+      "default": "WALKFULLY ISN'T\nA BRAND. IT'S A"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.promo-banner.settings.header__secondary_heading.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_heading",
+      "label": "t:sections.promo-banner.settings.show_secondary_heading.label",
       "default": false
     },
     {
+      "type": "textarea",
+      "id": "secondary_heading_prefix",
+      "label": "t:sections.promo-banner.settings.secondary_heading_prefix.label"
+    },
+    {
       "type": "text",
-      "id": "main_text",
-      "label": "t:sections.promo-banner.settings.main_text.label",
-      "default": "UP TO 50% OFF"
+      "id": "secondary_heading_accent",
+      "label": "t:sections.promo-banner.settings.secondary_heading_accent.label",
+      "default": "shift"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.promo-banner.settings.header__description.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "t:sections.promo-banner.settings.show_description.label",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "description_text",
+      "label": "t:sections.promo-banner.settings.description_text.label",
+      "default": "From rush to rhythm. From burnout to balance. From existing to being.\nThe world doesn't need you to walk faster — just more fully."
     },
     {
       "type": "header",
@@ -375,6 +550,28 @@
       "id": "cta_text_color",
       "label": "t:sections.promo-banner.settings.cta_text_color.label",
       "default": "#21262F"
+    },
+    {
+      "type": "color",
+      "id": "cta_border_color",
+      "label": "t:sections.promo-banner.settings.cta_border_color.label",
+      "default": "#F7F1E5"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:sections.promo-banner.settings.button_style.label",
+      "options": [
+        {
+          "value": "filled",
+          "label": "t:sections.promo-banner.settings.button_style.option__filled"
+        },
+        {
+          "value": "outline",
+          "label": "t:sections.promo-banner.settings.button_style.option__outline"
+        }
+      ],
+      "default": "filled"
     },
     {
       "type": "header",

@@ -2,6 +2,7 @@
   assign height = image.width | divided_by: image.aspect_ratio | round
   assign widths = '200, 320, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 1000, 1100, 1200, 1300, 1400, 1800, 2136, 2400, 3600, 7680'
   assign priority = 'auto'
+  assign image_alt = alt | default: image.alt | default: ''
 
   if prioritize == true
     assign priority = 'high'
@@ -50,6 +51,7 @@
       image
       | image_url: width: image.width
       | image_tag:
+        alt: image_alt,
         height: height,
         sizes: sizes,
         widths: widths,
