@@ -5,6 +5,7 @@
       "settings": {
         "background_color": "#F7F1E5",
         "text_color_scheme": "light",
+        "enable_bg_transition": true,
         "show_eyebrow": false,
         "eyebrow_text": "",
         "heading_size": "large",
@@ -25,11 +26,21 @@
         "footer_heading": ""
       }
     },
+    "scroll_line": {
+      "type": "scroll-line",
+      "settings": {
+        "line_color": "#D14626",
+        "line_width": 21,
+        "vertical_offset": -290,
+        "z_index": 5
+      }
+    },
     "founder_story": {
       "type": "about-story",
       "settings": {
         "background_color": "#6F2C26",
         "text_color_scheme": "dark",
+        "header_top_padding": 150,
         "show_eyebrow": true,
         "eyebrow_text": "Our Story",
         "heading_size": "medium",
@@ -170,5 +181,5 @@
       "block_order": ["member_1", "member_2", "member_3", "member_4"]
     }
   },
-  "order": ["story_intro", "founder_story", "our_values", "our_standards", "advisory_council"]
+  "order": ["story_intro", "scroll_line", "founder_story", "our_values", "our_standards", "advisory_council"]
 }

@@ -22,6 +22,8 @@
   assign text_scheme = section.settings.text_color_scheme | default: 'light'
   assign bg_color = section.settings.background_color | default: '#F7F1E5'
   assign heading_size = section.settings.heading_size | default: 'large'
+  assign header_top_padding = section.settings.header_top_padding | default: 40
+  assign enable_bg_transition = section.settings.enable_bg_transition
 
   assign has_heading = false
   if heading_line_1 != blank or heading_line_2_prefix != blank or heading_accent != blank or heading_line_3 != blank
@@ -36,8 +38,9 @@
 
 <div
   class="about-story about-story--{{ text_scheme }} about-story--heading-{{ heading_size }}{% if image_position == 'left' %} about-story--image-left{% endif %} section{% if section.settings.section_spacing_top != 'none' %} section--spacing-top-{{ section.settings.section_spacing_top }}{% endif %}{% if section.settings.section_spacing_bottom != 'none' %} section--spacing-bottom-{{ section.settings.section_spacing_bottom }}{% endif %}"
-  style="--about-story-bg: {{ bg_color }};"
+  style="--about-story-bg: {{ bg_color }}; --about-story-header-top-padding: {{ header_top_padding }}px;"
   data-section-id="{{ section.id }}"
+  {% if enable_bg_transition %}data-bg-transition="true" data-bg-color="{{ bg_color }}"{% endif %}
 >
   <div class="about-story__container">
     <div class="about-story__header">
@@ -143,7 +146,7 @@
   .about-story__container {
     max-width: 1400px;
     margin: 0 auto;
-    padding-top: 40px;
+    padding-top: var(--about-story-header-top-padding, 40px);
   }
 
   .about-story__header {
@@ -217,8 +220,6 @@
   .about-story__heading-accent--inline {
     display: inline;
     vertical-align: baseline;
-    position: relative;
-    top: 0.1em;
   }
 
   .about-story__heading-line + .about-story__heading-text {
@@ -623,6 +624,123 @@
   }
 </style>
 
+<script>
+  (function() {
+    if (window.bgTransitionInitialized) return;
+    window.bgTransitionInitialized = true;
+
+    function hexToRgb(hex) {
+      if (!hex) return null;
+      hex = hex.replace('#', '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const num = parseInt(hex, 16);
+      return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+    }
+
+    function parseColor(color) {
+      if (!color) return null;
+      if (color.startsWith('#')) return hexToRgb(color);
+      const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+      if (match) return { r: parseInt(match[1]), g: parseInt(match[2]), b: parseInt(match[3]) };
+      return null;
+    }
+
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function interpolateColor(start, end, progress) {
+      const easedProgress = easeInOutCubic(progress);
+      return {
+        r: Math.round(start.r + (end.r - start.r) * easedProgress),
+        g: Math.round(start.g + (end.g - start.g) * easedProgress),
+        b: Math.round(start.b + (end.b - start.b) * easedProgress)
+      };
+    }
+
+    function findNextSectionColor(el) {
+      let next = el.closest('section, .shopify-section');
+      if (next) next = next.nextElementSibling;
+
+      while (next) {
+        if (next.classList.contains('scroll-line-section')) {
+          next = next.nextElementSibling;
+          continue;
+        }
+
+        const inner = next.querySelector('.about-story, .program-promo, [data-bg-color]');
+        if (inner) {
+          const bgColor = inner.dataset.bgColor ||
+                         getComputedStyle(inner).getPropertyValue('--about-story-bg').trim() ||
+                         getComputedStyle(inner).getPropertyValue('--program-promo-bg').trim() ||
+                         getComputedStyle(inner).backgroundColor;
+          const parsed = parseColor(bgColor);
+          if (parsed) return parsed;
+        }
+
+        const computedBg = getComputedStyle(next).backgroundColor;
+        if (computedBg && computedBg !== 'rgba(0, 0, 0, 0)' && computedBg !== 'transparent') {
+          const parsed = parseColor(computedBg);
+          if (parsed) return parsed;
+        }
+
+        next = next.nextElementSibling;
+      }
+      return null;
+    }
+
+    function initBgTransition() {
+      const sections = document.querySelectorAll('[data-bg-transition="true"]');
+
+      sections.forEach(section => {
+        if (section._bgTransitionInit) return;
+        section._bgTransitionInit = true;
+
+        const startColor = hexToRgb(section.dataset.bgColor);
+        const endColor = findNextSectionColor(section);
+
+        if (!startColor || !endColor) return;
+
+        let rafId = null;
+
+        function handleScroll() {
+          const rect = section.getBoundingClientRect();
+          const sectionHeight = rect.height;
+          const scrolledPast = -rect.top;
+
+          const transitionStart = sectionHeight * 0.4;
+          const transitionEnd = sectionHeight * 0.95;
+          const transitionRange = transitionEnd - transitionStart;
+
+          let progress = 0;
+          if (scrolledPast > transitionStart) {
+            progress = (scrolledPast - transitionStart) / transitionRange;
+          }
+          progress = Math.max(0, Math.min(1, progress));
+
+          const color = interpolateColor(startColor, endColor, progress);
+          section.style.backgroundColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
+        }
+
+        function onScroll() {
+          if (rafId) cancelAnimationFrame(rafId);
+          rafId = requestAnimationFrame(handleScroll);
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
+        handleScroll();
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initBgTransition);
+    } else {
+      initBgTransition();
+    }
+  })();
+</script>
+
 {% schema %}
 {
   "name": "t:sections.about-story.name",
@@ -658,6 +776,13 @@
       ],
       "default": "light",
       "info": "t:sections.about-story.settings.text_color_scheme.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_bg_transition",
+      "label": "Enable background transition",
+      "info": "Smoothly transition background color to the next section as you scroll",
+      "default": false
     },
     {
       "type": "header",
@@ -838,6 +963,17 @@
     {
       "type": "header",
       "content": "t:sections.about-story.settings.header__spacing.content"
+    },
+    {
+      "type": "range",
+      "id": "header_top_padding",
+      "label": "Header top padding",
+      "info": "Space from top of section to header content",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 40
     },
     {
       "type": "select",
