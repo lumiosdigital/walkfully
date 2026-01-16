@@ -92,14 +92,23 @@
       {% endif %}
 
       {% if show_cta_button and section.settings.cta_text != blank %}
-        <a
-          href="{{ section.settings.cta_link }}"
-          class="walkfully-hero__cta-button"
-          style="--cta-button-color: {{ section.settings.cta_button_color | escape }};"
-          {% if section.settings.cta_link == blank %}onclick="return false;"{% endif %}
-        >
-          {{ section.settings.cta_text }}
-        </a>
+        {% if section.settings.cta_link != blank %}
+          <a
+            href="{{ section.settings.cta_link }}"
+            class="walkfully-hero__cta-button"
+            style="--cta-button-color: {{ section.settings.cta_button_color | escape }};"
+          >
+            {{ section.settings.cta_text }}
+          </a>
+        {% else %}
+          <span
+            class="walkfully-hero__cta-button walkfully-hero__cta-button--disabled"
+            style="--cta-button-color: {{ section.settings.cta_button_color | escape }};"
+            aria-disabled="true"
+          >
+            {{ section.settings.cta_text }}
+          </span>
+        {% endif %}
       {% endif %}
     </div>
   {% else %}
@@ -136,13 +145,18 @@
 
       <div class="walkfully-hero__footer-right">
         {% if section.settings.cta_text != blank %}
-          <a
-            href="{{ section.settings.cta_link }}"
-            class="walkfully-hero__cta"
-            {% if section.settings.cta_link == blank %}onclick="return false;"{% endif %}
-          >
-            {{ section.settings.cta_text }}
-          </a>
+          {% if section.settings.cta_link != blank %}
+            <a
+              href="{{ section.settings.cta_link }}"
+              class="walkfully-hero__cta"
+            >
+              {{ section.settings.cta_text }}
+            </a>
+          {% else %}
+            <span class="walkfully-hero__cta walkfully-hero__cta--disabled" aria-disabled="true">
+              {{ section.settings.cta_text }}
+            </span>
+          {% endif %}
         {% endif %}
       </div>
     </div>
@@ -202,7 +216,16 @@
     background-color: #21262F;
   }
 
-  .walkfully-hero__image,
+  .walkfully-hero__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .walkfully-hero__image img,
+  .walkfully-hero__image svg,
   .walkfully-hero__video {
     width: 100%;
     height: 100%;
@@ -402,9 +425,27 @@
     outline-offset: 3px;
   }
 
+  .walkfully-hero__cta-button--disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  .walkfully-hero__cta-button--disabled:hover {
+    opacity: 0.7;
+  }
+
   .walkfully-hero__cta:focus-visible {
     outline: 2px solid #f7f1e5;
     outline-offset: 2px;
+  }
+
+  .walkfully-hero__cta--disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  .walkfully-hero__cta--disabled:hover {
+    opacity: 0.7;
   }
 
   /* Responsive styles */

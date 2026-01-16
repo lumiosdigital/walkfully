@@ -1,0 +1,175 @@
+{%- liquid
+  assign eyebrow = section.settings.eyebrow_text
+  assign heading = section.settings.heading_text
+  assign description = section.settings.description_text
+-%}
+<div
+  class="walkfully-text-block color-{{ section.settings.color_scheme }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="walkfully-text-block__content">
+    {% if eyebrow != blank %}
+      <p class="walkfully-text-block__eyebrow">
+        {{ eyebrow }}
+      </p>
+    {% endif %}
+
+    {% if heading != blank %}
+      <h2 class="walkfully-text-block__heading">
+        {{ heading }}
+      </h2>
+    {% endif %}
+
+    {% if description != blank %}
+      <div class="walkfully-text-block__description">
+        {{ description | newline_to_br }}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .walkfully-text-block {
+    width: 100%;
+    padding: 82px 40px;
+    background-color: #f7f1e5;
+  }
+
+  .walkfully-text-block__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .walkfully-text-block__eyebrow {
+    font-family: 'Alte Haas Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.72px;
+    text-transform: uppercase;
+    color: #d14626;
+    margin: 0;
+  }
+
+  .walkfully-text-block__heading {
+    font-family: 'Alte Haas Grotesk', sans-serif;
+    font-size: 60px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.6px;
+    text-transform: uppercase;
+    color: #21262f;
+    margin: 16px 0 0;
+    max-width: 939px;
+  }
+
+  .walkfully-text-block__description {
+    font-family: 'Work Sans', Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: -0.18px;
+    color: #21262f;
+    margin: 32px 0 0;
+    max-width: 814px;
+  }
+
+  @media screen and (max-width: 990px) {
+    .walkfully-text-block {
+      padding: 60px 30px;
+    }
+
+    .walkfully-text-block__eyebrow {
+      font-size: 16px;
+      letter-spacing: 0.64px;
+    }
+
+    .walkfully-text-block__heading {
+      font-size: 42px;
+      letter-spacing: -0.42px;
+      margin-top: 14px;
+    }
+
+    .walkfully-text-block__description {
+      font-size: 16px;
+      margin-top: 28px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .walkfully-text-block {
+      padding: 48px 20px;
+    }
+
+    .walkfully-text-block__eyebrow {
+      font-size: 14px;
+      letter-spacing: 0.56px;
+    }
+
+    .walkfully-text-block__heading {
+      font-size: 32px;
+      letter-spacing: -0.32px;
+      margin-top: 12px;
+    }
+
+    .walkfully-text-block__description {
+      font-size: 15px;
+      line-height: 1.5;
+      margin-top: 24px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "t:sections.walkfully-text-block.name",
+  "tag": "section",
+  "class": "walkfully-text-block-section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.walkfully-text-block.settings.header__content.content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "t:sections.walkfully-text-block.settings.eyebrow_text.label",
+      "default": "This isn't a challenge"
+    },
+    {
+      "type": "textarea",
+      "id": "heading_text",
+      "label": "t:sections.walkfully-text-block.settings.heading_text.label",
+      "default": "It's a reclamation of yourself and your life"
+    },
+    {
+      "type": "textarea",
+      "id": "description_text",
+      "label": "t:sections.walkfully-text-block.settings.description_text.label",
+      "default": "Reclaim your energy, clarity, and calm in just 14 days.\nThe WalkFully Refresh guides you to move with intention, reduce stress, boost focus, and feel more alive—no gear, no pressure, no judgment."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.walkfully-text-block.presets.name",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
