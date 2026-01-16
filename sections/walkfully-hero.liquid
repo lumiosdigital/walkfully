@@ -1,10 +1,22 @@
 {%- liquid
   assign image_overlay_opacity = section.settings.image_overlay_opacity | divided_by: 100.0
   assign use_video = section.settings.use_video
+  assign layout_style = section.settings.layout_style | default: 'homepage'
+  assign is_page_hero = false
+  if layout_style == 'page_hero'
+    assign is_page_hero = true
+  endif
+  assign show_footer = section.settings.show_footer
+  if is_page_hero
+    assign show_footer = false
+  endif
+  assign show_centered_description = section.settings.show_centered_description
+  assign show_cta_button = section.settings.show_cta_button
 -%}
 <div
   class="
     walkfully-hero
+    walkfully-hero--{{ layout_style }}
     color-{{ section.settings.color_scheme }}
   "
   data-section-id="{{ section.id }}"
@@ -59,49 +71,84 @@
 
   <div class="walkfully-hero__overlay"></div>
 
-  <div class="walkfully-hero__content">
-    {% if section.settings.top_text != blank %}
-      <h1 class="walkfully-hero__top-text">
-        {{ section.settings.top_text }}
-      </h1>
-    {% endif %}
+  {% if is_page_hero %}
+    <div class="walkfully-hero__content walkfully-hero__content--page-hero">
+      {% if section.settings.middle_text != blank %}
+        <div class="walkfully-hero__stylized-text walkfully-hero__stylized-text--top">
+          {{ section.settings.middle_text }}
+        </div>
+      {% endif %}
 
-    {% if section.settings.middle_text != blank %}
-      <div class="walkfully-hero__middle-text">
-        {{ section.settings.middle_text }}
-      </div>
-    {% endif %}
+      {% if section.settings.top_text != blank %}
+        <h1 class="walkfully-hero__heading walkfully-hero__heading--page-hero">
+          {{ section.settings.top_text }}
+        </h1>
+      {% endif %}
 
-    {% if section.settings.bottom_text != blank %}
-      <h2 class="walkfully-hero__bottom-text">
-        {{ section.settings.bottom_text | newline_to_br }}
-      </h2>
-    {% endif %}
-  </div>
-
-  <div class="walkfully-hero__footer">
-    <div class="walkfully-hero__footer-left">
-      {% if section.settings.description_text != blank %}
-        <p class="walkfully-hero__description">
+      {% if show_centered_description and section.settings.description_text != blank %}
+        <p class="walkfully-hero__centered-description">
           {{ section.settings.description_text | newline_to_br }}
         </p>
       {% endif %}
-    </div>
 
-    <div class="walkfully-hero__footer-right">
-      {% if section.settings.cta_text != blank %}
+      {% if show_cta_button and section.settings.cta_text != blank %}
         <a
           href="{{ section.settings.cta_link }}"
-          class="walkfully-hero__cta"
+          class="walkfully-hero__cta-button"
+          style="--cta-button-color: {{ section.settings.cta_button_color | escape }};"
           {% if section.settings.cta_link == blank %}onclick="return false;"{% endif %}
         >
           {{ section.settings.cta_text }}
         </a>
       {% endif %}
     </div>
-  </div>
+  {% else %}
+    <div class="walkfully-hero__content">
+      {% if section.settings.top_text != blank %}
+        <h1 class="walkfully-hero__top-text">
+          {{ section.settings.top_text }}
+        </h1>
+      {% endif %}
 
-  <div class="walkfully-hero__border-bottom"></div>
+      {% if section.settings.middle_text != blank %}
+        <div class="walkfully-hero__middle-text">
+          {{ section.settings.middle_text }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.bottom_text != blank %}
+        <h2 class="walkfully-hero__bottom-text">
+          {{ section.settings.bottom_text | newline_to_br }}
+        </h2>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if show_footer %}
+    <div class="walkfully-hero__footer">
+      <div class="walkfully-hero__footer-left">
+        {% if section.settings.description_text != blank %}
+          <p class="walkfully-hero__description">
+            {{ section.settings.description_text | newline_to_br }}
+          </p>
+        {% endif %}
+      </div>
+
+      <div class="walkfully-hero__footer-right">
+        {% if section.settings.cta_text != blank %}
+          <a
+            href="{{ section.settings.cta_link }}"
+            class="walkfully-hero__cta"
+            {% if section.settings.cta_link == blank %}onclick="return false;"{% endif %}
+          >
+            {{ section.settings.cta_text }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="walkfully-hero__border-bottom"></div>
+  {% endif %}
 </div>
 
 {% if use_video and section.settings.hero_video != blank %}
@@ -285,6 +332,71 @@
     position: relative;
   }
 
+  /* Page Hero Layout Styles */
+  .walkfully-hero__content--page-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    max-width: 1035px;
+  }
+
+  .walkfully-hero__stylized-text--top {
+    font-family: 'Crimson Pro';
+    font-size: 74px;
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1;
+    letter-spacing: -2.96px;
+    color: #ffcd68;
+    margin: 0;
+  }
+
+  .walkfully-hero__heading--page-hero {
+    font-family: 'Alte Haas Grotesk';
+    font-size: 87.801px;
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.878px;
+    text-transform: uppercase;
+    color: #f7f1e5;
+    margin: 0;
+    text-align: center;
+  }
+
+  .walkfully-hero__centered-description {
+    font-family: 'Work Sans', Arial, sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.2px;
+    color: #f7f1e5;
+    margin: 0;
+    max-width: 518px;
+    text-align: center;
+  }
+
+  .walkfully-hero__cta-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Work Sans', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #f7f1e5;
+    background-color: var(--cta-button-color, #d14626);
+    padding: 10px 40px;
+    min-height: 50px;
+    border-radius: 3px;
+    transition: opacity 0.2s ease;
+  }
+
+  .walkfully-hero__cta-button:hover {
+    opacity: 0.9;
+  }
+
   /* Responsive styles */
   @media screen and (max-width: 1024px) {
     .walkfully-hero__content {
@@ -347,6 +459,28 @@
       padding-top: 20px;
       border-top: 1px solid rgba(247, 241, 229, 0.3);
     }
+
+    /* Page Hero - Tablet */
+    .walkfully-hero__stylized-text--top {
+      font-size: 48px;
+      letter-spacing: -1.92px;
+    }
+
+    .walkfully-hero__heading--page-hero {
+      font-size: 48px;
+      letter-spacing: -0.48px;
+    }
+
+    .walkfully-hero__centered-description {
+      font-size: 16px;
+      max-width: 90%;
+    }
+
+    .walkfully-hero__cta-button {
+      font-size: 12px;
+      padding: 10px 32px;
+      min-height: 44px;
+    }
   }
 
   @media screen and (max-width: 749px) {
@@ -372,6 +506,34 @@
     .walkfully-hero__bottom-text {
       font-size: 36px;
     }
+
+    /* Page Hero - Mobile */
+    .walkfully-hero__content--page-hero {
+      gap: 16px;
+    }
+
+    .walkfully-hero__stylized-text--top {
+      font-size: 36px;
+      letter-spacing: -1.44px;
+    }
+
+    .walkfully-hero__heading--page-hero {
+      font-size: 32px;
+      letter-spacing: -0.32px;
+    }
+
+    .walkfully-hero__centered-description {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .walkfully-hero__cta-button {
+      font-size: 13px;
+      padding: 12px 24px;
+      min-height: 44px;
+      width: 100%;
+      max-width: 280px;
+    }
   }
 </style>
 
@@ -387,6 +549,52 @@
     ]
   },
   "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.walkfully-hero.settings.header__layout.content"
+    },
+    {
+      "type": "select",
+      "id": "layout_style",
+      "label": "t:sections.walkfully-hero.settings.layout_style.label",
+      "options": [
+        {
+          "value": "homepage",
+          "label": "t:sections.walkfully-hero.settings.layout_style.option__homepage"
+        },
+        {
+          "value": "page_hero",
+          "label": "t:sections.walkfully-hero.settings.layout_style.option__page_hero"
+        }
+      ],
+      "default": "homepage",
+      "info": "t:sections.walkfully-hero.settings.layout_style.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_footer",
+      "label": "t:sections.walkfully-hero.settings.show_footer.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_centered_description",
+      "label": "t:sections.walkfully-hero.settings.show_centered_description.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta_button",
+      "label": "t:sections.walkfully-hero.settings.show_cta_button.label",
+      "default": true,
+      "info": "t:sections.walkfully-hero.settings.show_cta_button.info"
+    },
+    {
+      "type": "color",
+      "id": "cta_button_color",
+      "label": "t:sections.walkfully-hero.settings.cta_button_color.label",
+      "default": "#d14626"
+    },
     {
       "type": "color_scheme",
       "id": "color_scheme",
@@ -455,6 +663,7 @@
       "type": "textarea",
       "id": "description_text",
       "label": "Description text",
+      "info": "Displays in footer (homepage) or centered below heading (page hero)",
       "default": "WalkFully is a walking platform.\nCommunity programs, editorial, and weighted essentials built for daily use, for years to come."
     },
     {
