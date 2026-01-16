@@ -1,10 +1,17 @@
 {%- liquid
   assign circle_size_mobile = section.settings.circle_image_size | times: 0.75 | round
+  assign heading_style = section.settings.heading_style | default: 'homepage'
+  assign is_simple = false
+  if heading_style == 'simple'
+    assign is_simple = true
+  endif
+  assign show_cta_footer = section.settings.show_cta_footer
 -%}
 
 <div
   class="
     platform-cards
+    platform-cards--{{ heading_style }}
     section
     color-{{ section.settings.color_scheme }}
     {% if section.settings.section_spacing_top != 'none' %}section--spacing-top-{{ section.settings.section_spacing_top }}{% endif %}
@@ -15,6 +22,7 @@
   style="
     --circle-size: {{ section.settings.circle_image_size }}px;
     --circle-size-mobile: {{ circle_size_mobile }}px;
+    --cta-button-color: {{ section.settings.cta_footer_button_color | default: '#d14626' }};
   "
   data-section-id="{{ section.id }}"
   {% if section.settings.enable_animations %}
@@ -23,38 +31,53 @@
   {% endif %}
 >
   <div class="platform-cards__inner">
-    {%- comment -%} Heading {%- endcomment -%}
-    <div class="platform-cards__heading-wrapper">
-      {% if section.settings.top_text != blank %}
-        <div class="platform-cards__label-text">
-          {{ section.settings.top_text }}
-        </div>
-      {% endif %}
+    {% if is_simple %}
+      <div class="platform-cards__heading-wrapper platform-cards__heading-wrapper--simple">
+        {% if section.settings.middle_text != blank %}
+          <div class="platform-cards__stylized-top">
+            {{ section.settings.middle_text }}
+          </div>
+        {% endif %}
 
-      {% if section.settings.heading_top != blank %}
-        <div class="platform-cards__heading-top">
-          {{ section.settings.heading_top }}
-        </div>
-      {% endif %}
+        {% if section.settings.heading_top != blank %}
+          <h2 class="platform-cards__main-heading">
+            {{ section.settings.heading_top }}
+          </h2>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="platform-cards__heading-wrapper">
+        {% if section.settings.top_text != blank %}
+          <div class="platform-cards__label-text">
+            {{ section.settings.top_text }}
+          </div>
+        {% endif %}
 
-      {% if section.settings.middle_text != blank %}
-        <div class="platform-cards__middle-text">
-          {{ section.settings.middle_text }}
-        </div>
-      {% endif %}
+        {% if section.settings.heading_top != blank %}
+          <div class="platform-cards__heading-top">
+            {{ section.settings.heading_top }}
+          </div>
+        {% endif %}
 
-      {% if section.settings.bottom_text != blank %}
-        <div class="platform-cards__bottom-text">
-          {{ section.settings.bottom_text }}
-        </div>
-      {% endif %}
+        {% if section.settings.middle_text != blank %}
+          <div class="platform-cards__middle-text">
+            {{ section.settings.middle_text }}
+          </div>
+        {% endif %}
 
-      {% if section.settings.subtitle_text != blank %}
-        <div class="platform-cards__subtitle">
-          {{ section.settings.subtitle_text }}
-        </div>
-      {% endif %}
-    </div>
+        {% if section.settings.bottom_text != blank %}
+          <div class="platform-cards__bottom-text">
+            {{ section.settings.bottom_text }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.subtitle_text != blank %}
+          <div class="platform-cards__subtitle">
+            {{ section.settings.subtitle_text }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
 
     {%- comment -%} Cards Container {%- endcomment -%}
     <div class="platform-cards__container grid__item--span-12">
@@ -232,8 +255,194 @@
         </div>
       {% endif %}
     </div>
+
+    {% if show_cta_footer %}
+      <div class="platform-cards__cta-footer">
+        {% if section.settings.cta_footer_label != blank %}
+          <p class="platform-cards__cta-label">
+            {{ section.settings.cta_footer_label }}
+          </p>
+        {% endif %}
+
+        {% if section.settings.cta_footer_button_text != blank %}
+          {% if section.settings.cta_footer_button_link != blank %}
+            <a
+              href="{{ section.settings.cta_footer_button_link }}"
+              class="platform-cards__cta-button"
+            >
+              {{ section.settings.cta_footer_button_text }}
+            </a>
+          {% else %}
+            <span class="platform-cards__cta-button platform-cards__cta-button--disabled" aria-disabled="true">
+              {{ section.settings.cta_footer_button_text }}
+            </span>
+          {% endif %}
+        {% endif %}
+      </div>
+    {% endif %}
   </div>
 </div>
+
+<style>
+  .platform-cards__card-content {
+    text-align: center;
+    width: 100%;
+  }
+
+  .platform-cards__card-description {
+    width: 100%;
+    text-align: center;
+  }
+
+  .platform-cards__card-description p {
+    margin: 0;
+  }
+
+  .platform-cards__heading-wrapper--simple {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .platform-cards__stylized-top {
+    font-family: 'Crimson Pro';
+    font-size: 80px;
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1;
+    letter-spacing: -3.2px;
+    color: #d14626;
+    margin: 0;
+  }
+
+  .platform-cards__main-heading {
+    font-family: 'Alte Haas Grotesk';
+    font-size: 60px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.6px;
+    text-transform: uppercase;
+    color: #21262f;
+    margin: 0;
+  }
+
+  .platform-cards__cta-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 60px;
+  }
+
+  .platform-cards__cta-label {
+    font-family: 'Alte Haas Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.72px;
+    text-transform: uppercase;
+    color: #d14626;
+    margin: 0;
+  }
+
+  .platform-cards__cta-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Work Sans', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #f7f1e5;
+    background-color: var(--cta-button-color, #d14626);
+    padding: 10px 40px;
+    min-height: 50px;
+    border-radius: 3px;
+    transition: opacity 0.2s ease;
+  }
+
+  .platform-cards__cta-button:hover {
+    opacity: 0.9;
+  }
+
+  .platform-cards__cta-button:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  .platform-cards__cta-button--disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  .platform-cards__cta-button--disabled:hover {
+    opacity: 0.7;
+  }
+
+  @media screen and (max-width: 990px) {
+    .platform-cards__heading-wrapper--simple {
+      margin-bottom: 48px;
+    }
+
+    .platform-cards__stylized-top {
+      font-size: 56px;
+      letter-spacing: -2.24px;
+    }
+
+    .platform-cards__main-heading {
+      font-size: 42px;
+      letter-spacing: -0.42px;
+    }
+
+    .platform-cards__cta-label {
+      font-size: 16px;
+      letter-spacing: 0.64px;
+    }
+
+    .platform-cards__cta-button {
+      font-size: 12px;
+      padding: 10px 32px;
+      min-height: 44px;
+    }
+
+    .platform-cards__cta-footer {
+      margin-top: 48px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .platform-cards__stylized-top {
+      font-size: 42px;
+      letter-spacing: -1.68px;
+    }
+
+    .platform-cards__main-heading {
+      font-size: 32px;
+      letter-spacing: -0.32px;
+    }
+
+    .platform-cards__cta-label {
+      font-size: 14px;
+      letter-spacing: 0.56px;
+    }
+
+    .platform-cards__cta-button {
+      font-size: 13px;
+      padding: 12px 24px;
+      min-height: 44px;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .platform-cards__cta-footer {
+      margin-top: 40px;
+    }
+
+    .platform-cards__heading-wrapper--simple {
+      margin-bottom: 40px;
+    }
+  }
+</style>
 
 {% schema %}
 {
@@ -250,6 +459,26 @@
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
       "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.platform-cards.settings.header__layout.content"
+    },
+    {
+      "type": "select",
+      "id": "heading_style",
+      "label": "t:sections.platform-cards.settings.heading_style.label",
+      "options": [
+        {
+          "value": "homepage",
+          "label": "t:sections.platform-cards.settings.heading_style.option__homepage"
+        },
+        {
+          "value": "simple",
+          "label": "t:sections.platform-cards.settings.heading_style.option__simple"
+        }
+      ],
+      "default": "homepage"
     },
     {
       "type": "header",
@@ -460,6 +689,39 @@
       "step": 10,
       "unit": "px",
       "default": 200
+    },
+    {
+      "type": "header",
+      "content": "t:sections.platform-cards.settings.header__cta_footer.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta_footer",
+      "label": "t:sections.platform-cards.settings.show_cta_footer.label",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "cta_footer_label",
+      "label": "t:sections.platform-cards.settings.cta_footer_label.label",
+      "default": "Start your journey now"
+    },
+    {
+      "type": "text",
+      "id": "cta_footer_button_text",
+      "label": "t:sections.platform-cards.settings.cta_footer_button_text.label",
+      "default": "Subscribe by Email"
+    },
+    {
+      "type": "url",
+      "id": "cta_footer_button_link",
+      "label": "t:sections.platform-cards.settings.cta_footer_button_link.label"
+    },
+    {
+      "type": "color",
+      "id": "cta_footer_button_color",
+      "label": "t:sections.platform-cards.settings.cta_footer_button_color.label",
+      "default": "#d14626"
     },
     {
       "type": "header",

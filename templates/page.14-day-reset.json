@@ -9,16 +9,83 @@
         "show_cta_button": true,
         "cta_button_color": "#d14626",
         "top_text": "14-DAY MIND & BODY REFRESH",
-        "middle_text": "Free",
+        "middle_text": "Free program",
         "description_text": "A guided walking program to reset your daily rhythm, reconnect with your body, and build a sustainable movement practice.",
         "cta_text": "Start Your Reset",
         "cta_link": ""
       }
     },
-    "main": {
-      "type": "main-page",
-      "settings": {}
+    "text_block": {
+      "type": "walkfully-text-block",
+      "settings": {
+        "eyebrow_text": "This isn't a challenge",
+        "heading_text": "It's a reclamation of yourself and your life",
+        "description_text": "Reclaim your energy, clarity, and calm in just 14 days.\nThe WalkFully Refresh guides you to move with intention, reduce stress, boost focus, and feel more alive—no gear, no pressure, no judgment."
+      }
+    },
+    "what_to_expect": {
+      "type": "platform-cards",
+      "settings": {
+        "heading_style": "simple",
+        "heading_top": "TO EXPECT",
+        "middle_text": "What",
+        "show_cta_footer": true,
+        "cta_footer_label": "Start your journey Now",
+        "cta_footer_button_text": "Subscribe by Email",
+        "cta_footer_button_link": "",
+        "cta_footer_button_color": "#d14626",
+        "card_1_bg_color": "#2b3039",
+        "card_1_title": "A DAILY WALKING PROMPT",
+        "card_1_description": "<p>Each one will gently push you different directions to explore the wide variety of profound impacts walking can have on your life</p>",
+        "card_2_bg_color": "#6a93d7",
+        "card_2_title": "A SUPPORTIVE COMMUNITY",
+        "card_2_description": "<p>Even when you're going solo, you're walking as part of a new movement – based on the most ancient and essential movement</p>",
+        "card_3_bg_color": "#642823",
+        "card_3_title": "A FOUNDATION FOR CHANGE",
+        "card_3_description": "<p>Simple, powerful surveys that help you see yourself shift. Awareness is what makes change last</p>",
+        "section_spacing_top": "standard",
+        "section_spacing_bottom": "standard"
+      }
+    },
+    "why_14_days": {
+      "type": "program-promo",
+      "settings": {
+        "layout_style": "benefits",
+        "show_label": false,
+        "show_cta": false,
+        "show_benefits": true,
+        "content_bg_color": "#7C7A2E",
+        "heading_text": "Why 14 Days?",
+        "description_text": "Because lasting change comes from presence, practiced daily.\n\nResearch shows that even short, consistent behavioral shifts over two weeks can start to reshape patterns in the brain, regulate stress, and boost physical well-being.\n\nOur program is designed to easily:",
+        "benefit_1_title": "Boost your energy",
+        "benefit_1_description": "feel lighter, clearer, and more focused each day",
+        "benefit_2_title": "Lower your stress",
+        "benefit_2_description": "calm your nervous system and reset your mood naturally",
+        "benefit_3_title": "Reconnect with your body",
+        "benefit_3_description": "rediscover its resilience and vitality",
+        "benefit_4_title": "Build a routine that sticks",
+        "benefit_4_description": "create daily \"you-time\" with ease",
+        "benefit_5_title": "Create lasting change",
+        "benefit_5_description": "learn tools and habits you'll carry well beyond 14 days",
+        "section_spacing_top": "standard",
+        "section_spacing_bottom": "standard"
+      }
+    },
+    "closing_banner": {
+      "type": "promo-banner",
+      "settings": {
+        "banner_height": 200,
+        "background_color": "#D14626",
+        "show_eyebrow": true,
+        "eyebrow_text": "Two weeks. Nothing to prove. Everything to gain.",
+        "show_main_text": false,
+        "show_cta": true,
+        "cta_text": "Start Now",
+        "cta_link": "",
+        "section_spacing_top": "none",
+        "section_spacing_bottom": "none"
+      }
     }
   },
-  "order": ["hero", "main"]
+  "order": ["hero", "text_block", "what_to_expect", "why_14_days", "closing_banner"]
 }

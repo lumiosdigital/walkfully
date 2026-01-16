@@ -95,11 +95,19 @@
       "type": "promo-banner",
       "settings": {
         "color_scheme": "scheme-1",
+        "banner_height": 180,
         "background_color": "#D14626",
-        "top_text_color": "#F7F1E5",
+        "eyebrow_color": "#F7F1E5",
         "main_text_color": "#F7F1E5",
         "pattern_image": "shopify://shop_images/announcement-banner-pattern.png",
-        "pattern_opacity": 100
+        "pattern_opacity": 100,
+        "show_eyebrow": false,
+        "eyebrow_text": "Now",
+        "show_main_text": true,
+        "main_text": "UP TO 50% OFF",
+        "show_cta": false,
+        "section_spacing_top": "none",
+        "section_spacing_bottom": "none"
       }
     },
     "ugc_gallery": {

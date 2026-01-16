@@ -3,6 +3,20 @@
   if section.settings.link != blank
     assign has_link = true
   endif
+
+  assign show_eyebrow = section.settings.show_eyebrow
+  assign show_main_text = section.settings.show_main_text
+  assign show_cta = section.settings.show_cta
+
+  assign has_cta_link = false
+  if section.settings.cta_link != blank
+    assign has_cta_link = true
+  endif
+
+  assign show_cta_button = false
+  if show_cta and section.settings.cta_text != blank and has_cta_link and has_link == false
+    assign show_cta_button = true
+  endif
 -%}
 
 {% if has_link %}
@@ -22,34 +36,42 @@
   style="
     --pattern-opacity: {{ section.settings.pattern_opacity | divided_by: 100.0 }};
     --promo-banner-bg: {{ section.settings.background_color }};
-    --promo-banner-top-text: {{ section.settings.top_text_color }};
-    --promo-banner-main-text: {{ section.settings.main_text_color }};
+    --promo-banner-height: {{ section.settings.banner_height }}px;
+    --promo-banner-eyebrow-color: {{ section.settings.eyebrow_color }};
+    --promo-banner-main-text-color: {{ section.settings.main_text_color }};
+    --promo-banner-cta-bg: {{ section.settings.cta_background_color }};
+    --promo-banner-cta-text: {{ section.settings.cta_text_color }};
   "
   data-section-id="{{ section.id }}"
 >
-  {%- comment -%} Background Pattern {%- endcomment -%}
   {% if section.settings.pattern_image != blank %}
-    <div class="promo-banner__pattern">
+    <div class="promo-banner__pattern" aria-hidden="true">
       {% render 'image',
         image: section.settings.pattern_image,
         sizes: '100vw',
-        no_radius: true
+        no_radius: true,
+        alt: ''
       %}
     </div>
   {% endif %}
 
-  {%- comment -%} Content {%- endcomment -%}
   <div class="promo-banner__content">
-    {% if section.settings.top_text != blank %}
-      <span class="promo-banner__top-text">
-        {{ section.settings.top_text }}
-      </span>
+    {% if show_eyebrow and section.settings.eyebrow_text != blank %}
+      <p class="promo-banner__eyebrow">
+        {{ section.settings.eyebrow_text }}
+      </p>
     {% endif %}
 
-    {% if section.settings.main_text != blank %}
-      <span class="promo-banner__main-text">
+    {% if show_main_text and section.settings.main_text != blank %}
+      <p class="promo-banner__main-text">
         {{ section.settings.main_text }}
-      </span>
+      </p>
+    {% endif %}
+
+    {% if show_cta_button %}
+      <a href="{{ section.settings.cta_link }}" class="promo-banner__cta">
+        {{ section.settings.cta_text }}
+      </a>
     {% endif %}
   </div>
 </div>
@@ -65,12 +87,18 @@
     color: inherit;
   }
 
+  .promo-banner__link:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+
   .promo-banner {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 30px 40px 45px;
+    min-height: var(--promo-banner-height, 200px);
+    padding: 30px 40px;
     overflow: hidden;
     background-color: var(--promo-banner-bg);
   }
@@ -99,39 +127,121 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 20px;
   }
 
-  .promo-banner__top-text {
+  .promo-banner__eyebrow {
     font-family: 'Crimson Pro', serif;
     font-style: italic;
     font-weight: 400;
-    font-size: clamp(1.5rem, 3vw, 2.3rem);
+    font-size: 40px;
     line-height: normal;
-    letter-spacing: -0.02em;
-    color: var(--promo-banner-top-text);
+    letter-spacing: -0.8px;
+    color: var(--promo-banner-eyebrow-color, #F7F1E5);
+    margin: 0;
   }
 
   .promo-banner__main-text {
     font-family: 'Alte Haas Grotesk', sans-serif;
     font-weight: 700;
-    font-size: clamp(2rem, 5vw, 3.75rem);
+    font-size: 60px;
     font-style: normal;
-    line-height: 90%;
+    line-height: 1;
+    letter-spacing: -0.6px;
     text-transform: uppercase;
-    color: var(--promo-banner-main-text);
+    color: var(--promo-banner-main-text-color, #F7F1E5);
+    margin: 0;
+  }
+
+  .promo-banner__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Work Sans', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--promo-banner-cta-text, #21262F);
+    background-color: var(--promo-banner-cta-bg, #F7F1E5);
+    padding: 10px 40px;
+    min-height: 48px;
+    border-radius: 3px;
+    transition: opacity 0.2s ease;
+  }
+
+  .promo-banner__cta:hover {
+    opacity: 0.9;
+  }
+
+  .promo-banner__cta:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  @media screen and (max-width: 990px) {
+    .promo-banner__eyebrow {
+      font-size: 32px;
+      letter-spacing: -0.64px;
+    }
+
+    .promo-banner__main-text {
+      font-size: 42px;
+      letter-spacing: -0.42px;
+    }
+
+    .promo-banner__content {
+      gap: 16px;
+    }
   }
 
   @media screen and (max-width: 749px) {
     .promo-banner {
-      padding: 24px 20px 36px;
+      padding: 24px 20px;
+    }
+
+    .promo-banner__eyebrow {
+      font-size: 24px;
+      letter-spacing: -0.48px;
+    }
+
+    .promo-banner__main-text {
+      font-size: 32px;
+      letter-spacing: -0.32px;
+    }
+
+    .promo-banner__content {
+      gap: 14px;
+    }
+
+    .promo-banner__cta {
+      font-size: 13px;
+      padding: 10px 32px;
+      min-height: 44px;
+    }
+  }
+
+  @media screen and (max-width: 400px) {
+    .promo-banner__eyebrow {
+      font-size: 20px;
+      letter-spacing: -0.4px;
+    }
+
+    .promo-banner__main-text {
+      font-size: 28px;
+      letter-spacing: -0.28px;
+    }
+
+    .promo-banner__cta {
+      width: 100%;
+      max-width: 280px;
     }
   }
 </style>
 
 {% schema %}
 {
-  "name": "Promo Banner",
+  "name": "t:sections.promo-banner.name",
   "class": "promo-banner-section",
   "tag": "section",
   "disabled_on": {
@@ -147,39 +257,53 @@
     },
     {
       "type": "header",
-      "content": "Colors"
+      "content": "t:sections.promo-banner.settings.header__layout.content"
+    },
+    {
+      "type": "range",
+      "id": "banner_height",
+      "label": "t:sections.promo-banner.settings.banner_height.label",
+      "min": 100,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "default": 200
+    },
+    {
+      "type": "header",
+      "content": "t:sections.promo-banner.settings.header__colors.content"
     },
     {
       "type": "color",
       "id": "background_color",
-      "label": "Background color",
-      "default": "#2D4A3E"
+      "label": "t:sections.promo-banner.settings.background_color.label",
+      "default": "#D14626"
     },
     {
       "type": "color",
-      "id": "top_text_color",
-      "label": "Top text color",
+      "id": "eyebrow_color",
+      "label": "t:sections.promo-banner.settings.eyebrow_color.label",
       "default": "#F7F1E5"
     },
     {
       "type": "color",
       "id": "main_text_color",
-      "label": "Main text color",
+      "label": "t:sections.promo-banner.settings.main_text_color.label",
       "default": "#F7F1E5"
     },
     {
       "type": "header",
-      "content": "Background Pattern"
+      "content": "t:sections.promo-banner.settings.header__pattern.content"
     },
     {
       "type": "image_picker",
       "id": "pattern_image",
-      "label": "Background pattern image"
+      "label": "t:sections.promo-banner.settings.pattern_image.label"
     },
     {
       "type": "range",
       "id": "pattern_opacity",
-      "label": "Pattern opacity",
+      "label": "t:sections.promo-banner.settings.pattern_opacity.label",
       "min": 0,
       "max": 100,
       "step": 5,
@@ -188,54 +312,108 @@
     },
     {
       "type": "header",
-      "content": "Content"
+      "content": "t:sections.promo-banner.settings.header__eyebrow.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "t:sections.promo-banner.settings.show_eyebrow.label",
+      "default": true
     },
     {
       "type": "text",
-      "id": "top_text",
-      "label": "Top text (italic)",
-      "default": "Now"
+      "id": "eyebrow_text",
+      "label": "t:sections.promo-banner.settings.eyebrow_text.label",
+      "default": "Two weeks. Nothing to prove. Everything to gain."
+    },
+    {
+      "type": "header",
+      "content": "t:sections.promo-banner.settings.header__main_text.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_main_text",
+      "label": "t:sections.promo-banner.settings.show_main_text.label",
+      "default": false
     },
     {
       "type": "text",
       "id": "main_text",
-      "label": "Main text (large)",
+      "label": "t:sections.promo-banner.settings.main_text.label",
       "default": "UP TO 50% OFF"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.promo-banner.settings.header__cta.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "t:sections.promo-banner.settings.show_cta.label",
+      "default": true,
+      "info": "t:sections.promo-banner.settings.show_cta.info"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "t:sections.promo-banner.settings.cta_text.label",
+      "default": "Start Now"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "t:sections.promo-banner.settings.cta_link.label"
+    },
+    {
+      "type": "color",
+      "id": "cta_background_color",
+      "label": "t:sections.promo-banner.settings.cta_background_color.label",
+      "default": "#F7F1E5"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "t:sections.promo-banner.settings.cta_text_color.label",
+      "default": "#21262F"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.promo-banner.settings.header__banner_link.content"
     },
     {
       "type": "url",
       "id": "link",
-      "label": "Link",
-      "info": "Makes the entire banner clickable"
+      "label": "t:sections.promo-banner.settings.link.label",
+      "info": "t:sections.promo-banner.settings.link.info"
     },
     {
       "type": "header",
-      "content": "Section Spacing"
+      "content": "t:common.header__section_spacing_and_border.content"
     },
     {
       "type": "select",
       "id": "section_spacing_top",
-      "label": "Top spacing",
+      "label": "t:common.top_spacing.label",
       "options": [
         {
           "value": "none",
-          "label": "None"
+          "label": "t:common.sizing.none"
         },
         {
           "value": "compact",
-          "label": "Small"
+          "label": "t:common.sizing.compact"
         },
         {
           "value": "standard",
-          "label": "Medium"
+          "label": "t:common.sizing.standard"
         },
         {
           "value": "large",
-          "label": "Large"
+          "label": "t:common.sizing.large"
         },
         {
           "value": "x-large",
-          "label": "Extra Large"
+          "label": "t:common.sizing.x_large"
         }
       ],
       "default": "none"
@@ -243,51 +421,47 @@
     {
       "type": "select",
       "id": "section_spacing_bottom",
-      "label": "Bottom spacing",
+      "label": "t:common.bottom_spacing.label",
       "options": [
         {
           "value": "none",
-          "label": "None"
+          "label": "t:common.sizing.none"
         },
         {
           "value": "compact",
-          "label": "Small"
+          "label": "t:common.sizing.compact"
         },
         {
           "value": "standard",
-          "label": "Medium"
+          "label": "t:common.sizing.standard"
         },
         {
           "value": "large",
-          "label": "Large"
+          "label": "t:common.sizing.large"
         },
         {
           "value": "x-large",
-          "label": "Extra Large"
+          "label": "t:common.sizing.x_large"
         }
       ],
       "default": "none"
     },
     {
-      "type": "header",
-      "content": "Section Border"
-    },
-    {
       "type": "checkbox",
       "id": "section_border_top",
-      "label": "Show top border",
+      "label": "t:sections.promo-banner.settings.section_border_top.label",
       "default": false
     },
     {
       "type": "checkbox",
       "id": "section_border_bottom",
-      "label": "Show bottom border",
+      "label": "t:common.show_bottom_border.label",
       "default": false
     }
   ],
   "presets": [
     {
-      "name": "Promo Banner"
+      "name": "t:sections.promo-banner.presets.name"
     }
   ]
 }

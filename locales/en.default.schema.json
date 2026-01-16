@@ -2782,6 +2782,206 @@
       "presets": {
         "name": "Walkfully hero"
       }
+    },
+    "walkfully-text-block": {
+      "name": "Text block",
+      "settings": {
+        "header__content": {
+          "content": "Content"
+        },
+        "eyebrow_text": {
+          "label": "Eyebrow text"
+        },
+        "heading_text": {
+          "label": "Heading"
+        },
+        "description_text": {
+          "label": "Description"
+        }
+      },
+      "presets": {
+        "name": "Text block"
+      }
+    },
+    "program-promo": {
+      "name": "Program promo",
+      "settings": {
+        "header__layout": {
+          "content": "Layout"
+        },
+        "layout_style": {
+          "label": "Layout style",
+          "option__homepage": "Homepage (with label and CTA)",
+          "option__benefits": "Benefits (with benefit items)"
+        },
+        "show_label": {
+          "label": "Show label"
+        },
+        "show_cta": {
+          "label": "Show CTA button"
+        },
+        "show_features": {
+          "label": "Show features list"
+        },
+        "show_benefits": {
+          "label": "Show benefits list"
+        },
+        "header__benefits": {
+          "content": "Benefits (for benefits layout)"
+        },
+        "benefits_info": {
+          "content": "These items only display when using the benefits layout style."
+        },
+        "benefit_1_title": {
+          "label": "Benefit 1 title"
+        },
+        "benefit_1_description": {
+          "label": "Benefit 1 description"
+        },
+        "benefit_2_title": {
+          "label": "Benefit 2 title"
+        },
+        "benefit_2_description": {
+          "label": "Benefit 2 description"
+        },
+        "benefit_3_title": {
+          "label": "Benefit 3 title"
+        },
+        "benefit_3_description": {
+          "label": "Benefit 3 description"
+        },
+        "benefit_4_title": {
+          "label": "Benefit 4 title"
+        },
+        "benefit_4_description": {
+          "label": "Benefit 4 description"
+        },
+        "benefit_5_title": {
+          "label": "Benefit 5 title"
+        },
+        "benefit_5_description": {
+          "label": "Benefit 5 description"
+        }
+      },
+      "presets": {
+        "name": "Program promo"
+      }
+    },
+    "platform-cards": {
+      "name": "Platform cards",
+      "settings": {
+        "header__layout": {
+          "content": "Layout"
+        },
+        "heading_style": {
+          "label": "Heading style",
+          "option__homepage": "Homepage (multi-line with overlap)",
+          "option__simple": "Simple (stylized top + main heading)"
+        },
+        "header__cta_footer": {
+          "content": "CTA footer"
+        },
+        "show_cta_footer": {
+          "label": "Show CTA footer"
+        },
+        "cta_footer_label": {
+          "label": "CTA label text"
+        },
+        "cta_footer_button_text": {
+          "label": "Button text"
+        },
+        "cta_footer_button_link": {
+          "label": "Button link"
+        },
+        "cta_footer_button_color": {
+          "label": "Button color"
+        }
+      },
+      "presets": {
+        "name": "Platform cards"
+      }
+    },
+    "promo-banner": {
+      "name": "Promo banner",
+      "settings": {
+        "header__layout": {
+          "content": "Layout"
+        },
+        "banner_height": {
+          "label": "Banner height"
+        },
+        "header__colors": {
+          "content": "Colors"
+        },
+        "background_color": {
+          "label": "Background color"
+        },
+        "eyebrow_color": {
+          "label": "Eyebrow text color"
+        },
+        "main_text_color": {
+          "label": "Main text color"
+        },
+        "header__pattern": {
+          "content": "Background pattern"
+        },
+        "pattern_image": {
+          "label": "Pattern image"
+        },
+        "pattern_opacity": {
+          "label": "Pattern opacity"
+        },
+        "header__eyebrow": {
+          "content": "Eyebrow text"
+        },
+        "show_eyebrow": {
+          "label": "Show eyebrow text"
+        },
+        "eyebrow_text": {
+          "label": "Eyebrow text"
+        },
+        "header__main_text": {
+          "content": "Main text"
+        },
+        "show_main_text": {
+          "label": "Show main text"
+        },
+        "main_text": {
+          "label": "Main text"
+        },
+        "header__cta": {
+          "content": "Call to action"
+        },
+        "show_cta": {
+          "label": "Show CTA button",
+          "info": "Hidden when banner link is set to prevent nested links"
+        },
+        "cta_text": {
+          "label": "Button text"
+        },
+        "cta_link": {
+          "label": "Button link"
+        },
+        "cta_background_color": {
+          "label": "Button background color"
+        },
+        "cta_text_color": {
+          "label": "Button text color"
+        },
+        "header__banner_link": {
+          "content": "Banner link"
+        },
+        "link": {
+          "label": "Link",
+          "info": "Makes the entire banner clickable"
+        },
+        "section_border_top": {
+          "label": "Show top border"
+        }
+      },
+      "presets": {
+        "name": "Promo banner"
+      }
     }
   },
   "categories": {
