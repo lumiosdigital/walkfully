@@ -2752,6 +2752,36 @@
       "presets": {
         "name": "Slideshow"
       }
+    },
+    "walkfully-hero": {
+      "name": "Walkfully hero",
+      "settings": {
+        "header__layout": {
+          "content": "Layout"
+        },
+        "layout_style": {
+          "label": "Layout style",
+          "option__homepage": "Homepage (stylized text in middle)",
+          "option__page_hero": "Page hero (stylized text on top)",
+          "info": "Choose how content is arranged within the hero"
+        },
+        "show_footer": {
+          "label": "Show footer section"
+        },
+        "show_centered_description": {
+          "label": "Show centered description"
+        },
+        "show_cta_button": {
+          "label": "Show CTA button",
+          "info": "Displays a prominent button below the description"
+        },
+        "cta_button_color": {
+          "label": "CTA button color"
+        }
+      },
+      "presets": {
+        "name": "Walkfully hero"
+      }
     }
   },
   "categories": {
