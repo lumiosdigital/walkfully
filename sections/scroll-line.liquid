@@ -2,6 +2,7 @@
   assign line_color = section.settings.line_color | default: '#D14626'
   assign line_width = section.settings.line_width | default: 21
   assign vertical_offset = section.settings.vertical_offset | default: 0
+  assign mobile_vertical_offset = section.settings.mobile_vertical_offset | default: vertical_offset
   assign z_index = section.settings.z_index | default: 5
 -%}
 
@@ -12,6 +13,7 @@
     --scroll-line-color: {{ line_color }};
     --scroll-line-width: {{ line_width }}px;
     --scroll-line-vertical-offset: {{ vertical_offset }}px;
+    --scroll-line-mobile-vertical-offset: {{ mobile_vertical_offset }}px;
     --scroll-line-z-index: {{ z_index }};
   "
 >
@@ -60,7 +62,6 @@
     top: var(--scroll-line-vertical-offset, 0px);
     left: 0;
     width: 100vw;
-    min-width: 1440px;
     height: 576px;
     overflow: visible;
   }
@@ -73,6 +74,7 @@
 
   @media screen and (max-width: 749px) {
     .scroll-line__svg {
+      top: var(--scroll-line-mobile-vertical-offset, var(--scroll-line-vertical-offset, 0px));
       height: 400px;
     }
   }
@@ -172,8 +174,19 @@
     {
       "type": "range",
       "id": "vertical_offset",
-      "label": "Vertical position",
+      "label": "Vertical position (desktop)",
       "info": "Adjust to position the line between sections. Negative moves up, positive moves down.",
+      "min": -400,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_vertical_offset",
+      "label": "Vertical position (mobile)",
+      "info": "Position on screens smaller than 750px. Uses desktop value if not set.",
       "min": -400,
       "max": 400,
       "step": 10,

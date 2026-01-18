@@ -6,6 +6,9 @@
         "background_color": "#F7F1E5",
         "text_color_scheme": "light",
         "enable_bg_transition": true,
+        "header_top_padding": 40,
+        "section_spacing_top": "large",
+        "section_spacing_bottom": "xxl",
         "show_eyebrow": false,
         "eyebrow_text": "",
         "heading_size": "large",
@@ -32,6 +35,7 @@
         "line_color": "#D14626",
         "line_width": 21,
         "vertical_offset": -290,
+        "mobile_vertical_offset": -210,
         "z_index": 5
       }
     },
@@ -41,6 +45,8 @@
         "background_color": "#6F2C26",
         "text_color_scheme": "dark",
         "header_top_padding": 150,
+        "section_spacing_top": "xl",
+        "section_spacing_bottom": "xxl",
         "show_eyebrow": true,
         "eyebrow_text": "Our Story",
         "heading_size": "medium",
@@ -141,8 +147,8 @@
         "description_color": "#F7F1E5",
         "card_text_color": "#F7F1E5",
         "nav_color": "#F7F1E5",
-        "section_spacing_top": "none",
-        "section_spacing_bottom": "none"
+        "section_spacing_top": "x-large",
+        "section_spacing_bottom": "standard"
       },
       "blocks": {
         "member_1": {
@@ -179,7 +185,36 @@
         }
       },
       "block_order": ["member_1", "member_2", "member_3", "member_4"]
+    },
+    "team_carousel": {
+      "type": "team-carousel",
+      "settings": {
+        "background_color": "#F7F1E5"
+      },
+      "blocks": {
+        "member_1": {
+          "type": "team_member",
+          "settings": {}
+        },
+        "member_2": {
+          "type": "team_member",
+          "settings": {}
+        },
+        "member_3": {
+          "type": "team_member",
+          "settings": {}
+        },
+        "member_4": {
+          "type": "team_member",
+          "settings": {}
+        },
+        "member_5": {
+          "type": "team_member",
+          "settings": {}
+        }
+      },
+      "block_order": ["member_1", "member_2", "member_3", "member_4", "member_5"]
     }
   },
-  "order": ["story_intro", "scroll_line", "founder_story", "our_values", "our_standards", "advisory_council"]
+  "order": ["story_intro", "scroll_line", "founder_story", "our_values", "our_standards", "team_carousel", "advisory_council"]
 }

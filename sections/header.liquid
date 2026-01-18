@@ -500,6 +500,44 @@
   .drawer-menu__menu button {
     text-transform: uppercase;
   }
+
+  /* Mobile logo alignment */
+  @media screen and (max-width: 990px) {
+    /* When mobile logo is left-aligned, hide center logo and show left */
+    .header--mobile-logo-align-left .header__content-center .header__heading {
+      display: none;
+    }
+    .header--mobile-logo-align-left .header__content-left .header__heading {
+      display: block;
+    }
+
+    /* When mobile logo is center-aligned, hide left logo and show center */
+    .header--mobile-logo-align-center .header__content-left .header__heading {
+      display: none;
+    }
+    .header--mobile-logo-align-center .header__content-center .header__heading {
+      display: block;
+    }
+  }
+
+  /* Desktop logo alignment (override mobile rules) */
+  @media screen and (min-width: 991px) {
+    /* When desktop logo is left-aligned, hide center logo and show left */
+    .header--desktop-logo-align-left .header__content-center .header__heading {
+      display: none;
+    }
+    .header--desktop-logo-align-left .header__content-left .header__heading {
+      display: block;
+    }
+
+    /* When desktop logo is center-aligned, hide left logo and show center */
+    .header--desktop-logo-align-center .header__content-left .header__heading {
+      display: none;
+    }
+    .header--desktop-logo-align-center .header__content-center .header__heading {
+      display: block;
+    }
+  }
 </style>
 
 {% schema %}

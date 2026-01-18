@@ -702,6 +702,15 @@
     "show_bottom_border": {
       "label": "Show bottom border"
     },
+    "background_color": {
+      "label": "Background color"
+    },
+    "text_color": {
+      "label": "Text color"
+    },
+    "accent_color": {
+      "label": "Accent color"
+    },
     "header__country_localization": {
       "content": "Country/region",
       "info": "To add a country/region, go to your [market settings.](/admin/settings/markets)"
@@ -1418,6 +1427,57 @@
       },
       "presets": {
         "name": "Testimonials"
+      }
+    },
+    "team_carousel": {
+      "name": "Team carousel",
+      "header__content": {
+        "content": "Content"
+      },
+      "header__colors": {
+        "content": "Colors"
+      },
+      "background_color": {
+        "label": "Background color"
+      },
+      "eyebrow_text": {
+        "label": "Eyebrow text"
+      },
+      "eyebrow_color": {
+        "label": "Eyebrow color"
+      },
+      "heading_text": {
+        "label": "Heading text"
+      },
+      "heading_text_color": {
+        "label": "Heading text color"
+      },
+      "heading_stylized": {
+        "label": "Stylized word"
+      },
+      "heading_stylized_color": {
+        "label": "Stylized word color"
+      },
+      "blocks": {
+        "team_member": {
+          "name": "Team member",
+          "member_image": {
+            "label": "Photo",
+            "info": "Recommended: Portrait orientation, minimum 600x800px"
+          },
+          "member_name": {
+            "label": "Name"
+          },
+          "member_role": {
+            "label": "Role / Title"
+          },
+          "member_bio": {
+            "label": "Biography"
+          }
+        }
+      },
+      "presets": {
+        "name": "Team carousel"
       }
     },
     "stories_carousel": {
