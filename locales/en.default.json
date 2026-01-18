@@ -368,6 +368,9 @@
     "popups": {
       "i_am_over": "I am over {{ age }}",
       "i_am_under": "I am under {{ age }}"
+    },
+    "team_carousel": {
+      "expand_member": "View details for {{ name }}"
     }
   },
   "localization": {

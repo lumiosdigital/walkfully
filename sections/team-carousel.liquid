@@ -1,0 +1,463 @@
+<div class="team-carousel" style="padding-top: 110px; padding-bottom: 80px; background-color: {{ section.settings.background_color | default: '#FFFFFF' }};">
+  <div class="team-carousel__container page-width" style="max-width: 1440px; margin: 0 auto; padding: 0 40px;">
+    <div class="team-carousel__header" style="text-align: center; margin-bottom: 0;">
+      {%- if section.settings.eyebrow_text != blank -%}
+        <p class="team-carousel__eyebrow" style="color: {{ section.settings.eyebrow_color | default: '#21262F' }}; text-align: center; font-family: 'Alte Haas Grotesk', sans-serif; font-size: 18px; font-weight: 400; font-style: normal; line-height: normal; letter-spacing: 0.72px; text-transform: uppercase; margin: 0 0 20px 0;">{{ section.settings.eyebrow_text }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading_text != blank or section.settings.heading_stylized != blank -%}
+        <h2 class="team-carousel__title" style="line-height: 0.85; margin: 0; text-align: center; font-family: 'Alte Haas Grotesk', sans-serif; font-size: 64px; font-weight: 700; letter-spacing: -2.56px; text-transform: uppercase;">
+          {%- if section.settings.heading_text != blank -%}
+            <span class="team-carousel__title-bold" style="margin-right: 16px; color: {{ section.settings.heading_text_color | default: '#21262F' }}; line-height: 0.85;">{{ section.settings.heading_text | newline_to_br }}</span>
+          {%- endif -%}
+          {%- if section.settings.heading_stylized != blank -%}
+            <span class="team-carousel__title-stylized" style="color: {{ section.settings.heading_stylized_color | default: '#D14626' }}; font-family: 'Crimson Pro', serif; font-size: 96px; font-style: italic; font-weight: 400; line-height: 0.85; letter-spacing: -3.84px; text-transform: none;">{{ section.settings.heading_stylized }}</span>
+          {%- endif -%}
+        </h2>
+      {%- endif -%}
+    </div>
+
+    <div class="team-carousel__slider-wrap" style="margin-top: 70px; min-height: 550px; padding-bottom: 30px;">
+      <component-slider
+        class="team-carousel__slider swiper"
+        data-mobile-columns="1.2"
+        data-tablet-columns="2.5"
+        data-desktop-columns="4"
+        data-enable-loop="true"
+        style="
+          --mobile-columns: 1.2;
+          --tablet-columns: 2.5;
+          --desktop-columns: 4;
+          min-height: 550px;
+        "
+      >
+        <div class="team-carousel__wrapper swiper-wrapper" style="min-height: 500px; align-items: flex-start;">
+          {% for block in section.blocks %}
+            <div class="team-carousel__slide swiper-slide" {{ block.shopify_attributes }}>
+              <div class="team-carousel__card" style="gap: 0;" data-team-card data-index="{{ forloop.index0 }}">
+                <div class="team-carousel__card-image" style="position: relative; height: 386px; overflow: hidden; border-radius: 20px; cursor: pointer; transition: height 0.3s ease;">
+                  {%- if block.settings.member_image != blank -%}
+                    <img
+                      src="{{ block.settings.member_image | image_url: width: 640 }}"
+                      alt="{{ block.settings.member_name | escape }}"
+                      width="{{ block.settings.member_image.width }}"
+                      height="{{ block.settings.member_image.height }}"
+                      loading="lazy"
+                      style="width: 100%; height: 100%; object-fit: cover;"
+                    >
+                  {%- else -%}
+                    <div class="team-carousel__card-placeholder" style="width: 100%; height: 100%; background: #e5e5e5; display: flex; align-items: center; justify-content: center;">
+                      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </div>
+                  {%- endif -%}
+                  <div class="team-carousel__mobile-overlay">
+                    <div class="team-carousel__mobile-overlay-content">
+                      {%- if block.settings.member_name != blank -%}
+                        <p class="team-carousel__mobile-overlay-name">{{ block.settings.member_name }}</p>
+                      {%- endif -%}
+                      {%- if block.settings.member_role != blank -%}
+                        <p class="team-carousel__mobile-overlay-role">{{ block.settings.member_role }}</p>
+                      {%- endif -%}
+                      {%- if block.settings.member_bio != blank -%}
+                        <div class="team-carousel__mobile-overlay-bio">{{ block.settings.member_bio }}</div>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+                <div class="team-carousel__card-content" style="margin-top: 30px; gap: 0;">
+                  {%- if block.settings.member_name != blank -%}
+                    <p class="team-carousel__card-name" style="margin: 0 0 10px; color: #21262F; font-family: 'Alte Haas Grotesk', sans-serif; font-size: 20px; font-weight: 700; line-height: normal; letter-spacing: 0.8px; text-transform: uppercase;">{{ block.settings.member_name }}</p>
+                  {%- endif -%}
+                  {%- if block.settings.member_role != blank -%}
+                    <p class="team-carousel__card-role" style="margin: 0; color: #21262F; font-family: 'Work Sans', sans-serif; font-size: 16px; font-weight: 400; line-height: 130%; letter-spacing: -0.16px;">{{ block.settings.member_role }}</p>
+                  {%- endif -%}
+                </div>
+                <div class="team-carousel__bio-panel" style="display: none; position: absolute; left: 100%; top: 0; width: 100%; padding-left: 20px; opacity: 0; transition: opacity 0.3s ease;">
+                  <div class="team-carousel__bio-content" style="padding-top: 30px;">
+                    {%- if block.settings.member_name != blank -%}
+                      <p class="team-carousel__bio-name" style="margin: 0 0 10px; color: #21262F; font-family: 'Alte Haas Grotesk', sans-serif; font-size: 20px; font-weight: 700; line-height: normal; letter-spacing: 0.8px; text-transform: uppercase;">{{ block.settings.member_name }}</p>
+                    {%- endif -%}
+                    {%- if block.settings.member_role != blank -%}
+                      <p class="team-carousel__bio-role" style="margin: 0 0 20px; color: #21262F; font-family: 'Work Sans', sans-serif; font-size: 16px; font-weight: 400; line-height: 130%; letter-spacing: -0.16px;">{{ block.settings.member_role }}</p>
+                    {%- endif -%}
+                    {%- if block.settings.member_bio != blank -%}
+                      <div class="team-carousel__bio-text" style="color: #21262F; font-family: 'Work Sans', sans-serif; font-size: 16px; font-weight: 400; line-height: 150%; letter-spacing: -0.16px;">{{ block.settings.member_bio }}</div>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </component-slider>
+
+      <div class="team-carousel__footer" style="display: flex; justify-content: flex-end;">
+        <div class="team-carousel__nav" style="display: flex; gap: 5px; flex-shrink: 0; overflow: visible;">
+          <button type="button" class="team-carousel__nav-btn team-carousel__nav-btn--prev" aria-label="{{ 'general.slider.previous_slide' | t }}" style="background: transparent; border: none; padding: 2px; width: 34px; height: 34px; min-width: 34px; min-height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #21262F;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none" style="display: block; overflow: visible;">
+              <rect x="-0.5" y="0.5" width="29" height="29" rx="14.5" transform="matrix(-1 0 0 1 29 0)" stroke="currentColor" stroke-opacity="0.3"/>
+              <path opacity="0.3" d="M21 15H9M9 15L15 9M9 15L15 21" stroke="currentColor"/>
+            </svg>
+          </button>
+          <button type="button" class="team-carousel__nav-btn team-carousel__nav-btn--next" aria-label="{{ 'general.slider.next_slide' | t }}" style="background: transparent; border: none; padding: 2px; width: 34px; height: 34px; min-width: 34px; min-height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #21262F;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none" style="display: block; overflow: visible;">
+              <rect x="0.5" y="0.5" width="29" height="29" rx="14.5" stroke="currentColor" stroke-opacity="0.3"/>
+              <path opacity="0.3" d="M10 15H20M20 15L15 10M20 15L15 20" stroke="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  @media screen and (max-width: 989px) {
+    .team-carousel__eyebrow {
+      font-size: 16px !important;
+      letter-spacing: 0.64px !important;
+    }
+  }
+
+  .team-carousel__mobile-overlay {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
+    padding: 80px 20px 24px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .team-carousel__mobile-overlay-content {
+    color: #F7F1E5;
+  }
+
+  .team-carousel__mobile-overlay-name {
+    margin: 0 0 6px;
+    font-family: 'Alte Haas Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 0.72px;
+    text-transform: uppercase;
+  }
+
+  .team-carousel__mobile-overlay-role {
+    margin: 0 0 12px;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 130%;
+    letter-spacing: -0.14px;
+    opacity: 0.9;
+  }
+
+  .team-carousel__mobile-overlay-bio {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: -0.14px;
+    opacity: 0.9;
+  }
+
+  .team-carousel__mobile-overlay-bio p {
+    margin: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .team-carousel {
+      padding-top: 40px !important;
+      padding-bottom: 40px !important;
+    }
+    .team-carousel__container {
+      padding: 0 16px !important;
+    }
+    .team-carousel__title {
+      font-size: 28px !important;
+      letter-spacing: -1.12px !important;
+    }
+    .team-carousel__title-bold {
+      display: block !important;
+      margin-right: 0 !important;
+      margin-bottom: 5px !important;
+    }
+    .team-carousel__title-stylized {
+      display: block !important;
+      font-size: 48px !important;
+      letter-spacing: -1.92px !important;
+    }
+    .team-carousel__eyebrow {
+      font-size: 14px !important;
+      letter-spacing: 0.56px !important;
+      margin-bottom: 16px !important;
+    }
+    .team-carousel__slider-wrap {
+      margin-top: 30px !important;
+    }
+    .team-carousel__mobile-overlay {
+      display: block;
+    }
+    .team-carousel__card[data-expanded="true"] .team-carousel__mobile-overlay {
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const section = document.querySelector('.team-carousel');
+    if (!section) return;
+
+    const prevBtn = section.querySelector('.team-carousel__nav-btn--prev');
+    const nextBtn = section.querySelector('.team-carousel__nav-btn--next');
+    const slider = section.querySelector('component-slider');
+    const cards = section.querySelectorAll('[data-team-card]');
+    let expandedCard = null;
+
+    function goNext() {
+      if (!slider || !slider.swiper) return;
+      slider.swiper.slideNext();
+    }
+
+    function goPrev() {
+      if (!slider || !slider.swiper) return;
+      slider.swiper.slidePrev();
+    }
+
+    function isMobile() {
+      return window.innerWidth <= 749;
+    }
+
+    function expandCard(card) {
+      if (expandedCard === card) {
+        collapseCard();
+        return;
+      }
+      if (expandedCard) collapseCard();
+
+      expandedCard = card;
+      card.style.position = 'relative';
+
+      const imageWrapper = card.querySelector('.team-carousel__card-image');
+      const content = card.querySelector('.team-carousel__card-content');
+
+      if (isMobile()) {
+        imageWrapper.style.height = '450px';
+        content.style.display = 'none';
+        card.setAttribute('data-expanded', 'true');
+        return;
+      }
+
+      const slide = card.closest('.swiper-slide');
+      const allSlides = Array.from(section.querySelectorAll('.swiper-slide'));
+      const slideIndex = allSlides.indexOf(slide);
+      const bioPanel = card.querySelector('.team-carousel__bio-panel');
+
+      const slideWidth = slide.offsetWidth;
+      const slideRect = slide.getBoundingClientRect();
+      const containerRect = section.querySelector('.team-carousel__container').getBoundingClientRect();
+      const isLastVisible = (slideRect.right + slideWidth + 40) > containerRect.right;
+
+      imageWrapper.style.height = '500px';
+      content.style.display = 'none';
+      bioPanel.style.display = 'block';
+
+      if (isLastVisible) {
+        bioPanel.style.left = 'auto';
+        bioPanel.style.right = '100%';
+        bioPanel.style.paddingLeft = '0';
+        bioPanel.style.paddingRight = '20px';
+        card.setAttribute('data-expand-left', 'true');
+
+        allSlides.forEach((s, i) => {
+          if (i < slideIndex) {
+            s.style.transform = `translateX(-${slideWidth + 20}px)`;
+            s.style.transition = 'transform 0.3s ease';
+          }
+        });
+      } else {
+        bioPanel.style.left = '100%';
+        bioPanel.style.right = 'auto';
+        bioPanel.style.paddingLeft = '20px';
+        bioPanel.style.paddingRight = '0';
+        card.removeAttribute('data-expand-left');
+
+        allSlides.forEach((s, i) => {
+          if (i > slideIndex) {
+            s.style.transform = `translateX(${slideWidth + 20}px)`;
+            s.style.transition = 'transform 0.3s ease';
+          }
+        });
+      }
+
+      setTimeout(() => bioPanel.style.opacity = '1', 10);
+
+      card.setAttribute('data-expanded', 'true');
+    }
+
+    function collapseCard() {
+      if (!expandedCard) return;
+
+      const imageWrapper = expandedCard.querySelector('.team-carousel__card-image');
+      const content = expandedCard.querySelector('.team-carousel__card-content');
+      const cardRef = expandedCard;
+
+      imageWrapper.style.height = '386px';
+      cardRef.removeAttribute('data-expanded');
+      cardRef.removeAttribute('data-expand-left');
+
+      if (isMobile()) {
+        content.style.display = 'block';
+        expandedCard = null;
+        return;
+      }
+
+      const allSlides = Array.from(section.querySelectorAll('.swiper-slide'));
+      const bioPanel = cardRef.querySelector('.team-carousel__bio-panel');
+
+      bioPanel.style.opacity = '0';
+
+      allSlides.forEach(s => {
+        s.style.transform = '';
+      });
+
+      setTimeout(() => {
+        bioPanel.style.display = 'none';
+        bioPanel.style.left = '100%';
+        bioPanel.style.right = 'auto';
+        bioPanel.style.paddingLeft = '20px';
+        bioPanel.style.paddingRight = '0';
+        content.style.display = 'block';
+      }, 300);
+
+      expandedCard = null;
+    }
+
+    cards.forEach(card => {
+      const imageWrapper = card.querySelector('.team-carousel__card-image');
+      imageWrapper.addEventListener('click', (e) => {
+        e.stopPropagation();
+        expandCard(card);
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (expandedCard && !expandedCard.contains(e.target)) {
+        collapseCard();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && expandedCard) {
+        collapseCard();
+      }
+    });
+
+    if (prevBtn) prevBtn.addEventListener('click', goPrev);
+    if (nextBtn) nextBtn.addEventListener('click', goNext);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.team_carousel.name",
+  "class": "team-carousel-section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"],
+    "templates": ["password"]
+  },
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.team_carousel.background_color.label",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "t:sections.team_carousel.eyebrow_text.label",
+      "default": "Founding Team"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "t:sections.team_carousel.eyebrow_color.label",
+      "default": "#21262F"
+    },
+    {
+      "type": "textarea",
+      "id": "heading_text",
+      "label": "t:sections.team_carousel.heading_text.label",
+      "default": "The movement started with passionate"
+    },
+    {
+      "type": "color",
+      "id": "heading_text_color",
+      "label": "t:sections.team_carousel.heading_text_color.label",
+      "default": "#21262F"
+    },
+    {
+      "type": "text",
+      "id": "heading_stylized",
+      "label": "t:sections.team_carousel.heading_stylized.label",
+      "default": "walkers"
+    },
+    {
+      "type": "color",
+      "id": "heading_stylized_color",
+      "label": "t:sections.team_carousel.heading_stylized_color.label",
+      "default": "#D14626"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "team_member",
+      "name": "t:sections.team_carousel.blocks.team_member.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "member_image",
+          "label": "t:sections.team_carousel.blocks.team_member.member_image.label"
+        },
+        {
+          "type": "text",
+          "id": "member_name",
+          "label": "t:sections.team_carousel.blocks.team_member.member_name.label",
+          "default": "Team Member"
+        },
+        {
+          "type": "text",
+          "id": "member_role",
+          "label": "t:sections.team_carousel.blocks.team_member.member_role.label",
+          "default": "Role / Title"
+        },
+        {
+          "type": "richtext",
+          "id": "member_bio",
+          "label": "t:sections.team_carousel.blocks.team_member.member_bio.label",
+          "default": "<p>A brief biography about this team member.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.team_carousel.presets.name",
+      "category": "t:categories.informative",
+      "blocks": [
+        { "type": "team_member" },
+        { "type": "team_member" },
+        { "type": "team_member" },
+        { "type": "team_member" },
+        { "type": "team_member" }
+      ]
+    }
+  ]
+}
+{% endschema %}
