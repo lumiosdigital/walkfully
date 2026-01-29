@@ -6185,9 +6185,65 @@ var section_blog_posts_default = () => {
   }
 };
 
+// js/common/components/section-main-blog.js
+var section_main_blog_default = () => {
+  if (!customElements.get("section-main-blog")) {
+    customElements.define(
+      "section-main-blog",
+      class MainBlog extends HTMLElement {
+        constructor() {
+          super();
+          this.loadMoreButton = this.querySelector("[data-load-more]");
+          this.articlesContainer = this.querySelector("[data-articles-container]");
+          this.currentPage = parseInt(this.dataset.currentPage, 10) || 1;
+          this.totalPages = parseInt(this.dataset.totalPages, 10) || 1;
+          this.sectionId = this.dataset.sectionId;
+          this.filterTag = this.dataset.filterTag || "";
+          if (this.loadMoreButton) {
+            this.loadMoreButton.addEventListener("click", this.loadMore.bind(this));
+          }
+        }
+        async loadMore() {
+          if (this.currentPage >= this.totalPages) return;
+          this.loadMoreButton.classList.add("is-loading");
+          this.currentPage++;
+          try {
+            const url = new URL(window.location.href);
+            url.searchParams.set("page", this.currentPage);
+            const response = await fetch(url.toString());
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const newSection = doc.querySelector(`section-main-blog[data-section-id="${this.sectionId}"]`);
+            if (newSection) {
+              const newArticles = newSection.querySelectorAll("[data-article-card]");
+              newArticles.forEach((article) => {
+                article.classList.remove("animate--slide-in");
+                void article.offsetWidth;
+                article.classList.add("animate--slide-in");
+                this.articlesContainer.appendChild(article);
+              });
+              const newTotalPages = parseInt(newSection.dataset.totalPages, 10) || this.totalPages;
+              this.totalPages = newTotalPages;
+            }
+            if (this.currentPage >= this.totalPages) {
+              this.loadMoreButton.closest(".main-blog__load-more").classList.add("main-blog__load-more--hidden");
+            }
+          } catch (error) {
+            console.error("Failed to load more articles:", error);
+          } finally {
+            this.loadMoreButton.classList.remove("is-loading");
+          }
+        }
+      }
+    );
+  }
+};
+
 // js/common/web-components.js
 var web_components_default = () => {
   component_slider_default();
+  section_main_blog_default();
   component_modal_default();
   component_modal_full_content_default();
   section_announcement_bar_default();

@@ -371,6 +371,14 @@
     },
     "team_carousel": {
       "expand_member": "View details for {{ name }}"
+    },
+    "blog": {
+      "load_more": "Load more",
+      "loading": "Loading...",
+      "read_more": "Read More",
+      "shop_items": "Shop Items",
+      "field_notes": "Field Notes",
+      "marketplace_picks": "Marketplace Picks"
     }
   },
   "localization": {
