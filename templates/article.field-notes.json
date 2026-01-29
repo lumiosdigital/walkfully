@@ -1,0 +1,20 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-article-field-notes",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "hero_background_color": "#D14626",
+        "pattern_opacity": 20,
+        "eyebrow_text": "Field Notes",
+        "eyebrow_color": "#FFCD68",
+        "title_color": "#F7F1E5",
+        "show_share_button": true,
+        "enable_animations": true
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

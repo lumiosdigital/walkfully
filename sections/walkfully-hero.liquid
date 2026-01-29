@@ -72,6 +72,11 @@
   <div class="walkfully-hero__overlay"></div>
 
   {% if is_page_hero %}
+    {% if section.settings.show_breadcrumbs %}
+      <div class="walkfully-hero__breadcrumbs">
+        {% render 'breadcrumbs', color: 'light' %}
+      </div>
+    {% endif %}
     <div class="walkfully-hero__content walkfully-hero__content--page-hero">
       {% if section.settings.middle_text != blank %}
         <div class="walkfully-hero__stylized-text walkfully-hero__stylized-text--top">
@@ -355,6 +360,20 @@
     position: relative;
   }
 
+  /* Breadcrumbs */
+  .walkfully-hero__breadcrumbs {
+    position: absolute;
+    top: 15px;
+    left: 40px;
+    z-index: 10;
+  }
+
+  @media screen and (max-width: 990px) {
+    .walkfully-hero__breadcrumbs {
+      left: 20px;
+    }
+  }
+
   /* Page Hero Layout Styles */
   .walkfully-hero__content--page-hero {
     display: flex;
@@ -624,6 +643,13 @@
       ],
       "default": "homepage",
       "info": "t:sections.walkfully-hero.settings.layout_style.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "label": "Show breadcrumbs",
+      "info": "Only visible when using Page Hero layout",
+      "default": false
     },
     {
       "type": "checkbox",

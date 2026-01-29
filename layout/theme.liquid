@@ -124,6 +124,22 @@
     {% sections 'floating-group' %}
 
     <main class="main" role="main" id="main">
+      {%- liquid
+        # Show breadcrumbs on page and blog templates (not homepage, not articles - articles have their own)
+        # Exclude pages with full-viewport heroes (like 14-day-reset) - they handle breadcrumbs in their sections
+        assign show_layout_breadcrumbs = false
+        if template.name == 'page' or template.name == 'blog'
+          assign show_layout_breadcrumbs = true
+        endif
+        if template.suffix == '14-day-reset'
+          assign show_layout_breadcrumbs = false
+        endif
+      -%}
+      {% if show_layout_breadcrumbs %}
+        <div class="layout-breadcrumbs">
+          {% render 'breadcrumbs', color: 'dark' %}
+        </div>
+      {% endif %}
       {{ content_for_layout }}
     </main>
 

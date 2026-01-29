@@ -57,6 +57,9 @@
     "cart": {
       "view": "View cart"
     },
+    "breadcrumbs": {
+      "home": "Home"
+    },
     "share": {
       "copy_to_clipboard": "Copy URL",
       "success_message": "Copied",
@@ -76,6 +79,7 @@
   },
   "accessibility": {
     "skip_to_text": "Skip to content",
+    "breadcrumbs": "Breadcrumbs",
     "close": "Close",
     "unit_price_separator": "per",
     "more_pages": "More {{ parent }} pages",

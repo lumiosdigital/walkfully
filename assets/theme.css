@@ -13016,13 +13016,30 @@ a.pagination__button-link:hover, a.pagination__button-link:focus {
 .main-blog__inner {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 90px var(--page-gutter) 70px;
+  padding: 90px 40px 70px;
 }
 
-@media (max-width: 47.9375em) {
+@media (max-width: 990px) {
   .main-blog__inner {
-    padding: 60px var(--page-gutter) 50px;
+    padding: 60px 20px 50px;
   }
+}
+
+/* Layout Breadcrumbs (from theme.liquid) */
+.layout-breadcrumbs {
+  padding: 15px 40px 0;
+  background-color: var(--layout-breadcrumbs-bg, #F7F1E5);
+}
+
+@media screen and (max-width: 990px) {
+  .layout-breadcrumbs {
+    padding: 15px 20px 0;
+  }
+}
+
+/* Breadcrumbs */
+.main-blog__breadcrumbs {
+  margin-bottom: var(--space-l);
 }
 
 /* Header */
