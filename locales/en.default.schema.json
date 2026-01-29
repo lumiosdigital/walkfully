@@ -1789,12 +1789,45 @@
     "blog": {
       "name": "Blog posts",
       "settings": {
+        "header__header": {
+          "content": "Header"
+        },
+        "show_header": {
+          "label": "Show header"
+        },
+        "eyebrow_text": {
+          "label": "Eyebrow text"
+        },
+        "heading_text": {
+          "label": "Heading text",
+          "info": "Leave blank to use blog title"
+        },
+        "header__content": {
+          "content": "Content"
+        },
+        "filter_tag": {
+          "label": "Filter by tag",
+          "info": "Only show articles with this tag (e.g., 'field-note' or 'marketplace-pick')"
+        },
+        "card_mode": {
+          "label": "Card style",
+          "option__field_notes": "Field Notes (Read More button)",
+          "option__marketplace_picks": "Marketplace Picks (Shop Items button)"
+        },
+        "card_label": {
+          "label": "Card label override",
+          "info": "Leave blank to use default based on card style"
+        },
+        "featured_article": {
+          "label": "Featured article (tall)",
+          "info": "This article will span 2 rows on desktop"
+        },
+        "button_text": {
+          "label": "Button text override",
+          "info": "Leave blank to use default based on card style"
+        },
         "blog": {
           "label": "Blog"
-        },
-        "show_featured_post": {
-          "label": "Show featured article",
-          "info": "Shows the most recent article as featured in selected blog."
         },
         "highlight_first_article": {
           "label": "Highlight first article of each page"
@@ -1803,12 +1836,6 @@
           "label": "Highlight style",
           "option__contrast": "Contrast",
           "option__blend": "Blend"
-        },
-        "custom_featured_article": {
-          "label": "Custom featured article"
-        },
-        "max_posts": {
-          "label": "Number of articles to show"
         },
         "article_image_aspect_ratio": {
           "label": "Article image aspect ratio"

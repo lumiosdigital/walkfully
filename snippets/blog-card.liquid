@@ -1,0 +1,93 @@
+{% doc %}
+  Blog Card - Card component for the main blog listing section
+
+  @param {article} article - The article object to display
+  @param {string} mode - Card type: 'field_notes' or 'marketplace_picks'
+  @param {boolean} [tall] - Whether this card spans 2 rows (default: false)
+  @param {boolean} [animate] - Enable animations (default: false)
+  @param {string} [label] - Custom label text (overrides default based on mode)
+  @param {string} [button_text] - Custom button text (overrides default based on mode)
+{% enddoc %}
+
+{%- liquid
+  assign tall = tall | default: false
+  assign animate = animate | default: false
+  assign mode = mode | default: 'field_notes'
+
+  # Set defaults based on mode
+  if mode == 'marketplace_picks'
+    assign default_label = 'sections.blog.marketplace_picks' | t
+    assign default_button = 'sections.blog.shop_items' | t
+    assign icon_name = 'shopping-bag'
+  else
+    assign default_label = 'sections.blog.field_notes' | t
+    assign default_button = 'sections.blog.read_more' | t
+    assign icon_name = 'book-open'
+  endif
+
+  # Use custom values if provided
+  if label != blank
+    assign card_label = label
+  else
+    assign card_label = default_label
+  endif
+
+  if button_text != blank
+    assign card_button = button_text
+  else
+    assign card_button = default_button
+  endif
+
+  # Get article data
+  assign card_title = article.title
+  assign card_description = article.excerpt_or_content | strip_html | truncatewords: 25
+  assign card_url = article.url
+  assign card_image = article.image
+-%}
+
+<article
+  class="
+    blog-card
+    {% if tall %}blog-card--tall{% endif %}
+    {% if animate %}animate animate--slide-in{% endif %}
+  "
+  data-article-card
+>
+  <a href="{{ card_url }}" class="blog-card__image-link">
+    <div class="blog-card__image-wrapper{% if tall %} blog-card__image-wrapper--tall{% endif %}">
+      {%- if card_image != blank -%}
+        {% render 'image',
+          image: card_image,
+          wrapper_class: 'blog-card__image',
+          sizes: '(max-width: 749px) 100vw, 50vw',
+          aspect_ratio: tall | default: false
+        %}
+      {%- else -%}
+        <div class="blog-card__image--placeholder"></div>
+      {%- endif -%}
+    </div>
+  </a>
+
+  <div class="blog-card__content">
+    {%- if card_label != blank -%}
+      <span class="blog-card__label">{{ card_label }}</span>
+    {%- endif -%}
+
+    {%- if card_title != blank -%}
+      <h3 class="blog-card__title">
+        <a href="{{ card_url }}">{{ card_title }}</a>
+      </h3>
+    {%- endif -%}
+
+    <div class="blog-card__footer">
+      {%- if card_description != blank -%}
+        <p class="blog-card__description">{{ card_description }}</p>
+      {%- endif -%}
+
+      <a href="{{ card_url }}" class="blog-card__button">
+        {% render 'theme-icon', icon: icon_name, size: '28px' %}
+        <span>{{ card_button }}</span>
+      </a>
+    </div>
+  </div>
+</article>
