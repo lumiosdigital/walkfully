@@ -1,0 +1,152 @@
+{% doc %}
+  Renders breadcrumb navigation.
+
+  @param {string} [color] - 'light' (#F7F1E5) or 'dark' (#21262F), defaults to 'dark'
+  @param {string} [class] - Additional CSS classes
+{% enddoc %}
+
+{%- liquid
+  assign breadcrumb_color = color | default: 'dark'
+
+  if breadcrumb_color == 'light'
+    assign color_value = '#F7F1E5'
+  else
+    assign color_value = '#21262F'
+  endif
+-%}
+
+<nav class="breadcrumbs{% if class %} {{ class }}{% endif %}" aria-label="{{ 'accessibility.breadcrumbs' | t }}" style="--breadcrumbs-color: {{ color_value }};">
+  <ol class="breadcrumbs__list">
+    <li class="breadcrumbs__item">
+      <a href="{{ routes.root_url }}" class="breadcrumbs__link">
+        {{ 'general.breadcrumbs.home' | t }}
+      </a>
+    </li>
+
+    {%- if template.name == 'article' -%}
+      <li class="breadcrumbs__item">
+        <span class="breadcrumbs__separator" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4" fill="none">
+            <circle cx="2" cy="2" r="2" fill="currentColor"/>
+          </svg>
+        </span>
+        <a href="{{ blog.url }}" class="breadcrumbs__link">
+          {{ blog.title }}
+        </a>
+      </li>
+      <li class="breadcrumbs__item" aria-current="page">
+        <span class="breadcrumbs__separator" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4" fill="none">
+            <circle cx="2" cy="2" r="2" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="breadcrumbs__current">{{ article.title }}</span>
+      </li>
+
+    {%- elsif template.name == 'blog' -%}
+      <li class="breadcrumbs__item" aria-current="page">
+        <span class="breadcrumbs__separator" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4" fill="none">
+            <circle cx="2" cy="2" r="2" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="breadcrumbs__current">{{ blog.title }}</span>
+      </li>
+
+    {%- elsif template.name == 'page' -%}
+      <li class="breadcrumbs__item" aria-current="page">
+        <span class="breadcrumbs__separator" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4" fill="none">
+            <circle cx="2" cy="2" r="2" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="breadcrumbs__current">{{ page.title }}</span>
+      </li>
+
+    {%- elsif template.name == 'product' -%}
+      {%- if collection -%}
+        <li class="breadcrumbs__item">
+          <span class="breadcrumbs__separator" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4" fill="none">
+              <circle cx="2" cy="2" r="2" fill="currentColor"/>
+            </svg>
+          </span>
+          <a href="{{ collection.url }}" class="breadcrumbs__link">
+            {{ collection.title }}
+          </a>
+        </li>
+      {%- endif -%}
+      <li class="breadcrumbs__item" aria-current="page">
+        <span class="breadcrumbs__separator" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4" fill="none">
+            <circle cx="2" cy="2" r="2" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="breadcrumbs__current">{{ product.title }}</span>
+      </li>
+
+    {%- elsif template.name == 'collection' -%}
+      <li class="breadcrumbs__item" aria-current="page">
+        <span class="breadcrumbs__separator" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="4" height="4" viewBox="0 0 4 4" fill="none">
+            <circle cx="2" cy="2" r="2" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="breadcrumbs__current">{{ collection.title }}</span>
+      </li>
+    {%- endif -%}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs {
+    --breadcrumbs-color: #21262F;
+  }
+
+  .breadcrumbs__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .breadcrumbs__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-body-family);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--breadcrumbs-color);
+  }
+
+  .breadcrumbs__link {
+    color: var(--breadcrumbs-color);
+    text-decoration: none;
+    font-weight: 400;
+    transition: opacity 0.2s ease;
+  }
+
+  .breadcrumbs__link:hover {
+    opacity: 0.7;
+  }
+
+  .breadcrumbs__separator {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumbs__current {
+    font-weight: 600;
+  }
+
+  @media screen and (max-width: 990px) {
+    .breadcrumbs {
+      display: none;
+    }
+  }
+</style>

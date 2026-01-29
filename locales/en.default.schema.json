@@ -1313,6 +1313,34 @@
         "info": "Standard-styled cards have no borders when an image shape is active."
       }
     },
+    "breadcrumbs": {
+      "name": "Breadcrumbs",
+      "presets": {
+        "name": "Breadcrumbs"
+      },
+      "settings": {
+        "color_mode": {
+          "label": "Color mode",
+          "option__light": "Light",
+          "option__dark": "Dark"
+        },
+        "background_color": {
+          "label": "Background color"
+        },
+        "position": {
+          "label": "Position",
+          "option__left": "Left",
+          "option__center": "Center",
+          "option__right": "Right"
+        },
+        "padding_top": {
+          "label": "Padding top"
+        },
+        "padding_bottom": {
+          "label": "Padding bottom"
+        }
+      }
+    },
     "announcement-bar": {
       "name": "Announcement bar",
       "settings": {
@@ -3298,6 +3326,66 @@
       },
       "presets": {
         "name": "Platform cards"
+      }
+    },
+    "article_field_notes": {
+      "name": "Field Notes article",
+      "settings": {
+        "header__hero": {
+          "content": "Hero section"
+        },
+        "hero_background_color": {
+          "label": "Hero background color"
+        },
+        "pattern_image": {
+          "label": "Pattern image"
+        },
+        "pattern_opacity": {
+          "label": "Pattern opacity"
+        },
+        "eyebrow_text": {
+          "label": "Eyebrow text"
+        },
+        "eyebrow_color": {
+          "label": "Eyebrow text color"
+        },
+        "title_color": {
+          "label": "Title color"
+        },
+        "header__content": {
+          "content": "Article content"
+        },
+        "show_navigation": {
+          "label": "Show navigation buttons"
+        }
+      }
+    },
+    "breadcrumbs": {
+      "name": "Breadcrumbs",
+      "settings": {
+        "color_mode": {
+          "label": "Text color",
+          "option__light": "Light",
+          "option__dark": "Dark"
+        },
+        "background_color": {
+          "label": "Background color"
+        },
+        "position": {
+          "label": "Position",
+          "option__left": "Left",
+          "option__center": "Center",
+          "option__right": "Right"
+        },
+        "padding_top": {
+          "label": "Padding top"
+        },
+        "padding_bottom": {
+          "label": "Padding bottom"
+        }
+      },
+      "presets": {
+        "name": "Breadcrumbs"
       }
     },
     "promo-banner": {

@@ -4,6 +4,7 @@
       "type": "walkfully-hero",
       "settings": {
         "layout_style": "page_hero",
+        "show_breadcrumbs": true,
         "show_footer": false,
         "show_centered_description": true,
         "show_cta_button": true,
