@@ -1602,6 +1602,90 @@
         "name": "Stories carousel"
       }
     },
+    "science_carousel": {
+      "name": "Science carousel",
+      "settings": {
+        "background_color": {
+          "label": "Background color"
+        },
+        "header_content": {
+          "content": "Header"
+        },
+        "show_eyebrow": {
+          "label": "Show eyebrow"
+        },
+        "eyebrow_text": {
+          "label": "Eyebrow text"
+        },
+        "eyebrow_color": {
+          "label": "Eyebrow color"
+        },
+        "show_heading": {
+          "label": "Show heading"
+        },
+        "heading_accent_text": {
+          "label": "Heading accent text (italic)"
+        },
+        "heading_accent_color": {
+          "label": "Heading accent color"
+        },
+        "heading_main_text": {
+          "label": "Heading main text (bold)"
+        },
+        "heading_main_color": {
+          "label": "Heading main color"
+        },
+        "heading_style": {
+          "label": "Heading style",
+          "option__mixed": "Mixed (accent + main)",
+          "option__simple": "Simple (main only)"
+        },
+        "show_description": {
+          "label": "Show description"
+        },
+        "description_text": {
+          "label": "Description text"
+        },
+        "description_color": {
+          "label": "Description color"
+        },
+        "header_navigation": {
+          "content": "Navigation"
+        },
+        "nav_color": {
+          "label": "Navigation color"
+        },
+        "progress_line_color": {
+          "label": "Progress line color"
+        }
+      },
+      "blocks": {
+        "science_card": {
+          "name": "Science card",
+          "settings": {
+            "image": {
+              "label": "Image"
+            },
+            "image_alt": {
+              "label": "Image alt text",
+              "info": "Describe the image for accessibility and SEO"
+            },
+            "title": {
+              "label": "Card title"
+            },
+            "text": {
+              "label": "Card text"
+            },
+            "background_color": {
+              "label": "Footer background color"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Science carousel"
+      }
+    },
     "video-hero": {
       "name": "Video hero",
       "settings": {
@@ -3021,7 +3105,8 @@
         "layout_style": {
           "label": "Layout style",
           "option__homepage": "Homepage (with label and CTA)",
-          "option__benefits": "Benefits (with benefit items)"
+          "option__benefits": "Benefits (with benefit items)",
+          "option__science": "Science (titles only)"
         },
         "header__image": {
           "content": "Image"

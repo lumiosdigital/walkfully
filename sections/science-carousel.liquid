@@ -1,0 +1,538 @@
+{%- liquid
+  assign show_eyebrow = section.settings.show_eyebrow
+  assign show_heading = section.settings.show_heading
+  assign show_description = section.settings.show_description
+  assign heading_style = section.settings.heading_style | default: 'mixed'
+-%}
+
+<div
+  class="
+    science-section
+    color-{{ section.settings.color_scheme }}
+    {% render 'section-classes', settings: section.settings -%}
+  "
+  style="
+    --science-bg: {{ section.settings.background_color | default: '#F7F1E5' }};
+    --science-eyebrow-color: {{ section.settings.eyebrow_color | default: '#21262F' }};
+    --science-accent-color: {{ section.settings.heading_accent_color | default: '#D14626' }};
+    --science-heading-color: {{ section.settings.heading_main_color | default: '#21262F' }};
+    --science-description-color: {{ section.settings.description_color | default: '#21262F' }};
+    --science-nav-color: {{ section.settings.nav_color | default: '#21262F' }};
+    --science-progress-color: {{ section.settings.progress_line_color | default: '#D14626' }};
+  "
+  {% if section.settings.enable_animations %}
+    data-animate-elements-on-scroll
+    data-animate-delay="125"
+  {% endif %}
+>
+  <div class="science-section__container page-width">
+    <div class="science-header {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
+      {%- if show_eyebrow and section.settings.eyebrow_text != blank -%}
+        <p class="science-header__eyebrow">{{ section.settings.eyebrow_text }}</p>
+      {%- endif -%}
+      {%- if show_heading -%}
+        <h2 class="science-header__title {% if heading_style == 'simple' %}science-header__title--simple{% endif %}">
+          {%- if heading_style == 'mixed' and section.settings.heading_accent_text != blank -%}
+            <span class="science-header__title-accent">{{ section.settings.heading_accent_text }}</span>{{ ' ' }}
+          {%- endif -%}
+          {%- if section.settings.heading_main_text != blank -%}
+            <span class="science-header__title-main">{{ section.settings.heading_main_text }}</span>
+          {%- endif -%}
+        </h2>
+      {%- endif -%}
+      {%- if show_description and section.settings.description_text != blank -%}
+        <p class="science-header__description">{{ section.settings.description_text }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="science-carousel">
+      <component-slider
+        class="science-carousel__slider swiper"
+        data-mobile-columns="1.2"
+        data-tablet-columns="2.5"
+        data-desktop-columns="4"
+        data-enable-loop="true"
+        style="
+          --mobile-columns: 1.2;
+          --tablet-columns: 2.5;
+          --desktop-columns: 4;
+        "
+      >
+        <div class="science-carousel__wrapper swiper-wrapper">
+          {% for block in section.blocks %}
+            {% if block.type == 'science_card' %}
+              <div class="science-carousel__slide swiper-slide" {{ block.shopify_attributes }}>
+                <div class="science-card {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
+                  <div class="science-card__image-wrapper">
+                    {%- if block.settings.image != blank -%}
+                      {%- liquid
+                        assign card_alt = block.settings.image_alt
+                        if card_alt == blank
+                          assign card_alt = block.settings.title | default: 'Science card image'
+                        endif
+                      -%}
+                      {% render 'image',
+                        wrapper_class: 'science-card__image',
+                        image: block.settings.image,
+                        alt: card_alt,
+                        sizes: '(max-width: 749px) 90vw, (max-width: 989px) 50vw, 325px',
+                        aspect_ratio: '325-340',
+                        no_radius: true,
+                        shimmer_disabled: true
+                      %}
+                    {%- else -%}
+                      <div class="science-card__image science-card__image--placeholder">
+                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                      </div>
+                    {%- endif -%}
+                  </div>
+                  <div class="science-card__footer" style="--card-bg: {{ block.settings.background_color | default: '#749DE1' }};">
+                    {%- if block.settings.title != blank -%}
+                      <p class="science-card__title">{{ block.settings.title }}</p>
+                    {%- endif -%}
+                    {%- if block.settings.text != blank -%}
+                      <div class="science-card__text">{{ block.settings.text }}</div>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <button type="button" class="science-carousel__nav science-carousel__nav--prev swiper-button-prev" aria-label="{{ 'general.slider.previous_slide' | t }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+            <rect x="-0.5" y="0.5" width="29" height="29" rx="14.5" transform="matrix(-1 0 0 1 29 0)" stroke="currentColor" stroke-opacity="0.3"/>
+            <path opacity="0.3" d="M21 15H9M9 15L15 9M9 15L15 21" stroke="currentColor"/>
+          </svg>
+        </button>
+        <button type="button" class="science-carousel__nav science-carousel__nav--next swiper-button-next" aria-label="{{ 'general.slider.next_slide' | t }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+            <rect x="0.5" y="0.5" width="29" height="29" rx="14.5" stroke="currentColor" stroke-opacity="0.3"/>
+            <path opacity="0.3" d="M10 15H20M20 15L15 10M20 15L15 20" stroke="currentColor"/>
+          </svg>
+        </button>
+      </component-slider>
+
+      <div class="science-footer">
+        <div class="science-footer__track">
+          <div class="science-footer__line"></div>
+        </div>
+        <div class="science-footer__nav">
+          <button type="button" class="science-footer__btn science-footer__btn--prev" aria-label="{{ 'general.slider.previous_slide' | t }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+              <rect x="-0.5" y="0.5" width="29" height="29" rx="14.5" transform="matrix(-1 0 0 1 29 0)" stroke="currentColor" stroke-opacity="0.3"/>
+              <path opacity="0.3" d="M21 15H9M9 15L15 9M9 15L15 21" stroke="currentColor"/>
+            </svg>
+          </button>
+          <button type="button" class="science-footer__btn science-footer__btn--next" aria-label="{{ 'general.slider.next_slide' | t }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+              <rect x="0.5" y="0.5" width="29" height="29" rx="14.5" stroke="currentColor" stroke-opacity="0.3"/>
+              <path opacity="0.3" d="M10 15H20M20 15L15 10M20 15L15 20" stroke="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.science-section').forEach(function(section) {
+      const prevBtn = section.querySelector('.science-footer__btn--prev');
+      const nextBtn = section.querySelector('.science-footer__btn--next');
+      const progressLine = section.querySelector('.science-footer__line');
+      const track = section.querySelector('.science-footer__track');
+      const slider = section.querySelector('component-slider');
+
+      let currentIndex = 0;
+      let totalSlides = 0;
+
+      function updateProgress() {
+        if (!progressLine || !track || totalSlides === 0) return;
+        const progress = totalSlides > 1 ? currentIndex / (totalSlides - 1) : 0;
+        const trackWidth = track.offsetWidth;
+        const lineWidth = progressLine.offsetWidth;
+        const maxTranslate = trackWidth - lineWidth;
+        const translateX = progress * maxTranslate;
+        progressLine.style.transform = `translateX(${translateX}px)`;
+      }
+
+      function setButtonDisabled(btn, disabled) {
+        if (!btn) return;
+        btn.disabled = disabled;
+        btn.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+        if (disabled) {
+          btn.style.opacity = '0.3';
+          btn.style.cursor = 'default';
+        }
+      }
+
+      function goNext() {
+        if (!slider || !slider.swiper) return;
+        slider.swiper.slideNext();
+      }
+
+      function goPrev() {
+        if (!slider || !slider.swiper) return;
+        slider.swiper.slidePrev();
+      }
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', goPrev);
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', goNext);
+      }
+
+      function initSlider() {
+        if (!slider || !slider.swiper) return false;
+
+        const originalSlides = section.querySelectorAll('.science-carousel__slide');
+        totalSlides = originalSlides.length;
+        currentIndex = slider.swiper.realIndex || 0;
+
+        const visibleSlides = Math.floor(slider.swiper.params.slidesPerView);
+
+        if (totalSlides <= visibleSlides) {
+          setButtonDisabled(prevBtn, true);
+          setButtonDisabled(nextBtn, true);
+        }
+
+        slider.swiper.on('slideChange', () => {
+          currentIndex = slider.swiper.realIndex || 0;
+          updateProgress();
+        });
+
+        updateProgress();
+        return true;
+      }
+
+      // Try to init immediately, then use requestAnimationFrame as fallback
+      if (!initSlider()) {
+        let attempts = 0;
+        const maxAttempts = 50;
+
+        function tryInit() {
+          if (initSlider() || attempts >= maxAttempts) return;
+          attempts++;
+          requestAnimationFrame(tryInit);
+        }
+        requestAnimationFrame(tryInit);
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.science_carousel.name",
+  "class": "science-section-wrapper",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ],
+    "templates": [
+      "password"
+    ]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.science_carousel.settings.background_color.label",
+      "default": "#F7F1E5"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.science_carousel.settings.header_content.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow",
+      "label": "t:sections.science_carousel.settings.show_eyebrow.label",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "t:sections.science_carousel.settings.eyebrow_text.label",
+      "default": "The Science of Walking"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "t:sections.science_carousel.settings.eyebrow_color.label",
+      "default": "#21262F"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "t:sections.science_carousel.settings.show_heading.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "heading_style",
+      "label": "t:sections.science_carousel.settings.heading_style.label",
+      "options": [
+        {
+          "value": "mixed",
+          "label": "t:sections.science_carousel.settings.heading_style.option__mixed"
+        },
+        {
+          "value": "simple",
+          "label": "t:sections.science_carousel.settings.heading_style.option__simple"
+        }
+      ],
+      "default": "mixed"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent_text",
+      "label": "t:sections.science_carousel.settings.heading_accent_text.label",
+      "default": "Walking is"
+    },
+    {
+      "type": "color",
+      "id": "heading_accent_color",
+      "label": "t:sections.science_carousel.settings.heading_accent_color.label",
+      "default": "#D14626"
+    },
+    {
+      "type": "textarea",
+      "id": "heading_main_text",
+      "label": "t:sections.science_carousel.settings.heading_main_text.label",
+      "default": "one of the most powerful, evidence-backed health practices we have."
+    },
+    {
+      "type": "color",
+      "id": "heading_main_color",
+      "label": "t:sections.science_carousel.settings.heading_main_color.label",
+      "default": "#21262F"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "t:sections.science_carousel.settings.show_description.label",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "description_text",
+      "label": "t:sections.science_carousel.settings.description_text.label",
+      "default": "Decades of research show that consistent walking improves longevity, mental health, cardiovascular function, and cognitive resilience — with benefits compounding across the lifespan"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "t:sections.science_carousel.settings.description_color.label",
+      "default": "#21262F"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.science_carousel.settings.header_navigation.content"
+    },
+    {
+      "type": "color",
+      "id": "nav_color",
+      "label": "t:sections.science_carousel.settings.nav_color.label",
+      "default": "#21262F"
+    },
+    {
+      "type": "color",
+      "id": "progress_line_color",
+      "label": "t:sections.science_carousel.settings.progress_line_color.label",
+      "default": "#D14626"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_spacing_and_border.content"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "label": "t:common.top_spacing.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:common.sizing.none"
+        },
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "x-large"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "label": "t:common.bottom_spacing.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:common.sizing.none"
+        },
+        {
+          "value": "compact",
+          "label": "t:common.sizing.compact"
+        },
+        {
+          "value": "standard",
+          "label": "t:common.sizing.standard"
+        },
+        {
+          "value": "large",
+          "label": "t:common.sizing.large"
+        },
+        {
+          "value": "x-large",
+          "label": "t:common.sizing.x_large"
+        },
+        {
+          "value": "2x-large",
+          "label": "t:common.sizing.x_x_large"
+        }
+      ],
+      "default": "x-large"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:common.show_bottom_border.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_animations.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "t:common.enable_animations.label",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "science_card",
+      "name": "t:sections.science_carousel.blocks.science_card.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.science_carousel.blocks.science_card.settings.image.label"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "t:sections.science_carousel.blocks.science_card.settings.image_alt.label",
+          "info": "t:sections.science_carousel.blocks.science_card.settings.image_alt.info"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.science_carousel.blocks.science_card.settings.title.label"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:sections.science_carousel.blocks.science_card.settings.text.label",
+          "default": "<p>Walking <strong>8,000 steps/day</strong> reduces all-cause mortality by <strong>~60%</strong></p>"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "t:sections.science_carousel.blocks.science_card.settings.background_color.label",
+          "default": "#749DE1"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.science_carousel.presets.name",
+      "category": "t:categories.other",
+      "settings": {
+        "background_color": "#F7F1E5",
+        "show_eyebrow": true,
+        "eyebrow_text": "The Science of Walking",
+        "eyebrow_color": "#21262F",
+        "show_heading": true,
+        "heading_accent_text": "Walking is",
+        "heading_accent_color": "#D14626",
+        "heading_main_text": "one of the most powerful, evidence-backed health practices we have.",
+        "heading_main_color": "#21262F",
+        "show_description": true,
+        "description_text": "Decades of research show that consistent walking improves longevity, mental health, cardiovascular function, and cognitive resilience — with benefits compounding across the lifespan",
+        "description_color": "#21262F",
+        "nav_color": "#21262F",
+        "progress_line_color": "#D14626"
+      },
+      "blocks": [
+        {
+          "type": "science_card",
+          "settings": {
+            "text": "<p>Walking <strong>8,000 steps/day</strong> reduces all-cause mortality by <strong>~60%</strong></p>",
+            "background_color": "#749DE1"
+          }
+        },
+        {
+          "type": "science_card",
+          "settings": {
+            "text": "<p><strong>2.5 hours/week</strong> of walking lowers heart disease risk by <strong>~30%</strong></p>",
+            "background_color": "#642823"
+          }
+        },
+        {
+          "type": "science_card",
+          "settings": {
+            "text": "<p>Walking <strong>10,000 steps/day</strong> reduces dementia risk by <strong>~50%</strong></p>",
+            "background_color": "#868438"
+          }
+        },
+        {
+          "type": "science_card",
+          "settings": {
+            "text": "<p><strong>2.5 hours/week</strong> of brisk walking reduces depression risk by <strong>~25%</strong></p>",
+            "background_color": "#21262F"
+          }
+        },
+        {
+          "type": "science_card",
+          "settings": {
+            "text": "<p><strong>2.5 hours/week</strong> of brisk walking reduces depression risk by <strong>~25%</strong></p>",
+            "background_color": "#D14626"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

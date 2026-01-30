@@ -1,0 +1,142 @@
+{
+  "sections": {
+    "science_carousel": {
+      "type": "science-carousel",
+      "settings": {
+        "background_color": "#F7F1E5",
+        "show_eyebrow": true,
+        "eyebrow_text": "The Science of Walking",
+        "eyebrow_color": "#21262F",
+        "show_heading": true,
+        "heading_accent_text": "Walking is",
+        "heading_accent_color": "#D14626",
+        "heading_main_text": "one of the most powerful, evidence-backed health practices we have.",
+        "heading_main_color": "#21262F",
+        "show_description": true,
+        "description_text": "Decades of research show that consistent walking improves longevity, mental health, cardiovascular function, and cognitive resilience — with benefits compounding across the lifespan",
+        "description_color": "#21262F",
+        "nav_color": "#21262F",
+        "progress_line_color": "#D14626",
+        "section_spacing_top": "x-large",
+        "section_spacing_bottom": "x-large"
+      },
+      "blocks": {
+        "card_1": {
+          "type": "science_card",
+          "settings": {
+            "text": "<p>Walking <strong>8,000 steps/day</strong> reduces all-cause mortality by <strong>~60%</strong></p>",
+            "background_color": "#749DE1"
+          }
+        },
+        "card_2": {
+          "type": "science_card",
+          "settings": {
+            "text": "<p><strong>2.5 hours/week</strong> of walking lowers heart disease risk by <strong>~30%</strong></p>",
+            "background_color": "#642823"
+          }
+        },
+        "card_3": {
+          "type": "science_card",
+          "settings": {
+            "text": "<p>Walking <strong>10,000 steps/day</strong> reduces dementia risk by <strong>~50%</strong></p>",
+            "background_color": "#868438"
+          }
+        },
+        "card_4": {
+          "type": "science_card",
+          "settings": {
+            "text": "<p><strong>2.5 hours/week</strong> of brisk walking reduces depression risk by <strong>~25%</strong></p>",
+            "background_color": "#21262F"
+          }
+        },
+        "card_5": {
+          "type": "science_card",
+          "settings": {
+            "text": "<p><strong>2.5 hours/week</strong> of brisk walking reduces depression risk by <strong>~25%</strong></p>",
+            "background_color": "#D14626"
+          }
+        }
+      },
+      "block_order": ["card_1", "card_2", "card_3", "card_4", "card_5"]
+    },
+    "weighted_walking": {
+      "type": "program-promo",
+      "settings": {
+        "layout_style": "science",
+        "image_position": "right",
+        "content_bg_color": "#7C7A2E",
+        "show_label": true,
+        "label_text": "works deeper",
+        "label_position": "below",
+        "label_color": "#FFCD68",
+        "heading_text": "Walking works.\nWalking with weight",
+        "show_description": true,
+        "description_text": "Adding gentle resistance to walking increases muscular engagement, bone stimulation, and metabolic demand — without adding impact or complexity. It's one of the most accessible ways to layer strength into a daily habit.",
+        "show_benefits": true,
+        "benefit_1_title": "Builds functional strength and stability",
+        "benefit_2_title": "Stimulates bone density, especially in women 40+",
+        "benefit_3_title": "Improves balance and fall prevention",
+        "benefit_4_title": "Increases cardiovascular demand without joint stress",
+        "benefit_5_title": "Supports long-term consistency (no \"workout mindset\" required)",
+        "show_cta": false,
+        "feature_icon_color": "#FFCD68",
+        "section_spacing_top": "none",
+        "section_spacing_bottom": "none"
+      }
+    },
+    "materials_carousel": {
+      "type": "science-carousel",
+      "settings": {
+        "background_color": "#6F2C26",
+        "show_eyebrow": true,
+        "eyebrow_text": "Materials, Craft, and Innovation",
+        "eyebrow_color": "#D14626",
+        "show_heading": true,
+        "heading_style": "simple",
+        "heading_main_text": "Built to support bodies. And the years ahead",
+        "heading_main_color": "#F7F1E5",
+        "show_description": false,
+        "nav_color": "#F7F1E5",
+        "progress_line_color": "#D14626",
+        "section_spacing_top": "x-large",
+        "section_spacing_bottom": "x-large"
+      },
+      "blocks": {
+        "material_1": {
+          "type": "science_card",
+          "settings": {
+            "title": "Materials",
+            "text": "<p>Premium, sustainable materials selected for durability and comfort</p>",
+            "background_color": "#749DE1"
+          }
+        },
+        "material_2": {
+          "type": "science_card",
+          "settings": {
+            "title": "Ergonomics",
+            "text": "<p>Designed to support natural movement patterns</p>",
+            "background_color": "#868438"
+          }
+        },
+        "material_3": {
+          "type": "science_card",
+          "settings": {
+            "title": "Design Thinking",
+            "text": "<p>Form follows function, beauty follows both</p>",
+            "background_color": "#21262F"
+          }
+        },
+        "material_4": {
+          "type": "science_card",
+          "settings": {
+            "title": "Sustainability",
+            "text": "<p>Built to last, designed for minimal environmental impact</p>",
+            "background_color": "#D14626"
+          }
+        }
+      },
+      "block_order": ["material_1", "material_2", "material_3", "material_4"]
+    }
+  },
+  "order": ["science_carousel", "weighted_walking", "materials_carousel"]
+}

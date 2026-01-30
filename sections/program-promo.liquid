@@ -1,8 +1,11 @@
 {%- liquid
   assign layout_style = section.settings.layout_style | default: 'homepage'
   assign is_benefits = false
+  assign is_science = false
   if layout_style == 'benefits'
     assign is_benefits = true
+  elsif layout_style == 'science'
+    assign is_science = true
   endif
   assign show_label = section.settings.show_label
   assign label_position = section.settings.label_position | default: 'above'
@@ -29,10 +32,14 @@
     --icon-color: {{ section.settings.feature_icon_color | default: '#FFCD68' }};
   "
 >
+  {%- liquid
+    assign promo_alt = section.settings.heading_text | strip_html | default: 'Program promo image'
+  -%}
   <div class="program-promo__image-wrapper">
     {% if section.settings.image != blank %}
       {% render 'image',
         image: section.settings.image,
+        alt: promo_alt,
         sizes: '50vw',
         wrapper_class: 'program-promo__image program-promo__image--desktop',
         no_radius: true
@@ -46,6 +53,7 @@
     {% if section.settings.mobile_image != blank %}
       {% render 'image',
         image: section.settings.mobile_image,
+        alt: promo_alt,
         sizes: '100vw',
         wrapper_class: 'program-promo__image program-promo__image--mobile',
         no_radius: true
@@ -53,6 +61,7 @@
     {% elsif section.settings.image != blank %}
       {% render 'image',
         image: section.settings.image,
+        alt: promo_alt,
         sizes: '100vw',
         wrapper_class: 'program-promo__image program-promo__image--mobile',
         no_radius: true
@@ -103,7 +112,7 @@
 
       {% unless is_benefits %}
         {% if show_features %}
-          <ul class="program-promo__features">
+          <ul class="program-promo__features" role="list">
             {% if section.settings.feature_1_text != blank %}
               <li class="program-promo__feature">
                 {% render 'icon-star', class: 'program-promo__icon' %}
@@ -135,7 +144,7 @@
             <li class="program-promo__benefit">
               <div class="program-promo__benefit-header">
                 {% render 'icon-star', class: 'program-promo__icon' %}
-                <h3 class="program-promo__benefit-title">{{ section.settings.benefit_1_title }}</h3>
+                <p class="program-promo__benefit-title">{{ section.settings.benefit_1_title }}</p>
                 {% render 'icon-star', class: 'program-promo__icon' %}
               </div>
               {% if section.settings.benefit_1_description != blank %}
@@ -148,7 +157,7 @@
             <li class="program-promo__benefit">
               <div class="program-promo__benefit-header">
                 {% render 'icon-star', class: 'program-promo__icon' %}
-                <h3 class="program-promo__benefit-title">{{ section.settings.benefit_2_title }}</h3>
+                <p class="program-promo__benefit-title">{{ section.settings.benefit_2_title }}</p>
                 {% render 'icon-star', class: 'program-promo__icon' %}
               </div>
               {% if section.settings.benefit_2_description != blank %}
@@ -161,7 +170,7 @@
             <li class="program-promo__benefit">
               <div class="program-promo__benefit-header">
                 {% render 'icon-star', class: 'program-promo__icon' %}
-                <h3 class="program-promo__benefit-title">{{ section.settings.benefit_3_title }}</h3>
+                <p class="program-promo__benefit-title">{{ section.settings.benefit_3_title }}</p>
                 {% render 'icon-star', class: 'program-promo__icon' %}
               </div>
               {% if section.settings.benefit_3_description != blank %}
@@ -174,7 +183,7 @@
             <li class="program-promo__benefit">
               <div class="program-promo__benefit-header">
                 {% render 'icon-star', class: 'program-promo__icon' %}
-                <h3 class="program-promo__benefit-title">{{ section.settings.benefit_4_title }}</h3>
+                <p class="program-promo__benefit-title">{{ section.settings.benefit_4_title }}</p>
                 {% render 'icon-star', class: 'program-promo__icon' %}
               </div>
               {% if section.settings.benefit_4_description != blank %}
@@ -187,12 +196,66 @@
             <li class="program-promo__benefit">
               <div class="program-promo__benefit-header">
                 {% render 'icon-star', class: 'program-promo__icon' %}
-                <h3 class="program-promo__benefit-title">{{ section.settings.benefit_5_title }}</h3>
+                <p class="program-promo__benefit-title">{{ section.settings.benefit_5_title }}</p>
                 {% render 'icon-star', class: 'program-promo__icon' %}
               </div>
               {% if section.settings.benefit_5_description != blank %}
                 <p class="program-promo__benefit-description">{{ section.settings.benefit_5_description }}</p>
               {% endif %}
+            </li>
+          {% endif %}
+        </ul>
+      {% endif %}
+
+      {% if is_science and show_benefits %}
+        <ul class="program-promo__benefits program-promo__benefits--science" role="list">
+          {% if section.settings.benefit_1_title != blank %}
+            <li class="program-promo__benefit program-promo__benefit--title-only">
+              <div class="program-promo__benefit-header">
+                {% render 'icon-star', class: 'program-promo__icon' %}
+                <p class="program-promo__benefit-title">{{ section.settings.benefit_1_title }}</p>
+                {% render 'icon-star', class: 'program-promo__icon' %}
+              </div>
+            </li>
+          {% endif %}
+
+          {% if section.settings.benefit_2_title != blank %}
+            <li class="program-promo__benefit program-promo__benefit--title-only">
+              <div class="program-promo__benefit-header">
+                {% render 'icon-star', class: 'program-promo__icon' %}
+                <p class="program-promo__benefit-title">{{ section.settings.benefit_2_title }}</p>
+                {% render 'icon-star', class: 'program-promo__icon' %}
+              </div>
+            </li>
+          {% endif %}
+
+          {% if section.settings.benefit_3_title != blank %}
+            <li class="program-promo__benefit program-promo__benefit--title-only">
+              <div class="program-promo__benefit-header">
+                {% render 'icon-star', class: 'program-promo__icon' %}
+                <p class="program-promo__benefit-title">{{ section.settings.benefit_3_title }}</p>
+                {% render 'icon-star', class: 'program-promo__icon' %}
+              </div>
+            </li>
+          {% endif %}
+
+          {% if section.settings.benefit_4_title != blank %}
+            <li class="program-promo__benefit program-promo__benefit--title-only">
+              <div class="program-promo__benefit-header">
+                {% render 'icon-star', class: 'program-promo__icon' %}
+                <p class="program-promo__benefit-title">{{ section.settings.benefit_4_title }}</p>
+                {% render 'icon-star', class: 'program-promo__icon' %}
+              </div>
+            </li>
+          {% endif %}
+
+          {% if section.settings.benefit_5_title != blank %}
+            <li class="program-promo__benefit program-promo__benefit--title-only">
+              <div class="program-promo__benefit-header">
+                {% render 'icon-star', class: 'program-promo__icon' %}
+                <p class="program-promo__benefit-title">{{ section.settings.benefit_5_title }}</p>
+                {% render 'icon-star', class: 'program-promo__icon' %}
+              </div>
             </li>
           {% endif %}
         </ul>
@@ -380,6 +443,7 @@
 
   .program-promo__icon {
     flex-shrink: 0;
+    margin-top: 2px;
     color: var(--icon-color, #FFCD68);
   }
 
@@ -449,17 +513,16 @@
 
   .program-promo__benefit-header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    gap: 10px;
-    width: 100%;
+    gap: 5px;
   }
 
   .program-promo__benefit-title {
     font-family: 'Alte Haas Grotesk', Arial, sans-serif;
     font-size: 24px;
     font-weight: 700;
-    line-height: 0.9;
+    line-height: 1.1;
     letter-spacing: -0.24px;
     text-transform: uppercase;
     color: #F7F1E5;
@@ -477,6 +540,36 @@
     color: #F7F1E5;
     text-align: center;
     margin: 0;
+  }
+
+  /* Science variant styles */
+  .program-promo--science .program-promo__heading {
+    font-size: 50px;
+    letter-spacing: -0.5px;
+    margin: 0;
+  }
+
+  .program-promo--science .program-promo__label--below {
+    margin-top: -60px;
+  }
+
+  .program-promo--science .program-promo__description {
+    max-width: 582px;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.18px;
+    color: #F7F1E5;
+    text-align: center;
+  }
+
+  .program-promo__benefits--science {
+    gap: 40px;
+  }
+
+  .program-promo__benefit--title-only {
+    gap: 0;
   }
 
   @media screen and (max-width: 1024px) {
@@ -565,6 +658,23 @@
     .program-promo__benefit-description {
       font-size: 14px;
     }
+
+    .program-promo--science .program-promo__heading {
+      font-size: 36px;
+      letter-spacing: -0.36px;
+    }
+
+    .program-promo--science .program-promo__label--below {
+      margin-top: -40px;
+    }
+
+    .program-promo--science .program-promo__description {
+      font-size: 16px;
+    }
+
+    .program-promo__benefits--science {
+      gap: 32px;
+    }
   }
 
   @media screen and (max-width: 749px) {
@@ -643,6 +753,23 @@
       font-size: 13px;
       line-height: 1.5;
     }
+
+    .program-promo--science .program-promo__heading {
+      font-size: 28px;
+      letter-spacing: -0.28px;
+    }
+
+    .program-promo--science .program-promo__label--below {
+      margin-top: -30px;
+    }
+
+    .program-promo--science .program-promo__description {
+      font-size: 15px;
+    }
+
+    .program-promo__benefits--science {
+      gap: 28px;
+    }
   }
 
   @media screen and (max-width: 400px) {
@@ -705,12 +832,24 @@
     .program-promo__benefit-description {
       font-size: 12px;
     }
+
+    .program-promo--science .program-promo__heading {
+      font-size: 24px;
+    }
+
+    .program-promo--science .program-promo__label--below {
+      margin-top: -20px;
+    }
+
+    .program-promo--science .program-promo__description {
+      font-size: 14px;
+    }
   }
 </style>
 
 {% schema %}
 {
-  "name": "Program Promo",
+  "name": "t:sections.program-promo.name",
   "class": "program-promo-section",
   "tag": "section",
   "disabled_on": {
@@ -740,6 +879,10 @@
         {
           "value": "benefits",
           "label": "t:sections.program-promo.settings.layout_style.option__benefits"
+        },
+        {
+          "value": "science",
+          "label": "t:sections.program-promo.settings.layout_style.option__science"
         }
       ],
       "default": "homepage"
