@@ -1,6 +1,44 @@
 {%- liquid
   assign product_1 = section.settings.product_1
   assign product_2 = section.settings.product_2
+
+  # Product 1 media assignments
+  assign p1_desktop_video = section.settings.product_1_desktop_video
+  assign p1_desktop_image = section.settings.product_1_desktop_image
+  if p1_desktop_image == blank and product_1 != blank
+    assign p1_desktop_image = product_1.featured_image
+  endif
+  assign p1_mobile_video = section.settings.product_1_mobile_video
+  assign p1_mobile_image = section.settings.product_1_mobile_image
+
+  assign p1_has_desktop_video = false
+  if p1_desktop_video != blank
+    assign p1_has_desktop_video = true
+  endif
+
+  assign p1_has_mobile_video = false
+  if p1_mobile_video != blank
+    assign p1_has_mobile_video = true
+  endif
+
+  # Product 2 media assignments
+  assign p2_desktop_video = section.settings.product_2_desktop_video
+  assign p2_desktop_image = section.settings.product_2_desktop_image
+  if p2_desktop_image == blank and product_2 != blank
+    assign p2_desktop_image = product_2.featured_image
+  endif
+  assign p2_mobile_video = section.settings.product_2_mobile_video
+  assign p2_mobile_image = section.settings.product_2_mobile_image
+
+  assign p2_has_desktop_video = false
+  if p2_desktop_video != blank
+    assign p2_has_desktop_video = true
+  endif
+
+  assign p2_has_mobile_video = false
+  if p2_mobile_video != blank
+    assign p2_has_mobile_video = true
+  endif
 -%}
 
 <div
@@ -34,11 +72,107 @@
       {% if product_1 != blank %}
         <a href="{{ product_1.url }}" class="product-showcase__card {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
           <div class="product-showcase__card-inner">
-            {%- comment -%} Full-bleed Product Image {%- endcomment -%}
-            <div class="product-showcase__card-media">
-              {% if product_1.featured_image != blank %}
+            {%- comment -%} Full-bleed Product Media {%- endcomment -%}
+            {%- comment -%} Desktop Media {%- endcomment -%}
+            <div class="product-showcase__card-media product-showcase__card-media--desktop">
+              {% if p1_has_desktop_video %}
+                <video
+                  class="product-showcase__video"
+                  aria-label="{{ product_1.title | strip_html | escape }} product video"
+                  autoplay
+                  muted
+                  loop
+                  playsinline
+                  preload="metadata"
+                  {% if p1_desktop_image != blank %}
+                    poster="{{ p1_desktop_image | image_url: width: 1920 }}"
+                  {% endif %}
+                >
+                  {% for source in p1_desktop_video.sources %}
+                    {% if source.mime_type == 'video/webm' %}
+                      <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    {% endif %}
+                  {% endfor %}
+                  {% for source in p1_desktop_video.sources %}
+                    {% if source.mime_type == 'video/mp4' %}
+                      <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    {% endif %}
+                  {% endfor %}
+                </video>
+              {% elsif p1_desktop_image != blank %}
                 {% render 'image',
-                  image: product_1.featured_image,
+                  image: p1_desktop_image,
+                  sizes: '(max-width: 749px) 50vw, 50vw',
+                  no_radius: true
+                %}
+              {% else %}
+                <div class="product-showcase__image-placeholder">
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+              {% endif %}
+            </div>
+
+            {%- comment -%} Mobile Media {%- endcomment -%}
+            <div class="product-showcase__card-media product-showcase__card-media--mobile">
+              {% if p1_has_mobile_video %}
+                <video
+                  class="product-showcase__video"
+                  aria-label="{{ product_1.title | strip_html | escape }} product video"
+                  autoplay
+                  muted
+                  loop
+                  playsinline
+                  preload="metadata"
+                  {% if p1_mobile_image != blank %}
+                    poster="{{ p1_mobile_image | image_url: width: 1920 }}"
+                  {% elsif p1_desktop_image != blank %}
+                    poster="{{ p1_desktop_image | image_url: width: 1920 }}"
+                  {% endif %}
+                >
+                  {% for source in p1_mobile_video.sources %}
+                    {% if source.mime_type == 'video/webm' %}
+                      <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    {% endif %}
+                  {% endfor %}
+                  {% for source in p1_mobile_video.sources %}
+                    {% if source.mime_type == 'video/mp4' %}
+                      <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    {% endif %}
+                  {% endfor %}
+                </video>
+              {% elsif p1_mobile_image != blank %}
+                {% render 'image',
+                  image: p1_mobile_image,
+                  sizes: '(max-width: 749px) 50vw, 50vw',
+                  no_radius: true
+                %}
+              {% elsif p1_has_desktop_video %}
+                <video
+                  class="product-showcase__video"
+                  aria-label="{{ product_1.title | strip_html | escape }} product video"
+                  autoplay
+                  muted
+                  loop
+                  playsinline
+                  preload="metadata"
+                  {% if p1_desktop_image != blank %}
+                    poster="{{ p1_desktop_image | image_url: width: 1920 }}"
+                  {% endif %}
+                >
+                  {% for source in p1_desktop_video.sources %}
+                    {% if source.mime_type == 'video/webm' %}
+                      <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    {% endif %}
+                  {% endfor %}
+                  {% for source in p1_desktop_video.sources %}
+                    {% if source.mime_type == 'video/mp4' %}
+                      <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    {% endif %}
+                  {% endfor %}
+                </video>
+              {% elsif p1_desktop_image != blank %}
+                {% render 'image',
+                  image: p1_desktop_image,
                   sizes: '(max-width: 749px) 50vw, 50vw',
                   no_radius: true
                 %}
@@ -88,10 +222,106 @@
       {% if product_2 != blank %}
         <a href="{{ product_2.url }}" class="product-showcase__card {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
           <div class="product-showcase__card-inner">
-            <div class="product-showcase__card-media">
-              {% if product_2.featured_image != blank %}
+            {%- comment -%} Desktop Media {%- endcomment -%}
+            <div class="product-showcase__card-media product-showcase__card-media--desktop">
+              {% if p2_has_desktop_video %}
+                <video
+                  class="product-showcase__video"
+                  aria-label="{{ product_2.title | strip_html | escape }} product video"
+                  autoplay
+                  muted
+                  loop
+                  playsinline
+                  preload="metadata"
+                  {% if p2_desktop_image != blank %}
+                    poster="{{ p2_desktop_image | image_url: width: 1920 }}"
+                  {% endif %}
+                >
+                  {% for source in p2_desktop_video.sources %}
+                    {% if source.mime_type == 'video/webm' %}
+                      <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    {% endif %}
+                  {% endfor %}
+                  {% for source in p2_desktop_video.sources %}
+                    {% if source.mime_type == 'video/mp4' %}
+                      <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    {% endif %}
+                  {% endfor %}
+                </video>
+              {% elsif p2_desktop_image != blank %}
                 {% render 'image',
-                  image: product_2.featured_image,
+                  image: p2_desktop_image,
+                  sizes: '(max-width: 749px) 50vw, 50vw',
+                  no_radius: true
+                %}
+              {% else %}
+                <div class="product-showcase__image-placeholder">
+                  {{ 'product-2' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+              {% endif %}
+            </div>
+
+            {%- comment -%} Mobile Media {%- endcomment -%}
+            <div class="product-showcase__card-media product-showcase__card-media--mobile">
+              {% if p2_has_mobile_video %}
+                <video
+                  class="product-showcase__video"
+                  aria-label="{{ product_2.title | strip_html | escape }} product video"
+                  autoplay
+                  muted
+                  loop
+                  playsinline
+                  preload="metadata"
+                  {% if p2_mobile_image != blank %}
+                    poster="{{ p2_mobile_image | image_url: width: 1920 }}"
+                  {% elsif p2_desktop_image != blank %}
+                    poster="{{ p2_desktop_image | image_url: width: 1920 }}"
+                  {% endif %}
+                >
+                  {% for source in p2_mobile_video.sources %}
+                    {% if source.mime_type == 'video/webm' %}
+                      <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    {% endif %}
+                  {% endfor %}
+                  {% for source in p2_mobile_video.sources %}
+                    {% if source.mime_type == 'video/mp4' %}
+                      <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    {% endif %}
+                  {% endfor %}
+                </video>
+              {% elsif p2_mobile_image != blank %}
+                {% render 'image',
+                  image: p2_mobile_image,
+                  sizes: '(max-width: 749px) 50vw, 50vw',
+                  no_radius: true
+                %}
+              {% elsif p2_has_desktop_video %}
+                <video
+                  class="product-showcase__video"
+                  aria-label="{{ product_2.title | strip_html | escape }} product video"
+                  autoplay
+                  muted
+                  loop
+                  playsinline
+                  preload="metadata"
+                  {% if p2_desktop_image != blank %}
+                    poster="{{ p2_desktop_image | image_url: width: 1920 }}"
+                  {% endif %}
+                >
+                  {% for source in p2_desktop_video.sources %}
+                    {% if source.mime_type == 'video/webm' %}
+                      <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    {% endif %}
+                  {% endfor %}
+                  {% for source in p2_desktop_video.sources %}
+                    {% if source.mime_type == 'video/mp4' %}
+                      <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    {% endif %}
+                  {% endfor %}
+                </video>
+              {% elsif p2_desktop_image != blank %}
+                {% render 'image',
+                  image: p2_desktop_image,
                   sizes: '(max-width: 749px) 50vw, 50vw',
                   no_radius: true
                 %}
@@ -135,6 +365,82 @@
     </div>
   </div>
 </div>
+
+{% if p1_has_desktop_video or p1_has_mobile_video or p2_has_desktop_video or p2_has_mobile_video %}
+<script>
+  (function() {
+    const videos = document.querySelectorAll('[data-section-id="{{ section.id }}"] .product-showcase__video');
+    if (!videos.length) return;
+
+    videos.forEach(function(video) {
+      // Show video once it can play
+      function onVideoReady() {
+        video.classList.add('is-loaded');
+      }
+
+      // Check if video is already ready
+      if (video.readyState >= 3) {
+        onVideoReady();
+      } else {
+        video.addEventListener('canplay', onVideoReady, { once: true });
+      }
+
+      // Fallback: show video after timeout even if not fully loaded
+      setTimeout(function() {
+        if (!video.classList.contains('is-loaded')) {
+          video.classList.add('is-loaded');
+        }
+      }, 3000);
+
+      // Try to play video (handles autoplay restrictions)
+      video.play().catch(function() {
+        // Autoplay blocked, video will still show with poster
+        video.classList.add('is-loaded');
+      });
+    });
+  })();
+</script>
+{% endif %}
+
+<style>
+  .product-showcase__card-media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .product-showcase__card-media--mobile {
+    display: none;
+  }
+
+  .product-showcase__card-media--desktop {
+    display: block;
+  }
+
+  @media screen and (max-width: 990px) {
+    .product-showcase__card-media--mobile {
+      display: block;
+    }
+
+    .product-showcase__card-media--desktop {
+      display: none;
+    }
+  }
+
+  .product-showcase__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .product-showcase__video.is-loaded {
+    opacity: 1;
+  }
+</style>
 
 {% schema %}
 {
@@ -180,12 +486,66 @@
     },
     {
       "type": "header",
+      "content": "Product 1 Custom Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_1_desktop_image",
+      "label": "Custom desktop image",
+      "info": "Optional: Override product featured image"
+    },
+    {
+      "type": "video",
+      "id": "product_1_desktop_video",
+      "label": "Desktop video",
+      "info": "If provided, will be used instead of image"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_1_mobile_image",
+      "label": "Custom mobile image",
+      "info": "Optional: Different image for mobile"
+    },
+    {
+      "type": "video",
+      "id": "product_1_mobile_video",
+      "label": "Mobile video"
+    },
+    {
+      "type": "header",
       "content": "Product 2"
     },
     {
       "type": "product",
       "id": "product_2",
       "label": "Second product"
+    },
+    {
+      "type": "header",
+      "content": "Product 2 Custom Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_2_desktop_image",
+      "label": "Custom desktop image",
+      "info": "Optional: Override product featured image"
+    },
+    {
+      "type": "video",
+      "id": "product_2_desktop_video",
+      "label": "Desktop video",
+      "info": "If provided, will be used instead of image"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_2_mobile_image",
+      "label": "Custom mobile image",
+      "info": "Optional: Different image for mobile"
+    },
+    {
+      "type": "video",
+      "id": "product_2_mobile_video",
+      "label": "Mobile video"
     },
     {
       "type": "header",
