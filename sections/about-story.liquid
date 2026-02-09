@@ -13,9 +13,21 @@
   assign button_link = section.settings.button_link
   assign image = section.settings.image
   assign mobile_image = section.settings.mobile_image
+  assign desktop_video = section.settings.desktop_video
+  assign mobile_video = section.settings.mobile_video
   assign image_alt = section.settings.image_alt | default: image.alt
   assign image_position = section.settings.image_position | default: 'right'
   assign image_rounded = section.settings.image_rounded
+
+  assign has_desktop_video = false
+  if desktop_video != blank
+    assign has_desktop_video = true
+  endif
+
+  assign has_mobile_video = false
+  if mobile_video != blank
+    assign has_mobile_video = true
+  endif
   assign show_footer = section.settings.show_footer
   assign footer_eyebrow = section.settings.footer_eyebrow
   assign footer_heading = section.settings.footer_heading
@@ -96,7 +108,32 @@
       </div>
 
       <div class="about-story__media{% if image_rounded %} about-story__media--rounded{% endif %}">
-        {% if image != blank %}
+        {%- comment -%} Desktop Media {%- endcomment -%}
+        {% if has_desktop_video %}
+          <video
+            class="about-story__video about-story__video--desktop"
+            aria-label="About story background video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            {% if image != blank %}
+              poster="{{ image | image_url: width: 1920 }}"
+            {% endif %}
+          >
+            {% for source in desktop_video.sources %}
+              {% if source.mime_type == 'video/webm' %}
+                <source src="{{ source.url }}" type="{{ source.mime_type }}">
+              {% endif %}
+            {% endfor %}
+            {% for source in desktop_video.sources %}
+              {% if source.mime_type == 'video/mp4' %}
+                <source src="{{ source.url }}" type="{{ source.mime_type }}">
+              {% endif %}
+            {% endfor %}
+          </video>
+        {% elsif image != blank %}
           {% render 'image',
             image: image,
             sizes: '(min-width: 990px) 50vw, 100vw',
@@ -105,13 +142,64 @@
           %}
         {% endif %}
 
-        {% if mobile_image != blank %}
+        {%- comment -%} Mobile Media {%- endcomment -%}
+        {% if has_mobile_video %}
+          <video
+            class="about-story__video about-story__video--mobile"
+            aria-label="About story background video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            {% if mobile_image != blank %}
+              poster="{{ mobile_image | image_url: width: 1920 }}"
+            {% elsif image != blank %}
+              poster="{{ image | image_url: width: 1920 }}"
+            {% endif %}
+          >
+            {% for source in mobile_video.sources %}
+              {% if source.mime_type == 'video/webm' %}
+                <source src="{{ source.url }}" type="{{ source.mime_type }}">
+              {% endif %}
+            {% endfor %}
+            {% for source in mobile_video.sources %}
+              {% if source.mime_type == 'video/mp4' %}
+                <source src="{{ source.url }}" type="{{ source.mime_type }}">
+              {% endif %}
+            {% endfor %}
+          </video>
+        {% elsif mobile_image != blank %}
           {% render 'image',
             image: mobile_image,
             sizes: '100vw',
             wrapper_class: 'about-story__image about-story__image--mobile',
             no_radius: true
           %}
+        {% elsif has_desktop_video %}
+          <video
+            class="about-story__video about-story__video--mobile"
+            aria-label="About story background video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            {% if image != blank %}
+              poster="{{ image | image_url: width: 1920 }}"
+            {% endif %}
+          >
+            {% for source in desktop_video.sources %}
+              {% if source.mime_type == 'video/webm' %}
+                <source src="{{ source.url }}" type="{{ source.mime_type }}">
+              {% endif %}
+            {% endfor %}
+            {% for source in desktop_video.sources %}
+              {% if source.mime_type == 'video/mp4' %}
+                <source src="{{ source.url }}" type="{{ source.mime_type }}">
+              {% endif %}
+            {% endfor %}
+          </video>
         {% elsif image != blank %}
           {% render 'image',
             image: image,
@@ -365,6 +453,36 @@
 
   .about-story__image--desktop {
     display: block;
+  }
+
+  .about-story__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .about-story__video.is-loaded {
+    opacity: 1;
+  }
+
+  .about-story__video--mobile {
+    display: none;
+  }
+
+  .about-story__video--desktop {
+    display: block;
+  }
+
+  @media screen and (max-width: 990px) {
+    .about-story__video--mobile {
+      display: block;
+    }
+
+    .about-story__video--desktop {
+      display: none;
+    }
   }
 
   .about-story__footer {
@@ -625,6 +743,42 @@
     }
   }
 </style>
+
+{% if has_desktop_video or has_mobile_video %}
+<script>
+  (function() {
+    const videos = document.querySelectorAll('[data-section-id="{{ section.id }}"] .about-story__video');
+    if (!videos.length) return;
+
+    videos.forEach(function(video) {
+      // Show video once it can play
+      function onVideoReady() {
+        video.classList.add('is-loaded');
+      }
+
+      // Check if video is already ready
+      if (video.readyState >= 3) {
+        onVideoReady();
+      } else {
+        video.addEventListener('canplay', onVideoReady, { once: true });
+      }
+
+      // Fallback: show video after timeout even if not fully loaded
+      setTimeout(function() {
+        if (!video.classList.contains('is-loaded')) {
+          video.classList.add('is-loaded');
+        }
+      }, 3000);
+
+      // Try to play video (handles autoplay restrictions)
+      video.play().catch(function() {
+        // Autoplay blocked, video will still show with poster
+        video.classList.add('is-loaded');
+      });
+    });
+  })();
+</script>
+{% endif %}
 
 <script>
   (function() {
@@ -907,10 +1061,22 @@
       "label": "t:sections.about-story.settings.image.label"
     },
     {
+      "type": "video",
+      "id": "desktop_video",
+      "label": "Desktop video",
+      "info": "If provided, will be used instead of desktop image"
+    },
+    {
       "type": "image_picker",
       "id": "mobile_image",
       "label": "t:sections.about-story.settings.mobile_image.label",
       "info": "t:sections.about-story.settings.mobile_image.info"
+    },
+    {
+      "type": "video",
+      "id": "mobile_video",
+      "label": "Mobile video",
+      "info": "Optional: Different video for mobile screens"
     },
     {
       "type": "text",

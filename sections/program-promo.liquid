@@ -15,6 +15,22 @@
   assign show_benefits = section.settings.show_benefits
   assign image_position = section.settings.image_position | default: 'left'
   assign pattern_opacity = section.settings.pattern_opacity | divided_by: 100.0
+
+  # Media assignments
+  assign image = section.settings.image
+  assign mobile_image = section.settings.mobile_image
+  assign desktop_video = section.settings.desktop_video
+  assign mobile_video = section.settings.mobile_video
+
+  assign has_desktop_video = false
+  if desktop_video != blank
+    assign has_desktop_video = true
+  endif
+
+  assign has_mobile_video = false
+  if mobile_video != blank
+    assign has_mobile_video = true
+  endif
 -%}
 
 <div
@@ -36,9 +52,34 @@
     assign promo_alt = section.settings.heading_text | strip_html | default: 'Program promo image'
   -%}
   <div class="program-promo__image-wrapper">
-    {% if section.settings.image != blank %}
+    {%- comment -%} Desktop Media {%- endcomment -%}
+    {% if has_desktop_video %}
+      <video
+        class="program-promo__video program-promo__video--desktop"
+        aria-label="Program promo background video"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        {% if image != blank %}
+          poster="{{ image | image_url: width: 1920 }}"
+        {% endif %}
+      >
+        {% for source in desktop_video.sources %}
+          {% if source.mime_type == 'video/webm' %}
+            <source src="{{ source.url }}" type="{{ source.mime_type }}">
+          {% endif %}
+        {% endfor %}
+        {% for source in desktop_video.sources %}
+          {% if source.mime_type == 'video/mp4' %}
+            <source src="{{ source.url }}" type="{{ source.mime_type }}">
+          {% endif %}
+        {% endfor %}
+      </video>
+    {% elsif image != blank %}
       {% render 'image',
-        image: section.settings.image,
+        image: image,
         alt: promo_alt,
         sizes: '50vw',
         wrapper_class: 'program-promo__image program-promo__image--desktop',
@@ -50,17 +91,68 @@
       </div>
     {% endif %}
 
-    {% if section.settings.mobile_image != blank %}
+    {%- comment -%} Mobile Media {%- endcomment -%}
+    {% if has_mobile_video %}
+      <video
+        class="program-promo__video program-promo__video--mobile"
+        aria-label="Program promo background video"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        {% if mobile_image != blank %}
+          poster="{{ mobile_image | image_url: width: 1920 }}"
+        {% elsif image != blank %}
+          poster="{{ image | image_url: width: 1920 }}"
+        {% endif %}
+      >
+        {% for source in mobile_video.sources %}
+          {% if source.mime_type == 'video/webm' %}
+            <source src="{{ source.url }}" type="{{ source.mime_type }}">
+          {% endif %}
+        {% endfor %}
+        {% for source in mobile_video.sources %}
+          {% if source.mime_type == 'video/mp4' %}
+            <source src="{{ source.url }}" type="{{ source.mime_type }}">
+          {% endif %}
+        {% endfor %}
+      </video>
+    {% elsif mobile_image != blank %}
       {% render 'image',
-        image: section.settings.mobile_image,
+        image: mobile_image,
         alt: promo_alt,
         sizes: '100vw',
         wrapper_class: 'program-promo__image program-promo__image--mobile',
         no_radius: true
       %}
-    {% elsif section.settings.image != blank %}
+    {% elsif has_desktop_video %}
+      <video
+        class="program-promo__video program-promo__video--mobile"
+        aria-label="Program promo background video"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        {% if image != blank %}
+          poster="{{ image | image_url: width: 1920 }}"
+        {% endif %}
+      >
+        {% for source in desktop_video.sources %}
+          {% if source.mime_type == 'video/webm' %}
+            <source src="{{ source.url }}" type="{{ source.mime_type }}">
+          {% endif %}
+        {% endfor %}
+        {% for source in desktop_video.sources %}
+          {% if source.mime_type == 'video/mp4' %}
+            <source src="{{ source.url }}" type="{{ source.mime_type }}">
+          {% endif %}
+        {% endfor %}
+      </video>
+    {% elsif image != blank %}
       {% render 'image',
-        image: section.settings.image,
+        image: image,
         alt: promo_alt,
         sizes: '100vw',
         wrapper_class: 'program-promo__image program-promo__image--mobile',
@@ -330,6 +422,26 @@
   }
 
   .program-promo__image--desktop {
+    display: block;
+  }
+
+  .program-promo__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .program-promo__video.is-loaded {
+    opacity: 1;
+  }
+
+  .program-promo__video--mobile {
+    display: none;
+  }
+
+  .program-promo__video--desktop {
     display: block;
   }
 
@@ -606,6 +718,14 @@
       display: none;
     }
 
+    .program-promo__video--mobile {
+      display: block;
+    }
+
+    .program-promo__video--desktop {
+      display: none;
+    }
+
     .program-promo__content-wrapper {
       padding: 50px 30px;
     }
@@ -862,6 +982,42 @@
   }
 </style>
 
+{% if has_desktop_video or has_mobile_video %}
+<script>
+  (function() {
+    const videos = document.querySelectorAll('.program-promo__video');
+    if (!videos.length) return;
+
+    videos.forEach(function(video) {
+      // Show video once it can play
+      function onVideoReady() {
+        video.classList.add('is-loaded');
+      }
+
+      // Check if video is already ready
+      if (video.readyState >= 3) {
+        onVideoReady();
+      } else {
+        video.addEventListener('canplay', onVideoReady, { once: true });
+      }
+
+      // Fallback: show video after timeout even if not fully loaded
+      setTimeout(function() {
+        if (!video.classList.contains('is-loaded')) {
+          video.classList.add('is-loaded');
+        }
+      }, 3000);
+
+      // Try to play video (handles autoplay restrictions)
+      video.play().catch(function() {
+        // Autoplay blocked, video will still show with poster
+        video.classList.add('is-loaded');
+      });
+    });
+  })();
+</script>
+{% endif %}
+
 {% schema %}
 {
   "name": "t:sections.program-promo.name",
@@ -912,10 +1068,22 @@
       "label": "t:sections.program-promo.settings.image.label"
     },
     {
+      "type": "video",
+      "id": "desktop_video",
+      "label": "Desktop video",
+      "info": "If provided, will be used instead of desktop image"
+    },
+    {
       "type": "image_picker",
       "id": "mobile_image",
       "label": "t:sections.program-promo.settings.mobile_image.label",
       "info": "t:sections.program-promo.settings.mobile_image.info"
+    },
+    {
+      "type": "video",
+      "id": "mobile_video",
+      "label": "Mobile video",
+      "info": "Optional: Different video for mobile screens"
     },
     {
       "type": "select",

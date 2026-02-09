@@ -1,13 +1,38 @@
 {%- liquid
   assign image_overlay_opacity = section.settings.image_overlay_opacity | divided_by: 100.0
-  assign use_video = section.settings.use_video
+
+  # Media assignments with backward compatibility
+  assign desktop_image = section.settings.desktop_image | default: section.settings.hero_image
+  assign desktop_video = section.settings.desktop_video | default: section.settings.hero_video
+  assign mobile_image = section.settings.mobile_image
+  assign mobile_video = section.settings.mobile_video
+
+  # Check if we have desktop or mobile media
+  assign has_desktop_video = false
+  if desktop_video != blank
+    assign has_desktop_video = true
+  endif
+
+  assign has_mobile_video = false
+  if mobile_video != blank
+    assign has_mobile_video = true
+  endif
+
+  assign has_mobile_media = false
+  if mobile_image != blank or mobile_video != blank
+    assign has_mobile_media = true
+  endif
+
   assign layout_style = section.settings.layout_style | default: 'homepage'
   assign is_page_hero = false
+  assign is_stacked = false
   if layout_style == 'page_hero'
     assign is_page_hero = true
+  elsif layout_style == 'stacked'
+    assign is_stacked = true
   endif
   assign show_footer = section.settings.show_footer
-  if is_page_hero
+  if is_page_hero or is_stacked
     assign show_footer = false
   endif
   assign show_centered_description = section.settings.show_centered_description
@@ -25,48 +50,134 @@
   "
 >
   <div class="walkfully-hero__media-wrapper">
-    {% if use_video and section.settings.hero_video != blank %}
-      <video
-        class="walkfully-hero__video"
-        aria-label="{{ section.settings.top_text | strip_html | escape }} - background video"
-        autoplay
-        muted
-        loop
-        playsinline
-        preload="metadata"
-        {% if section.settings.hero_image != blank %}
-          poster="{{ section.settings.hero_image | image_url: width: 1920 }}"
-        {% endif %}
-      >
-        {%- comment -%} Prioritize WebM for better compression, fallback to MP4 {%- endcomment -%}
-        {% for source in section.settings.hero_video.sources %}
-          {% if source.mime_type == 'video/webm' %}
-            <source src="{{ source.url }}" type="{{ source.mime_type }}">
+    {%- comment -%} Desktop Media Container {%- endcomment -%}
+    <div class="walkfully-hero__media walkfully-hero__media--desktop">
+      {% if has_desktop_video %}
+        <video
+          class="walkfully-hero__video"
+          aria-label="{{ section.settings.top_text | strip_html | escape }} - background video"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          {% if desktop_image != blank %}
+            poster="{{ desktop_image | image_url: width: 1920 }}"
           {% endif %}
-        {% endfor %}
-        {% for source in section.settings.hero_video.sources %}
-          {% if source.mime_type == 'video/mp4' %}
-            <source src="{{ source.url }}" type="{{ source.mime_type }}">
+        >
+          {%- comment -%} Prioritize WebM for better compression, fallback to MP4 {%- endcomment -%}
+          {% for source in desktop_video.sources %}
+            {% if source.mime_type == 'video/webm' %}
+              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+            {% endif %}
+          {% endfor %}
+          {% for source in desktop_video.sources %}
+            {% if source.mime_type == 'video/mp4' %}
+              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+            {% endif %}
+          {% endfor %}
+          {% for source in desktop_video.sources %}
+            {% if source.mime_type != 'video/webm' and source.mime_type != 'video/mp4' %}
+              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+            {% endif %}
+          {% endfor %}
+        </video>
+      {% elsif desktop_image != blank %}
+        {% render 'image',
+          image: desktop_image,
+          sizes: '100vw',
+          no_radius: true,
+          wrapper_class: 'walkfully-hero__image'
+        %}
+      {% else %}
+        <div class="image no-radius walkfully-hero__image" role="img" aria-label="Hero background placeholder">
+          {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {% endif %}
+    </div>
+
+    {%- comment -%} Mobile Media Container {%- endcomment -%}
+    <div class="walkfully-hero__media walkfully-hero__media--mobile">
+      {% if has_mobile_video %}
+        <video
+          class="walkfully-hero__video"
+          aria-label="{{ section.settings.top_text | strip_html | escape }} - background video"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          {% if mobile_image != blank %}
+            poster="{{ mobile_image | image_url: width: 1920 }}"
+          {% elsif desktop_image != blank %}
+            poster="{{ desktop_image | image_url: width: 1920 }}"
           {% endif %}
-        {% endfor %}
-        {% for source in section.settings.hero_video.sources %}
-          {% if source.mime_type != 'video/webm' and source.mime_type != 'video/mp4' %}
-            <source src="{{ source.url }}" type="{{ source.mime_type }}">
+        >
+          {% for source in mobile_video.sources %}
+            {% if source.mime_type == 'video/webm' %}
+              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+            {% endif %}
+          {% endfor %}
+          {% for source in mobile_video.sources %}
+            {% if source.mime_type == 'video/mp4' %}
+              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+            {% endif %}
+          {% endfor %}
+          {% for source in mobile_video.sources %}
+            {% if source.mime_type != 'video/webm' and source.mime_type != 'video/mp4' %}
+              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+            {% endif %}
+          {% endfor %}
+        </video>
+      {% elsif mobile_image != blank %}
+        {% render 'image',
+          image: mobile_image,
+          sizes: '100vw',
+          no_radius: true,
+          wrapper_class: 'walkfully-hero__image'
+        %}
+      {% elsif has_desktop_video %}
+        <video
+          class="walkfully-hero__video"
+          aria-label="{{ section.settings.top_text | strip_html | escape }} - background video"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          {% if desktop_image != blank %}
+            poster="{{ desktop_image | image_url: width: 1920 }}"
           {% endif %}
-        {% endfor %}
-      </video>
-    {% elsif section.settings.hero_image != blank %}
-      {% render 'image',
-        image: section.settings.hero_image,
-        sizes: '100vw',
-        no_radius: true,
-        wrapper_class: 'walkfully-hero__image'
-      %}
-    {% else %}
-      <div class="image no-radius walkfully-hero__image" role="img" aria-label="Hero background placeholder">
-        {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
-      </div>
-    {% endif %}
+        >
+          {% for source in desktop_video.sources %}
+            {% if source.mime_type == 'video/webm' %}
+              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+            {% endif %}
+          {% endfor %}
+          {% for source in desktop_video.sources %}
+            {% if source.mime_type == 'video/mp4' %}
+              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+            {% endif %}
+          {% endfor %}
+          {% for source in desktop_video.sources %}
+            {% if source.mime_type != 'video/webm' and source.mime_type != 'video/mp4' %}
+              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+            {% endif %}
+          {% endfor %}
+        </video>
+      {% elsif desktop_image != blank %}
+        {% render 'image',
+          image: desktop_image,
+          sizes: '100vw',
+          no_radius: true,
+          wrapper_class: 'walkfully-hero__image'
+        %}
+      {% else %}
+        <div class="image no-radius walkfully-hero__image" role="img" aria-label="Hero background placeholder">
+          {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {% endif %}
+    </div>
   </div>
 
   <div class="walkfully-hero__overlay"></div>
@@ -108,6 +219,52 @@
         {% else %}
           <span
             class="walkfully-hero__cta-button walkfully-hero__cta-button--disabled"
+            style="--cta-button-color: {{ section.settings.cta_button_color | escape }};"
+            aria-disabled="true"
+          >
+            {{ section.settings.cta_text }}
+          </span>
+        {% endif %}
+      {% endif %}
+    </div>
+  {% elsif is_stacked %}
+    <div class="walkfully-hero__content walkfully-hero__content--stacked">
+      {% if section.settings.top_text != blank %}
+        <h1 class="walkfully-hero__top-text">
+          {{ section.settings.top_text }}
+        </h1>
+      {% endif %}
+
+      {% if section.settings.middle_text != blank %}
+        <div class="walkfully-hero__middle-text">
+          {{ section.settings.middle_text }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.bottom_text != blank %}
+        <h2 class="walkfully-hero__bottom-text">
+          {{ section.settings.bottom_text | newline_to_br }}
+        </h2>
+      {% endif %}
+
+      {% if show_centered_description and section.settings.description_text != blank %}
+        <p class="walkfully-hero__stacked-description">
+          {{ section.settings.description_text | newline_to_br }}
+        </p>
+      {% endif %}
+
+      {% if show_cta_button and section.settings.cta_text != blank %}
+        {% if section.settings.cta_link != blank %}
+          <a
+            href="{{ section.settings.cta_link }}"
+            class="walkfully-hero__cta-button walkfully-hero__cta-button--stacked"
+            style="--cta-button-color: {{ section.settings.cta_button_color | escape }};"
+          >
+            {{ section.settings.cta_text }}
+          </a>
+        {% else %}
+          <span
+            class="walkfully-hero__cta-button walkfully-hero__cta-button--stacked walkfully-hero__cta-button--disabled"
             style="--cta-button-color: {{ section.settings.cta_button_color | escape }};"
             aria-disabled="true"
           >
@@ -170,35 +327,37 @@
   {% endif %}
 </div>
 
-{% if use_video and section.settings.hero_video != blank %}
+{% if has_desktop_video or has_mobile_video %}
 <script>
   (function() {
-    const video = document.querySelector('[data-section-id="{{ section.id }}"] .walkfully-hero__video');
-    if (!video) return;
+    const videos = document.querySelectorAll('[data-section-id="{{ section.id }}"] .walkfully-hero__video');
+    if (!videos.length) return;
 
-    // Show video once it can play
-    function onVideoReady() {
-      video.classList.add('is-loaded');
-    }
-
-    // Check if video is already ready
-    if (video.readyState >= 3) {
-      onVideoReady();
-    } else {
-      video.addEventListener('canplay', onVideoReady, { once: true });
-    }
-
-    // Fallback: show video after timeout even if not fully loaded
-    setTimeout(function() {
-      if (!video.classList.contains('is-loaded')) {
+    videos.forEach(function(video) {
+      // Show video once it can play
+      function onVideoReady() {
         video.classList.add('is-loaded');
       }
-    }, 3000);
 
-    // Try to play video (handles autoplay restrictions)
-    video.play().catch(function() {
-      // Autoplay blocked, video will still show with poster
-      video.classList.add('is-loaded');
+      // Check if video is already ready
+      if (video.readyState >= 3) {
+        onVideoReady();
+      } else {
+        video.addEventListener('canplay', onVideoReady, { once: true });
+      }
+
+      // Fallback: show video after timeout even if not fully loaded
+      setTimeout(function() {
+        if (!video.classList.contains('is-loaded')) {
+          video.classList.add('is-loaded');
+        }
+      }, 3000);
+
+      // Try to play video (handles autoplay restrictions)
+      video.play().catch(function() {
+        // Autoplay blocked, video will still show with poster
+        video.classList.add('is-loaded');
+      });
     });
   })();
 </script>
@@ -219,6 +378,32 @@
     width: 100%;
     height: 100%;
     background-color: #21262F;
+  }
+
+  .walkfully-hero__media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .walkfully-hero__media--mobile {
+    display: none;
+  }
+
+  .walkfully-hero__media--desktop {
+    display: block;
+  }
+
+  @media screen and (max-width: 990px) {
+    .walkfully-hero__media--mobile {
+      display: block;
+    }
+
+    .walkfully-hero__media--desktop {
+      display: none;
+    }
   }
 
   .walkfully-hero__image {
@@ -467,6 +652,30 @@
     opacity: 0.7;
   }
 
+  /* Stacked Layout */
+  .walkfully-hero__content--stacked {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 909px;
+  }
+
+  .walkfully-hero__stacked-description {
+    font-family: 'Work Sans', Arial, sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.2px;
+    color: #f7f1e5;
+    margin: 24px 0 0 0;
+    max-width: 580px;
+    text-align: center;
+  }
+
+  .walkfully-hero__cta-button--stacked {
+    margin-top: 24px;
+  }
+
   /* Responsive styles */
   @media screen and (max-width: 1024px) {
     .walkfully-hero__content {
@@ -555,6 +764,20 @@
       padding: 10px 32px;
       min-height: 44px;
     }
+
+    /* Stacked Layout - Tablet */
+    .walkfully-hero__stacked-description {
+      font-size: 16px;
+      max-width: 90%;
+      margin-top: 20px;
+    }
+
+    .walkfully-hero__cta-button--stacked {
+      font-size: 12px;
+      padding: 10px 32px;
+      min-height: 44px;
+      margin-top: 20px;
+    }
   }
 
   @media screen and (max-width: 749px) {
@@ -608,6 +831,22 @@
       width: 100%;
       max-width: 280px;
     }
+
+    /* Stacked Layout - Mobile */
+    .walkfully-hero__stacked-description {
+      font-size: 14px;
+      line-height: 1.4;
+      margin-top: 16px;
+    }
+
+    .walkfully-hero__cta-button--stacked {
+      font-size: 13px;
+      padding: 12px 24px;
+      min-height: 44px;
+      width: 100%;
+      max-width: 280px;
+      margin-top: 16px;
+    }
   }
 </style>
 
@@ -639,6 +878,10 @@
         {
           "value": "page_hero",
           "label": "t:sections.walkfully-hero.settings.layout_style.option__page_hero"
+        },
+        {
+          "value": "stacked",
+          "label": "Homepage Stacked"
         }
       ],
       "default": "homepage",
@@ -687,21 +930,27 @@
       "content": "Hero Background"
     },
     {
-      "type": "checkbox",
-      "id": "use_video",
-      "label": "Use video background",
-      "default": false,
-      "info": "Toggle to use video instead of image"
-    },
-    {
       "type": "image_picker",
-      "id": "hero_image",
-      "label": "Hero image"
+      "id": "desktop_image",
+      "label": "Desktop image"
     },
     {
       "type": "video",
-      "id": "hero_video",
-      "label": "Hero video file"
+      "id": "desktop_video",
+      "label": "Desktop video",
+      "info": "If provided, will be used instead of desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image",
+      "info": "Optional: Different image for mobile screens (below 990px)"
+    },
+    {
+      "type": "video",
+      "id": "mobile_video",
+      "label": "Mobile video",
+      "info": "Optional: Different video for mobile screens (below 990px)"
     },
     {
       "type": "range",
