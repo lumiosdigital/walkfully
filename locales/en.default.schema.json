@@ -1237,6 +1237,22 @@
     }
   },
   "sections": {
+    "walkfully_product": {
+      "name": "Walkfully product",
+      "blocks": {
+        "trust_badge": {
+          "name": "Trust badge",
+          "settings": {
+            "icon": {
+              "label": "Icon"
+            },
+            "text": {
+              "label": "Text"
+            }
+          }
+        }
+      }
+    },
     "all": {
       "animation": {
         "content": "Animations",
