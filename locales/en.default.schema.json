@@ -1686,6 +1686,57 @@
         "name": "Science carousel"
       }
     },
+    "science_product_explore": {
+      "name": "Product explore",
+      "settings": {
+        "background_color": {
+          "label": "Background color"
+        },
+        "header_content": {
+          "content": "Content"
+        },
+        "eyebrow_text": {
+          "label": "Eyebrow text"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "description": {
+          "label": "Description"
+        },
+        "header_image": {
+          "content": "Product image"
+        },
+        "product_image": {
+          "label": "Image"
+        }
+      },
+      "blocks": {
+        "hotspot": {
+          "name": "Hotspot",
+          "settings": {
+            "title": {
+              "label": "Title"
+            },
+            "description": {
+              "label": "Description"
+            },
+            "header_position": {
+              "content": "Dot position"
+            },
+            "dot_x": {
+              "label": "Horizontal position"
+            },
+            "dot_y": {
+              "label": "Vertical position"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Product explore"
+      }
+    },
     "video-hero": {
       "name": "Video hero",
       "settings": {

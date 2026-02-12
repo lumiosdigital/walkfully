@@ -84,6 +84,74 @@
         "section_spacing_bottom": "none"
       }
     },
+    "product_explore": {
+      "type": "science-product-explore",
+      "settings": {
+        "background_color": "#F7F1E5",
+        "eyebrow_text": "Smart load. Natural stride. Everyday wear.",
+        "heading": "Where the weight sits matters as much as the weight itself",
+        "description": "Most weighted gear loads the chest or shoulders. WalkFully anchors weight at the hips—your natural center of gravity—so added load feels steady, breathable, and wearable.",
+        "section_spacing_top": "x-large",
+        "section_spacing_bottom": "x-large"
+      },
+      "blocks": {
+        "hotspot_1": {
+          "type": "hotspot",
+          "settings": {
+            "title": "Adjustable fit system",
+            "description": "Adapts to your body and layers comfortably over everyday clothing",
+            "dot_x": 75,
+            "dot_y": 35
+          }
+        },
+        "hotspot_2": {
+          "type": "hotspot",
+          "settings": {
+            "title": "Weight pocket access",
+            "description": "Easy-access pockets for quick weight adjustments on the go",
+            "dot_x": 67,
+            "dot_y": 20
+          }
+        },
+        "hotspot_3": {
+          "type": "hotspot",
+          "settings": {
+            "title": "Secure closure",
+            "description": "Keeps contents safe during movement with reinforced zippers",
+            "dot_x": 48,
+            "dot_y": 15
+          }
+        },
+        "hotspot_4": {
+          "type": "hotspot",
+          "settings": {
+            "title": "Ergonomic waistband",
+            "description": "Contoured to sit naturally at the hips without shifting",
+            "dot_x": 33,
+            "dot_y": 22
+          }
+        },
+        "hotspot_5": {
+          "type": "hotspot",
+          "settings": {
+            "title": "Side utility pocket",
+            "description": "Quick-access storage for essentials while walking",
+            "dot_x": 22,
+            "dot_y": 60
+          }
+        },
+        "hotspot_6": {
+          "type": "hotspot",
+          "settings": {
+            "title": "Hip-anchored design",
+            "description": "Centers weight at your natural center of gravity for balanced load distribution",
+            "dot_x": 48,
+            "dot_y": 72
+          }
+        }
+      },
+      "block_order": ["hotspot_1", "hotspot_2", "hotspot_3", "hotspot_4", "hotspot_5", "hotspot_6"]
+    },
     "materials_carousel": {
       "type": "science-carousel",
       "settings": {
@@ -138,5 +206,5 @@
       "block_order": ["material_1", "material_2", "material_3", "material_4"]
     }
   },
-  "order": ["science_carousel", "weighted_walking", "materials_carousel"]
+  "order": ["science_carousel", "weighted_walking", "product_explore", "materials_carousel"]
 }
