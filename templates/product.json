@@ -10,7 +10,31 @@
 {
   "sections": {
     "main": {
-      "type": "main-product",
+      "type": "walkfully-product",
+      "blocks": {
+        "trust_shipping": {
+          "type": "trust_badge",
+          "settings": {
+            "icon": "shipping",
+            "text": "Ships in 2–4 days"
+          }
+        },
+        "trust_returns": {
+          "type": "trust_badge",
+          "settings": {
+            "icon": "returns",
+            "text": "Free returns"
+          }
+        },
+        "trust_checkout": {
+          "type": "trust_badge",
+          "settings": {
+            "icon": "secure-checkout",
+            "text": "Secure checkout"
+          }
+        }
+      },
+      "block_order": ["trust_shipping", "trust_returns", "trust_checkout"],
       "settings": {}
     }
   },

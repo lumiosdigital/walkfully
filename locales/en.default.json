@@ -289,6 +289,9 @@
     "science_product_explore": {
       "placeholder_label": "Product image placeholder"
     },
+    "walkfully_product": {
+      "choose_color": "Choose\nyour color:"
+    },
     "announcements": {
       "previous_announcement": "Previous announcement",
       "next_announcement": "Next announcement",

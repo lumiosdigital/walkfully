@@ -21,7 +21,7 @@
         "border_weight": "1",
         "border_opacity": 30,
         "logo_alignment": "left",
-        "logo_alignment_mobile": "left"
+        "logo_alignment_mobile": "center"
       }
     }
   },
