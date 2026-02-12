@@ -286,6 +286,9 @@
     }
   },
   "sections": {
+    "science_product_explore": {
+      "placeholder_label": "Product image placeholder"
+    },
     "announcements": {
       "previous_announcement": "Previous announcement",
       "next_announcement": "Next announcement",

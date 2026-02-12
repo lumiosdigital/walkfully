@@ -1,0 +1,665 @@
+{%- liquid
+  assign has_eyebrow = false
+  if section.settings.eyebrow_text != blank
+    assign has_eyebrow = true
+  endif
+
+  assign has_heading = false
+  if section.settings.heading != blank
+    assign has_heading = true
+  endif
+
+  assign has_description = false
+  if section.settings.description != blank
+    assign has_description = true
+  endif
+
+  assign hotspot_blocks = section.blocks | where: 'type', 'hotspot'
+-%}
+
+<section-product-explore
+  class="
+    product-explore
+    {% render 'section-classes', settings: section.settings -%}
+  "
+  style="--product-explore-bg: {{ section.settings.background_color | default: '#F7F1E5' }};"
+  {% if section.settings.enable_animations %}
+    data-animate-elements-on-scroll
+    data-animate-delay="125"
+  {% endif %}
+>
+  <div class="product-explore__container">
+    {%- comment -%} Header: eyebrow, heading, description {%- endcomment -%}
+    <div class="product-explore__header {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
+      {%- if has_eyebrow -%}
+        <p class="product-explore__eyebrow">{{ section.settings.eyebrow_text }}</p>
+      {%- endif -%}
+
+      {%- if has_heading -%}
+        <h2 class="product-explore__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+
+      {%- if has_description -%}
+        <p class="product-explore__description">{{ section.settings.description }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Desktop: product image with interactive dots {%- endcomment -%}
+    <div class="product-explore__image-container">
+      {% if section.settings.product_image != blank %}
+        {% render 'image',
+          image: section.settings.product_image,
+          alt: section.settings.product_image.alt | default: section.settings.heading,
+          sizes: '(min-width: 1200px) 1069px, (min-width: 750px) 80vw, 100vw',
+          wrapper_class: 'product-explore__image',
+          no_radius: true
+        %}
+      {% else %}
+        <div class="product-explore__placeholder" role="img" aria-label="{{ 'sections.science_product_explore.placeholder_label' | t }}">
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder' }}
+        </div>
+      {% endif %}
+
+      {%- comment -%} Hotspot dots (desktop only) {%- endcomment -%}
+      {% for block in hotspot_blocks %}
+        <button
+          class="product-explore__dot"
+          style="
+            --dot-x: {{ block.settings.dot_x }}%;
+            --dot-y: {{ block.settings.dot_y }}%;
+          "
+          data-dot
+          data-index="{{ forloop.index0 }}"
+          data-title="{{ block.settings.title | escape }}"
+          data-description="{{ block.settings.description | escape }}"
+          aria-expanded="false"
+          aria-describedby="tooltip-{{ section.id }}"
+          aria-label="{{ block.settings.title }}"
+          {{ block.shopify_attributes }}
+        >
+          <span class="product-explore__dot-inner"></span>
+        </button>
+      {% endfor %}
+
+      {%- comment -%} Single tooltip element, repositioned by JS {%- endcomment -%}
+      <div class="product-explore__tooltip" id="tooltip-{{ section.id }}" data-tooltip role="tooltip" aria-hidden="true">
+        <div class="product-explore__tooltip-content">
+          <p class="product-explore__tooltip-title" data-tooltip-title></p>
+          <p class="product-explore__tooltip-text" data-tooltip-text></p>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%} Mobile: feature list below image {%- endcomment -%}
+    <div class="product-explore__features">
+      {% for block in hotspot_blocks %}
+        <div class="product-explore__feature" {{ block.shopify_attributes }}>
+          <h3 class="product-explore__feature-title">{{ block.settings.title }}</h3>
+          <p class="product-explore__feature-text">{{ block.settings.description }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section-product-explore>
+
+{% style %}
+  section-product-explore {
+    display: block;
+  }
+
+  .product-explore.section {
+    position: relative;
+    width: 100%;
+    background-color: var(--product-explore-bg, #F7F1E5);
+  }
+
+  .product-explore__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--page-gutter);
+  }
+
+  .product-explore__header {
+    text-align: center;
+    margin-bottom: 95px;
+  }
+
+  .product-explore__eyebrow {
+    color: #D14626;
+    font-family: "Alte Haas Grotesk", var(--font-sans), sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 0.72px;
+    text-transform: uppercase;
+    margin: 0 0 18px;
+  }
+
+  .product-explore__heading {
+    color: #21262F;
+    font-family: "Alte Haas Grotesk", var(--font-sans), sans-serif;
+    font-size: 60px;
+    font-weight: 700;
+    line-height: 100%;
+    letter-spacing: -0.6px;
+    text-transform: uppercase;
+    max-width: 939px;
+    margin: 0 auto 30px;
+  }
+
+  .product-explore__description {
+    color: #21262F;
+    font-family: "Work Sans", var(--font-sans), sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 140%;
+    letter-spacing: -0.18px;
+    max-width: 814px;
+    margin: 0 auto;
+  }
+
+  .product-explore__image-container {
+    position: relative;
+    max-width: 1069px;
+    margin: 0 auto;
+  }
+
+  .product-explore__image,
+  .product-explore__image img {
+    width: 100%;
+    height: auto;
+    border-radius: 0 !important;
+  }
+
+  .product-explore__placeholder {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: rgba(var(--color-foreground), 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-explore__placeholder svg {
+    width: 40%;
+    opacity: 0.3;
+  }
+
+  /* Hotspot dots */
+  .product-explore__dot {
+    position: absolute;
+    left: var(--dot-x);
+    top: var(--dot-y);
+    transform: translate(-50%, -50%);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 6px solid rgba(209, 70, 38, 0.9);
+    background: white;
+    box-sizing: border-box;
+    cursor: pointer;
+    padding: 0;
+    z-index: 2;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .product-explore__dot:hover,
+  .product-explore__dot[aria-expanded="true"] {
+    transform: translate(-50%, -50%) scale(1.15);
+    box-shadow: 0 0 0 4px rgba(209, 70, 38, 0.2);
+  }
+
+  .product-explore__dot:focus-visible {
+    outline: 2px solid #D14626;
+    outline-offset: 4px;
+  }
+
+  .product-explore__dot-inner {
+    display: none;
+  }
+
+  /* Tooltip */
+  .product-explore__tooltip {
+    position: absolute;
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    width: 350px;
+  }
+
+  .product-explore__tooltip[aria-hidden="false"] {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .product-explore__tooltip-content {
+    background: #FFFFFF;
+    border: 1px solid #D14626;
+    border-radius: 8px;
+    padding: 16px;
+    position: relative;
+  }
+
+  .product-explore__tooltip-content::before {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #FFFFFF;
+    border-left: 1px solid #D14626;
+    border-bottom: 1px solid #D14626;
+    left: var(--arrow-left, 24px);
+  }
+
+  .product-explore__tooltip--above .product-explore__tooltip-content::before {
+    bottom: -7px;
+    transform: rotate(-45deg);
+  }
+
+  .product-explore__tooltip--below .product-explore__tooltip-content::before {
+    top: -7px;
+    transform: rotate(135deg);
+  }
+
+  .product-explore__tooltip-title {
+    color: #D14626;
+    font-family: "Alte Haas Grotesk", var(--font-sans), sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 110%;
+    letter-spacing: -0.2px;
+    text-transform: uppercase;
+    margin: 0 0 5px;
+  }
+
+  .product-explore__tooltip-text {
+    color: #21262F;
+    font-family: "Work Sans", var(--font-sans), sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 130%;
+    letter-spacing: -0.16px;
+    margin: 0;
+  }
+
+  /* Mobile feature list (hidden on desktop) */
+  .product-explore__features {
+    display: none;
+  }
+
+  /* Responsive */
+  @media screen and (max-width: 1024px) {
+    .product-explore__dot,
+    .product-explore__tooltip {
+      display: none;
+    }
+
+    .product-explore__features {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-m);
+      margin-top: var(--space-l);
+    }
+
+    .product-explore__feature {
+      padding: var(--space-s) 0;
+      border-bottom: 1px solid rgba(33, 38, 47, 0.1);
+    }
+
+    .product-explore__feature:last-child {
+      border-bottom: none;
+    }
+
+    .product-explore__feature-title {
+      color: #D14626;
+      font-family: "Alte Haas Grotesk", var(--font-sans), sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 110%;
+      letter-spacing: -0.18px;
+      text-transform: uppercase;
+      margin: 0 0 4px;
+    }
+
+    .product-explore__feature-text {
+      color: #21262F;
+      font-family: "Work Sans", var(--font-sans), sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 130%;
+      letter-spacing: -0.16px;
+      margin: 0;
+    }
+
+    .product-explore__heading {
+      font-size: 40px;
+    }
+
+    .product-explore__description {
+      font-size: 16px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-explore__heading {
+      font-size: 32px;
+      letter-spacing: -0.32px;
+    }
+
+    .product-explore__eyebrow {
+      font-size: 14px;
+    }
+  }
+{% endstyle %}
+
+<script>
+  if (!customElements.get('section-product-explore')) {
+    class SectionProductExplore extends HTMLElement {
+      constructor() {
+        super();
+        this.dots = this.querySelectorAll('[data-dot]');
+        this.tooltip = this.querySelector('[data-tooltip]');
+        this.tooltipTitle = this.querySelector('[data-tooltip-title]');
+        this.tooltipText = this.querySelector('[data-tooltip-text]');
+        this.imageContainer = this.querySelector('.product-explore__image-container');
+        this.activeDot = null;
+        this.pinned = false;
+        this.handleDocumentClick = this.handleDocumentClick.bind(this);
+        this.handleDocumentKeydown = this.handleDocumentKeydown.bind(this);
+      }
+
+      connectedCallback() {
+        this.bindEvents();
+        document.addEventListener('click', this.handleDocumentClick);
+        document.addEventListener('keydown', this.handleDocumentKeydown);
+      }
+
+      bindEvents() {
+        this.dots.forEach((dot) => {
+          dot.addEventListener('mouseenter', () => {
+            if (!this.pinned) this.showTooltip(dot);
+          });
+          dot.addEventListener('mouseleave', () => {
+            if (!this.pinned) this.hideTooltip();
+          });
+          dot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (this.activeDot === dot && this.pinned) {
+              this.pinned = false;
+              this.hideTooltip();
+            } else {
+              this.showTooltip(dot);
+              this.pinned = true;
+            }
+          });
+          dot.addEventListener('focus', () => this.showTooltip(dot));
+          dot.addEventListener('blur', () => {
+            setTimeout(() => {
+              if (!this.contains(document.activeElement)) {
+                this.hideTooltip();
+                this.pinned = false;
+              }
+            }, 0);
+          });
+        });
+      }
+
+      handleDocumentClick(e) {
+        if (this.activeDot && !this.tooltip.contains(e.target) && !e.target.closest('[data-dot]')) {
+          this.pinned = false;
+          this.hideTooltip();
+        }
+      }
+
+      handleDocumentKeydown(e) {
+        if (e.key === 'Escape' && this.activeDot) {
+          const dot = this.activeDot;
+          this.pinned = false;
+          this.hideTooltip();
+          dot.focus();
+        }
+      }
+
+      showTooltip(dot) {
+        if (this.activeDot && this.activeDot !== dot) {
+          this.activeDot.setAttribute('aria-expanded', 'false');
+        }
+
+        this.activeDot = dot;
+        dot.setAttribute('aria-expanded', 'true');
+
+        this.tooltipTitle.textContent = dot.dataset.title || '';
+        this.tooltipText.textContent = dot.dataset.description || '';
+
+        this.positionTooltip(dot);
+        this.tooltip.setAttribute('aria-hidden', 'false');
+      }
+
+      hideTooltip() {
+        if (this.activeDot) {
+          this.activeDot.setAttribute('aria-expanded', 'false');
+          this.activeDot = null;
+        }
+        this.tooltip.setAttribute('aria-hidden', 'true');
+        this.tooltip.classList.remove('product-explore__tooltip--above', 'product-explore__tooltip--below');
+      }
+
+      positionTooltip(dot) {
+        const containerRect = this.imageContainer.getBoundingClientRect();
+        const dotRect = dot.getBoundingClientRect();
+        const tooltipHeight = this.tooltip.offsetHeight || 100;
+
+        const dotCenterX = dotRect.left + dotRect.width / 2 - containerRect.left;
+        const dotTopY = dotRect.top - containerRect.top;
+        const dotBottomY = dotRect.bottom - containerRect.top;
+        const tooltipWidth = 350;
+        const gap = 12;
+        const showBelow = dotTopY < tooltipHeight + gap;
+
+        const top = showBelow ? dotBottomY + gap : dotTopY - tooltipHeight - gap;
+        let left = Math.max(8, Math.min(dotCenterX - 36, containerRect.width - tooltipWidth - 8));
+        const arrowOffset = dotCenterX - left;
+
+        this.tooltip.classList.remove('product-explore__tooltip--above', 'product-explore__tooltip--below');
+        this.tooltip.classList.add(showBelow ? 'product-explore__tooltip--below' : 'product-explore__tooltip--above');
+        this.tooltip.style.cssText = `top: ${top}px; left: ${left}px; --arrow-left: ${arrowOffset}px;`;
+      }
+
+      disconnectedCallback() {
+        document.removeEventListener('click', this.handleDocumentClick);
+        document.removeEventListener('keydown', this.handleDocumentKeydown);
+      }
+    }
+
+    customElements.define('section-product-explore', SectionProductExplore);
+  }
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.science_product_explore.name",
+  "class": "product-explore-section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.science_product_explore.settings.background_color.label",
+      "default": "#F7F1E5"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.science_product_explore.settings.header_content.content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "t:sections.science_product_explore.settings.eyebrow_text.label",
+      "default": "Smart load. Natural stride. Everyday wear."
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "t:sections.science_product_explore.settings.heading.label",
+      "default": "Where the weight sits matters as much as the weight itself"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "t:sections.science_product_explore.settings.description.label",
+      "default": "Most weighted gear loads the chest or shoulders. WalkFully anchors weight at the hips—your natural center of gravity—so added load feels steady, breathable, and wearable."
+    },
+    {
+      "type": "header",
+      "content": "t:sections.science_product_explore.settings.header_image.content"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "t:sections.science_product_explore.settings.product_image.label"
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_spacing_and_border.content"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "label": "t:common.top_spacing.label",
+      "options": [
+        { "value": "none", "label": "t:common.sizing.none" },
+        { "value": "compact", "label": "t:common.sizing.compact" },
+        { "value": "standard", "label": "t:common.sizing.standard" },
+        { "value": "large", "label": "t:common.sizing.large" },
+        { "value": "x-large", "label": "t:common.sizing.x_large" },
+        { "value": "2x-large", "label": "t:common.sizing.x_x_large" }
+      ],
+      "default": "x-large"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "label": "t:common.bottom_spacing.label",
+      "options": [
+        { "value": "none", "label": "t:common.sizing.none" },
+        { "value": "compact", "label": "t:common.sizing.compact" },
+        { "value": "standard", "label": "t:common.sizing.standard" },
+        { "value": "large", "label": "t:common.sizing.large" },
+        { "value": "x-large", "label": "t:common.sizing.x_large" },
+        { "value": "2x-large", "label": "t:common.sizing.x_x_large" }
+      ],
+      "default": "x-large"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "t:common.show_bottom_border.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:common.header__section_animations.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "t:common.enable_animations.label",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hotspot",
+      "name": "t:sections.science_product_explore.blocks.hotspot.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.science_product_explore.blocks.hotspot.settings.title.label",
+          "default": "Feature name"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "t:sections.science_product_explore.blocks.hotspot.settings.description.label",
+          "default": "Describe this product feature"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.science_product_explore.blocks.hotspot.settings.header_position.content"
+        },
+        {
+          "type": "range",
+          "id": "dot_x",
+          "label": "t:sections.science_product_explore.blocks.hotspot.settings.dot_x.label",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "dot_y",
+          "label": "t:sections.science_product_explore.blocks.hotspot.settings.dot_y.label",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.science_product_explore.presets.name",
+      "category": "t:categories.other",
+      "blocks": [
+        {
+          "type": "hotspot",
+          "settings": {
+            "title": "Adjustable fit system",
+            "description": "Adapts to your body and layers comfortably over everyday clothing",
+            "dot_x": 75,
+            "dot_y": 40
+          }
+        },
+        {
+          "type": "hotspot",
+          "settings": {
+            "title": "Weight pocket access",
+            "description": "Easy-access pockets for quick weight adjustments on the go",
+            "dot_x": 55,
+            "dot_y": 25
+          }
+        },
+        {
+          "type": "hotspot",
+          "settings": {
+            "title": "Hip-anchored design",
+            "description": "Centers weight at your natural center of gravity for balanced load distribution",
+            "dot_x": 45,
+            "dot_y": 70
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

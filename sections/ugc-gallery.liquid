@@ -17,7 +17,7 @@
     {%- comment -%} Media items - scattered around the edges {%- endcomment -%}
     <div class="ugc-gallery__media-wrapper">
       {% for block in section.blocks %}
-        {% if block.type == 'media_item' %}
+        {% if block.type == 'media_item' and block.settings.visibility != 'mobile' %}
           <div
             class="ugc-gallery__media-item ugc-gallery__media-item--pos-{{ block.settings.position }}"
             style="
@@ -111,30 +111,40 @@
       {% endif %}
     </div>
 
-    <div class="ugc-gallery__mobile-grid">
-      {% assign mobile_count = 0 %}
-      {% for block in section.blocks %}
-        {% if block.type == 'media_item' and mobile_count < 6 %}
-          <div class="ugc-gallery__mobile-item" {{ block.shopify_attributes }}>
-            {% if block.settings.video != blank %}
-              {{ block.settings.video | video_tag: image_size: '720x', autoplay: true, loop: true, controls: false, muted: true, playsinline: true }}
-            {% elsif block.settings.image != blank %}
-              {% render 'image',
-                image: block.settings.image,
-                sizes: '50vw',
-                wrapper_class: 'ugc-gallery__image',
-                no_radius: true
-              %}
-            {% else %}
-              <div class="ugc-gallery__placeholder">
-                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder' }}
+    <component-slider
+      class="ugc-gallery__mobile-carousel swiper"
+      data-mobile-columns="1.15"
+      data-tablet-columns="1.15"
+      data-desktop-columns="1.15"
+      data-show-pagination="true"
+      data-disable-nav="true"
+    >
+      <div class="swiper-wrapper">
+        {% for block in section.blocks %}
+          {% if block.type == 'media_item' and block.settings.visibility != 'desktop' %}
+            <div class="swiper-slide">
+              <div class="ugc-gallery__mobile-item" {{ block.shopify_attributes }}>
+                {% if block.settings.video != blank %}
+                  {{ block.settings.video | video_tag: image_size: '720x', autoplay: true, loop: true, controls: false, muted: true, playsinline: true }}
+                {% elsif block.settings.image != blank %}
+                  {% render 'image',
+                    image: block.settings.image,
+                    sizes: '85vw',
+                    wrapper_class: 'ugc-gallery__image',
+                    no_radius: true
+                  %}
+                {% else %}
+                  <div class="ugc-gallery__placeholder">
+                    {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder' }}
+                  </div>
+                {% endif %}
               </div>
-            {% endif %}
-          </div>
-          {% assign mobile_count = mobile_count | plus: 1 %}
-        {% endif %}
-      {% endfor %}
-    </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="ugc-gallery__pagination swiper-pagination"></div>
+    </component-slider>
   </div>
 </section-ugc-gallery>
 
@@ -286,18 +296,22 @@
   }
 
   .ugc-gallery__mobile-center .ugc-gallery__heading {
-    font-size: 2rem;
+    font-size: 44px;
+    line-height: 100%;
+    letter-spacing: -0.88px;
     white-space: normal;
   }
 
-  .ugc-gallery__mobile-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-s);
+  .ugc-gallery__mobile-carousel {
+    overflow: hidden;
+  }
+
+  .ugc-gallery__mobile-carousel .swiper-slide {
+    height: auto;
   }
 
   .ugc-gallery__mobile-item {
-    aspect-ratio: 1;
+    aspect-ratio: 4/5;
     border-radius: 0;
     overflow: hidden;
   }
@@ -313,6 +327,40 @@
 
   .ugc-gallery__mobile-item .image {
     border-radius: 0 !important;
+  }
+
+  .ugc-gallery__pagination.swiper-pagination {
+    position: relative;
+    bottom: auto;
+    margin-top: var(--space-m);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .ugc-gallery__pagination .swiper-pagination-bullet {
+    opacity: 1;
+    background: #D14626;
+    width: 12px;
+    height: 12px;
+    margin: 0;
+    padding: 0;
+    border-radius: 20px;
+    border: none;
+    transition: width 0.3s ease, background 0.3s ease;
+  }
+
+  .ugc-gallery__pagination .swiper-pagination-bullet div,
+  .ugc-gallery__pagination .swiper-pagination-bullet span {
+    display: none;
+  }
+
+  .ugc-gallery__pagination .swiper-pagination-bullet-active {
+    width: 24px;
+    background: transparent;
+    border: 1px solid #D14626;
   }
 
   /* Medium breakpoint - Theme editor / smaller desktops */
@@ -361,7 +409,7 @@
   }
 
   /* Tablet - switch to mobile layout */
-  @media screen and (max-width: 989px) {
+  @media screen and (max-width: 1024px) {
     .ugc-gallery__container {
       display: none;
     }
@@ -514,6 +562,26 @@
       "type": "media_item",
       "name": "Media item",
       "settings": [
+        {
+          "type": "select",
+          "id": "visibility",
+          "label": "Show on",
+          "options": [
+            {
+              "value": "both",
+              "label": "Desktop & mobile"
+            },
+            {
+              "value": "desktop",
+              "label": "Desktop only"
+            },
+            {
+              "value": "mobile",
+              "label": "Mobile only"
+            }
+          ],
+          "default": "both"
+        },
         {
           "type": "select",
           "id": "position",
