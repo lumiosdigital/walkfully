@@ -36,7 +36,15 @@
       },
       "block_order": ["trust_shipping", "trust_returns", "trust_checkout"],
       "settings": {}
+    },
+    "text_block": {
+      "type": "walkfully-text-block",
+      "settings": {}
+    },
+    "product_explore": {
+      "type": "science-product-explore",
+      "settings": {}
     }
   },
-  "order": ["main"]
+  "order": ["main", "text_block", "product_explore"]
 }
