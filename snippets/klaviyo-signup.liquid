@@ -1,0 +1,88 @@
+{% doc %}
+  Klaviyo Client API v3 subscription helper with reCAPTCHA v3.
+  Renders once in theme.liquid. Provides window.WalkfullyKlaviyo.subscribe()
+  and delegated click listener for [data-klaviyo-modal-trigger] buttons.
+{% enddoc %}
+
+<script src="https://www.google.com/recaptcha/api.js?render=6LdeRmosAAAAACMQelRrN60vNVef0rOj2dLiydtP" async></script>
+
+<script>
+  window.WalkfullyKlaviyo = {
+    companyId: 'WVb9tL',
+    listId: 'TEQdQm',
+    recaptchaSiteKey: '6LdeRmosAAAAACMQelRrN60vNVef0rOj2dLiydtP',
+
+    getRecaptchaToken() {
+      return new Promise(function(resolve, reject) {
+        if (typeof grecaptcha === 'undefined') {
+          reject(new Error('reCAPTCHA not loaded'));
+          return;
+        }
+        grecaptcha.ready(function() {
+          grecaptcha.execute('6LdeRmosAAAAACMQelRrN60vNVef0rOj2dLiydtP', { action: 'subscribe' })
+            .then(resolve)
+            .catch(reject);
+        });
+      });
+    },
+
+    async subscribe({ email, fullName }) {
+      var token = await this.getRecaptchaToken();
+
+      var parts = fullName.trim().split(' ');
+      var firstName = parts[0] || '';
+      var lastName = parts.slice(1).join(' ') || '';
+
+      var response = await fetch('https://a.klaviyo.com/client/subscriptions/', {
+        method: 'POST',
+        headers: {
+          'revision': '2024-10-15',
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          data: {
+            type: 'subscription',
+            attributes: {
+              custom_source: 'Walkfully Website',
+              profile: {
+                data: {
+                  type: 'profile',
+                  attributes: {
+                    email: email,
+                    first_name: firstName,
+                    last_name: lastName,
+                    properties: {
+                      recaptcha_token: token
+                    }
+                  }
+                }
+              }
+            },
+            relationships: {
+              list: {
+                data: {
+                  type: 'list',
+                  id: this.listId
+                }
+              }
+            }
+          }
+        })
+      });
+
+      if (!response.ok && response.status !== 202) {
+        throw new Error('Subscription failed');
+      }
+
+      return true;
+    }
+  };
+
+  document.addEventListener('click', function(e) {
+    var trigger = e.target.closest('[data-klaviyo-modal-trigger]');
+    if (trigger) {
+      e.preventDefault();
+      document.dispatchEvent(new CustomEvent('klaviyo-modal:open'));
+    }
+  });
+</script>

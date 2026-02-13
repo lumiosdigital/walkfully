@@ -217,13 +217,14 @@
             {{ section.settings.cta_text }}
           </a>
         {% else %}
-          <span
-            class="walkfully-hero__cta-button walkfully-hero__cta-button--disabled"
+          <button
+            type="button"
+            class="walkfully-hero__cta-button"
             style="--cta-button-color: {{ section.settings.cta_button_color | escape }};"
-            aria-disabled="true"
+            data-klaviyo-modal-trigger
           >
             {{ section.settings.cta_text }}
-          </span>
+          </button>
         {% endif %}
       {% endif %}
     </div>
@@ -263,13 +264,14 @@
             {{ section.settings.cta_text }}
           </a>
         {% else %}
-          <span
-            class="walkfully-hero__cta-button walkfully-hero__cta-button--stacked walkfully-hero__cta-button--disabled"
+          <button
+            type="button"
+            class="walkfully-hero__cta-button walkfully-hero__cta-button--stacked"
             style="--cta-button-color: {{ section.settings.cta_button_color | escape }};"
-            aria-disabled="true"
+            data-klaviyo-modal-trigger
           >
             {{ section.settings.cta_text }}
-          </span>
+          </button>
         {% endif %}
       {% endif %}
     </div>
@@ -315,9 +317,13 @@
               {{ section.settings.cta_text }}
             </a>
           {% else %}
-            <span class="walkfully-hero__cta walkfully-hero__cta--disabled" aria-disabled="true">
+            <button
+              type="button"
+              class="walkfully-hero__cta"
+              data-klaviyo-modal-trigger
+            >
               {{ section.settings.cta_text }}
-            </span>
+            </button>
           {% endif %}
         {% endif %}
       </div>

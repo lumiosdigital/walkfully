@@ -57,23 +57,41 @@
               {%- if block.settings.text != blank -%}
                 <p class="walkfully-footer__newsletter-text">{{ block.settings.text }}</p>
               {%- endif -%}
-              {%- form 'customer', id: 'FooterNewsletter', class: 'walkfully-footer__form' -%}
-                <input type="hidden" name="contact[tags]" value="newsletter">
-                {%- if form.posted_successfully? -%}
-                  <p class="walkfully-footer__success">Thanks for subscribing!</p>
-                {% else %}
-                  <div class="walkfully-footer__form-row">
-                    <input
-                      type="email"
-                      name="contact[email]"
-                      class="walkfully-footer__input"
-                      placeholder="Enter your email"
-                      required
-                    >
-                    <button type="submit" class="walkfully-footer__button">Subscribe</button>
-                  </div>
-                {%- endif -%}
-              {%- endform -%}
+              <form class="walkfully-footer__form" data-klaviyo-footer-form novalidate>
+                <div class="walkfully-footer__form-row walkfully-footer__form-row--name">
+                  <input
+                    type="text"
+                    class="walkfully-footer__input"
+                    placeholder="{{ 'klaviyo.form.name_placeholder' | t }}"
+                    required
+                    autocomplete="name"
+                    data-klaviyo-name
+                  >
+                </div>
+                <div class="walkfully-footer__form-row">
+                  <input
+                    type="email"
+                    class="walkfully-footer__input"
+                    placeholder="{{ 'klaviyo.form.email_placeholder' | t }}"
+                    required
+                    autocomplete="email"
+                    data-klaviyo-email
+                  >
+                  <button type="submit" class="walkfully-footer__button">{{ 'klaviyo.form.subscribe_text' | t }}</button>
+                </div>
+                <div class="walkfully-footer__consent">
+                  <input type="checkbox" id="footer-klaviyo-consent" class="walkfully-footer__checkbox" required>
+                  <label for="footer-klaviyo-consent" class="walkfully-footer__consent-label">
+                    {{ 'klaviyo.form.consent_text' | t }}
+                  </label>
+                </div>
+                <p class="walkfully-footer__message" data-klaviyo-message hidden></p>
+                <p class="walkfully-footer__recaptcha">
+                  This site is protected by reCAPTCHA and the Google
+                  <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy Policy</a> and
+                  <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Terms of Service</a> apply.
+                </p>
+              </form>
             </div>
           {% endif %}
         {%- endfor -%}
@@ -291,6 +309,95 @@
     opacity: 0.85;
   }
 
+  .walkfully-footer__button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .walkfully-footer__form-row--name {
+    margin-bottom: 10px;
+  }
+
+  .walkfully-footer__consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .walkfully-footer__checkbox {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    border: 1.5px solid var(--footer-input-border);
+    border-radius: 3px;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .walkfully-footer__checkbox:checked {
+    background-color: var(--footer-button-bg);
+    border-color: var(--footer-button-bg);
+  }
+
+  .walkfully-footer__checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 5px;
+    height: 8px;
+    border: solid var(--footer-button-text);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .walkfully-footer__consent-label {
+    font-family: "Work Sans", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--footer-text);
+    opacity: 0.6;
+    cursor: pointer;
+  }
+
+  .walkfully-footer__message {
+    font-family: "Work Sans", sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    margin: 12px 0 0;
+    color: var(--footer-text);
+  }
+
+  .walkfully-footer__message--error {
+    color: #D14626;
+  }
+
+  .walkfully-footer__message--success {
+    opacity: 0.7;
+  }
+
+  .walkfully-footer__recaptcha {
+    font-family: "Work Sans", sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--footer-text);
+    opacity: 0.4;
+    margin: 12px 0 0;
+  }
+
+  .walkfully-footer__recaptcha a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
   .walkfully-footer__social {
     display: flex;
     flex-direction: column;
@@ -464,6 +571,58 @@
     }
   }
 </style>
+
+<script>
+  (function() {
+    var form = document.querySelector('[data-klaviyo-footer-form]');
+    if (!form) return;
+
+    var nameInput = form.querySelector('[data-klaviyo-name]');
+    var emailInput = form.querySelector('[data-klaviyo-email]');
+    var consent = form.querySelector('.walkfully-footer__checkbox');
+    var submitBtn = form.querySelector('.walkfully-footer__button');
+    var message = form.querySelector('[data-klaviyo-message]');
+    var submitText = submitBtn.textContent.trim();
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      message.hidden = true;
+      message.className = 'walkfully-footer__message';
+
+      if (!nameInput.value.trim() || !emailInput.value.trim() || !consent.checked) {
+        showMessage('Please fill in all fields and accept the consent.', 'error');
+        return;
+      }
+      if (!emailInput.validity.valid) {
+        showMessage('Please enter a valid email address.', 'error');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
+      try {
+        await window.WalkfullyKlaviyo.subscribe({
+          email: emailInput.value.trim(),
+          fullName: nameInput.value.trim()
+        });
+        form.reset();
+        showMessage('Thanks for subscribing!', 'success');
+      } catch (err) {
+        showMessage('Something went wrong. Please try again.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = submitText;
+      }
+    });
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = 'walkfully-footer__message walkfully-footer__message--' + type;
+      message.hidden = false;
+    }
+  })();
+</script>
 
 {% schema %}
 {

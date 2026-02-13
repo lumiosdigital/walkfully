@@ -232,13 +232,22 @@
 
         {% if section.settings.show_subscribe_button %}
           <div class="header__subscribe-button">
-            <a
-              href="{{ section.settings.subscribe_button_link }}"
-              class="btn-subscribe"
-              {% if section.settings.subscribe_button_link == blank %}onclick="return false;"{% endif %}
-            >
-              {{ section.settings.subscribe_button_text }}
-            </a>
+            {% if section.settings.subscribe_button_link != blank %}
+              <a
+                href="{{ section.settings.subscribe_button_link }}"
+                class="btn-subscribe"
+              >
+                {{ section.settings.subscribe_button_text }}
+              </a>
+            {% else %}
+              <button
+                type="button"
+                class="btn-subscribe"
+                data-klaviyo-modal-trigger
+              >
+                {{ section.settings.subscribe_button_text }}
+              </button>
+            {% endif %}
           </div>
         {% endif %}
 
