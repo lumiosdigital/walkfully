@@ -18,7 +18,11 @@
     "popups": {
       "type": "popups",
       "settings": {}
+    },
+    "klaviyo-modal": {
+      "type": "klaviyo-modal",
+      "settings": {}
     }
   },
-  "order": ["quick-cart", "popups"]
+  "order": ["quick-cart", "popups", "klaviyo-modal"]
 }

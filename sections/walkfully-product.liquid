@@ -40,6 +40,11 @@
     <div class="walkfully-product__info product__details-content" data-product-url="{{ product.url }}">
       <div class="walkfully-product__info-inner">
         <div class="walkfully-product__header">
+          <div class="walkfully-product__rating" data-id="{{ product.id }}">
+            <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}">
+              {{ product.metafields.judgeme.badge }}
+            </div>
+          </div>
           <h1 class="walkfully-product__title">{{ product.title }}</h1>
 
           {%- if short_description != blank -%}
@@ -669,6 +674,23 @@
     gap: 14px;
   }
 
+  /* Hide Judge.me auto-injected star badge — we place it manually */
+  .jdgm-preview-badge {
+    display: none !important;
+  }
+
+  /* Judge.me star rating badge */
+  .walkfully-product__rating {
+    align-self: flex-end;
+  }
+
+  .walkfully-product__rating .jdgm-preview-badge {
+    display: flex !important;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+  }
+
   .walkfully-product__title {
     font-family: var(--font-heading-family);
     font-size: 50px;
@@ -933,6 +955,219 @@
     letter-spacing: -0.14px;
     color: #21262F;
     white-space: nowrap;
+  }
+
+  /* ================================================
+     Judge.me Review Widget (Revamp) Overrides
+     Targets the jm- prefixed classes from the new widget
+     ================================================ */
+
+  /* Override CSS custom properties on the widget root */
+  .jdgm-widget-revamp {
+    --jm-review-widget-background-color: #F7F1E5 !important;
+    --jm-review-widget-button-color: #D14626 !important;
+    --jm-review-widget-button-text-color: #F7F1E5 !important;
+    --jm-review-widget-text-color: #21262F !important;
+    --jm-review-widget-form-background-color: #F7F1E5 !important;
+    --jm-review-widget-form-button-color: #D14626 !important;
+    --jm-review-widget-form-button-text-color: #F7F1E5 !important;
+    --jm-review-widget-form-text-color: #21262F !important;
+    --jm-review-widget-star-and-histogram-color: #D14626 !important;
+    --jm-review-widget-form-modal-overlay-color: rgba(0, 33, 38, 0.4) !important;
+    font-family: var(--font-body-family) !important;
+  }
+
+  /* Widget + section background — remove white gaps */
+  .jdgm-widget-revamp,
+  .jm-review-widget,
+  .jm-review-widget__body,
+  .jdgm-carousel-review-list {
+    background-color: #F7F1E5 !important;
+  }
+
+  /* Review cards — cream background */
+  .jm-review-widget .jm-review-card,
+  .jm-carousel .jm-carousel__item,
+  .jdgm-carousel-review-list .jm-carousel__item {
+    background-color: #FFFBF2 !important;
+  }
+
+  /* Title — Crimson Pro */
+  .jm-review-widget-minimal-header__title,
+  .jm-review-widget__header h2,
+  .jm-review-widget .jm-review-widget__title,
+  .jm-text.jm-review-widget-minimal-header__title {
+    --text-size: 56px !important;
+    --text-weight: 400 !important;
+    font-family: "Crimson Pro", var(--font-heading-family) !important;
+    font-size: 56px !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    line-height: 90% !important;
+    letter-spacing: -1.12px !important;
+    color: #21262F !important;
+    text-transform: none !important;
+  }
+
+  /* Center the header content */
+  .jm-review-widget__header-and-body {
+    font-family: var(--font-body-family) !important;
+  }
+
+  /* All text — force theme fonts (exclude star icons and SVGs) */
+  .jdgm-widget-revamp *:not(svg):not(path):not([class*="star"]):not([class*="icon"]):not(i) {
+    font-family: var(--font-body-family) !important;
+  }
+
+  /* Headings inside widget use heading font */
+  .jm-review-widget-minimal-header__title,
+  .jm-review-widget__header h2,
+  .jm-review-widget .jm-review-widget__title {
+    font-family: "Crimson Pro", var(--font-heading-family) !important;
+  }
+
+  /* "Write a review" button — match ATC style */
+  .jm-button--primary,
+  .jm-action-buttons__button,
+  [data-testid="write-review-button"],
+  .jm-review-widget button[class*="write-rev"],
+  .jm-review-widget [class*="write-review"] {
+    display: flex !important;
+    height: 56px !important;
+    padding: 10px 20px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border-radius: 3px !important;
+    background-color: #D14626 !important;
+    color: #F7F1E5 !important;
+    border: none !important;
+    font-family: "Work Sans", var(--font-body-family) !important;
+    font-size: 14px !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    line-height: normal !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0 !important;
+    cursor: pointer !important;
+  }
+
+  .jm-button--primary:hover,
+  .jm-action-buttons__button:hover,
+  [data-testid="write-review-button"]:hover,
+  .jm-review-widget button[class*="write-rev"]:hover,
+  .jm-review-widget [class*="write-review"]:hover {
+    background-color: #b83b1f !important;
+  }
+
+  /* Carousel navigation arrows — force visible */
+  .jm-carousel__btn,
+  .jm-carousel [class*="arrow"],
+  .jm-carousel [class*="btn-prev"],
+  .jm-carousel [class*="btn-next"],
+  .jdgm-carousel-review-list [class*="arrow"],
+  .jdgm-carousel-review-list button {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    color: #21262F !important;
+  }
+
+  /* Hide chevron on "Write a review" button */
+  .jm-button--primary svg,
+  .jm-button--primary .jm-button__icon,
+  .jm-action-buttons__button svg,
+  .jm-action-buttons__button .jm-button__icon,
+  [data-testid="write-review-button"] svg,
+  [data-testid="write-review-button"] .jm-button__icon {
+    display: none !important;
+  }
+
+  /* Sort/filter button — 56px square to match "Write a review" height */
+  .jm-sort-filter,
+  .jm-sort-filter--compact {
+    height: 56px !important;
+    width: 56px !important;
+    border: 1px solid #21262F !important;
+    border-radius: 3px !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Hide the chevron icon, keep only the sort icon */
+  .jm-sort-filter__icon--chevron {
+    display: none !important;
+  }
+
+  .jm-sort-filter__icon--sort {
+    height: 100% !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: none !important;
+    border-radius: 3px !important;
+    box-sizing: border-box !important;
+  }
+
+  .jm-sort-filter:hover,
+  .jm-sort-filter--compact:hover {
+    background-color: #21262F !important;
+    color: #F7F1E5 !important;
+  }
+
+  .jm-sort-filter:hover .jm-sort-filter__icon--sort,
+  .jm-sort-filter:hover .jm-sort-filter__icon--sort svg {
+    color: #F7F1E5 !important;
+    fill: #F7F1E5 !important;
+  }
+
+  /* Hide the select visually but keep it clickable */
+  .jm-sort-filter__select,
+  .jdgm-sort-dropdown {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    opacity: 0 !important;
+    cursor: pointer !important;
+    font-family: var(--font-body-family) !important;
+  }
+
+  /* Empty state — center "Be the first to write a review" + button */
+  .jm-no-reviews-state {
+    align-items: center !important;
+  }
+
+  .jm-no-reviews-state__action-buttons {
+    --cluster-justify: center !important;
+    justify-content: center !important;
+  }
+
+  /* Remove white backgrounds on header/footer */
+  .jm-review-widget__header,
+  .jm-review-widget__footer {
+    background-color: transparent !important;
+  }
+
+  /* Review modal — transparent overlay + prevent background scroll */
+  .jm-modal-overlay,
+  .jm-review-form-modal__overlay,
+  .jdgm-widget-revamp [class*="modal-overlay"],
+  .jdgm-widget-revamp [class*="modal__overlay"] {
+    background-color: rgba(0, 33, 38, 0.25) !important;
+    backdrop-filter: blur(2px) !important;
+  }
+
+  body.jm-modal-open,
+  body:has(.jm-modal-overlay),
+  body:has(.jm-review-form-modal) {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
   }
 
 </style>

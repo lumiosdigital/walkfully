@@ -529,6 +529,21 @@
       "expired": "Expired"
     }
   },
+  "klaviyo": {
+    "modal": {
+      "heading": "Join the movement",
+      "subtext": "Sign up for the free 14-Day Walking Reset and get community updates, exclusive drops, and mindful walking tips.",
+      "success_heading": "You're in!",
+      "success_text": "Check your inbox for a welcome email."
+    },
+    "form": {
+      "name_placeholder": "Full name",
+      "email_placeholder": "Enter your email",
+      "consent_text": "I agree to receive emails from WalkFully. Unsubscribe anytime.",
+      "submit_text": "Join now",
+      "subscribe_text": "Subscribe"
+    }
+  },
   "recipient": {
     "form": {
       "email": "Email",

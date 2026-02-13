@@ -16,7 +16,7 @@
   endif
 
   assign show_cta_button = false
-  if show_cta and section.settings.cta_text != blank and has_cta_link and has_link == false
+  if show_cta and section.settings.cta_text != blank and has_link == false
     assign show_cta_button = true
   endif
 
@@ -93,9 +93,15 @@
     {% endif %}
 
     {% if show_cta_button %}
-      <a href="{{ section.settings.cta_link }}" class="promo-banner__cta promo-banner__cta--{{ button_style }}">
-        {{ section.settings.cta_text }}
-      </a>
+      {% if has_cta_link %}
+        <a href="{{ section.settings.cta_link }}" class="promo-banner__cta promo-banner__cta--{{ button_style }}">
+          {{ section.settings.cta_text }}
+        </a>
+      {% else %}
+        <button type="button" class="promo-banner__cta promo-banner__cta--{{ button_style }}" data-klaviyo-modal-trigger>
+          {{ section.settings.cta_text }}
+        </button>
+      {% endif %}
     {% endif %}
   </div>
 </div>

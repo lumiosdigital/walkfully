@@ -1,0 +1,383 @@
+{% doc %}
+  Klaviyo signup modal. Triggered by buttons with data-klaviyo-modal-trigger.
+  Included once in theme.liquid.
+{% enddoc %}
+
+<klaviyo-signup-modal class="klaviyo-modal" aria-hidden="true">
+  <div class="klaviyo-modal__overlay" data-klaviyo-close></div>
+
+  <div
+    class="klaviyo-modal__dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="klaviyo-modal-title"
+  >
+    <button type="button" class="klaviyo-modal__close" data-klaviyo-close aria-label="{{ 'accessibility.close' | t }}">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <div class="klaviyo-modal__content">
+      <h2 id="klaviyo-modal-title" class="klaviyo-modal__heading">
+        {{ 'klaviyo.modal.heading' | t }}
+      </h2>
+      <p class="klaviyo-modal__subtext">
+        {{ 'klaviyo.modal.subtext' | t }}
+      </p>
+
+      <form class="klaviyo-modal__form" novalidate>
+        <div class="klaviyo-modal__field">
+          <label for="klaviyo-modal-name" class="visually-hidden">{{ 'klaviyo.form.name_placeholder' | t }}</label>
+          <input
+            type="text"
+            id="klaviyo-modal-name"
+            class="klaviyo-modal__input"
+            placeholder="{{ 'klaviyo.form.name_placeholder' | t }}"
+            required
+            autocomplete="name"
+          >
+        </div>
+
+        <div class="klaviyo-modal__field">
+          <label for="klaviyo-modal-email" class="visually-hidden">{{ 'klaviyo.form.email_placeholder' | t }}</label>
+          <input
+            type="email"
+            id="klaviyo-modal-email"
+            class="klaviyo-modal__input"
+            placeholder="{{ 'klaviyo.form.email_placeholder' | t }}"
+            required
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="klaviyo-modal__consent">
+          <input type="checkbox" id="klaviyo-modal-consent" class="klaviyo-modal__checkbox" required>
+          <label for="klaviyo-modal-consent" class="klaviyo-modal__consent-label">
+            {{ 'klaviyo.form.consent_text' | t }}
+          </label>
+        </div>
+
+        <button type="submit" class="klaviyo-modal__submit">
+          {{ 'klaviyo.form.submit_text' | t }}
+        </button>
+
+        <p class="klaviyo-modal__error" aria-live="polite" hidden></p>
+      </form>
+
+      <div class="klaviyo-modal__success" hidden>
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="klaviyo-modal__success-icon">
+          <circle cx="24" cy="24" r="23" stroke="#D14626" stroke-width="2"/>
+          <path d="M15 24L21 30L33 18" stroke="#D14626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h3 class="klaviyo-modal__success-heading">{{ 'klaviyo.modal.success_heading' | t }}</h3>
+        <p class="klaviyo-modal__success-text">{{ 'klaviyo.modal.success_text' | t }}</p>
+      </div>
+    </div>
+  </div>
+</klaviyo-signup-modal>
+
+<style>
+  .klaviyo-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .klaviyo-modal.active {
+    display: flex;
+  }
+
+  .klaviyo-modal__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(33, 38, 47, 0.5);
+    backdrop-filter: blur(2px);
+    cursor: pointer;
+  }
+
+  .klaviyo-modal__dialog {
+    position: relative;
+    background-color: #F7F1E5;
+    border-radius: 8px;
+    max-width: 480px;
+    width: 100%;
+    padding: 48px 40px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: klaviyo-modal-in 0.25s ease;
+  }
+
+  @keyframes klaviyo-modal-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .klaviyo-modal__close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #21262F;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.15s ease;
+  }
+
+  .klaviyo-modal__close:hover {
+    background-color: rgba(33, 38, 47, 0.08);
+  }
+
+  .klaviyo-modal__content {
+    text-align: center;
+  }
+
+  .klaviyo-modal__heading {
+    font-family: var(--font-heading-family);
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.8px;
+    color: #21262F;
+    margin: 0 0 16px;
+  }
+
+  .klaviyo-modal__subtext {
+    font-family: var(--font-body-family);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #21262F;
+    opacity: 0.7;
+    margin: 0 0 32px;
+  }
+
+  .klaviyo-modal__form {
+    text-align: left;
+  }
+
+  .klaviyo-modal__field + .klaviyo-modal__field {
+    margin-top: 12px;
+  }
+
+  .klaviyo-modal__input {
+    width: 100%;
+    height: 50px;
+    padding: 0 16px;
+    border: 1px solid rgba(33, 38, 47, 0.25);
+    border-radius: 3px;
+    background-color: transparent;
+    font-family: var(--font-body-family);
+    font-size: 14px;
+    color: #21262F;
+    outline: none;
+    transition: border-color 0.15s ease;
+    box-sizing: border-box;
+  }
+
+  .klaviyo-modal__input::placeholder {
+    color: rgba(33, 38, 47, 0.45);
+  }
+
+  .klaviyo-modal__input:focus {
+    border-color: #21262F;
+  }
+
+  .klaviyo-modal__consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .klaviyo-modal__checkbox {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    accent-color: #D14626;
+    cursor: pointer;
+  }
+
+  .klaviyo-modal__consent-label {
+    font-family: var(--font-body-family);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: #21262F;
+    opacity: 0.6;
+    cursor: pointer;
+  }
+
+  .klaviyo-modal__submit {
+    width: 100%;
+    height: 56px;
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #D14626;
+    color: #F7F1E5;
+    border: none;
+    border-radius: 3px;
+    font-family: var(--font-body-family);
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+
+  .klaviyo-modal__submit:hover {
+    background-color: #b83b1f;
+  }
+
+  .klaviyo-modal__submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .klaviyo-modal__error {
+    font-family: var(--font-body-family);
+    font-size: 13px;
+    color: #D14626;
+    margin: 12px 0 0;
+    text-align: center;
+  }
+
+  .klaviyo-modal__success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 0;
+  }
+
+  .klaviyo-modal__success-heading {
+    font-family: var(--font-heading-family);
+    font-size: 32px;
+    font-weight: 400;
+    color: #21262F;
+    margin: 0;
+  }
+
+  .klaviyo-modal__success-text {
+    font-family: var(--font-body-family);
+    font-size: 15px;
+    color: #21262F;
+    opacity: 0.7;
+    margin: 0;
+  }
+
+  @media (max-width: 600px) {
+    .klaviyo-modal__dialog {
+      padding: 40px 24px;
+    }
+
+    .klaviyo-modal__heading {
+      font-size: 32px;
+    }
+  }
+</style>
+
+<script>
+  if (!customElements.get('klaviyo-signup-modal')) {
+    customElements.define('klaviyo-signup-modal', class extends HTMLElement {
+      connectedCallback() {
+        this.form = this.querySelector('.klaviyo-modal__form');
+        this.successEl = this.querySelector('.klaviyo-modal__success');
+        this.errorEl = this.querySelector('.klaviyo-modal__error');
+        this.submitBtn = this.querySelector('.klaviyo-modal__submit');
+        this.submitText = this.submitBtn.textContent.trim();
+
+        document.addEventListener('klaviyo-modal:open', () => this.open());
+
+        this.querySelectorAll('[data-klaviyo-close]').forEach(el => {
+          el.addEventListener('click', () => this.close());
+        });
+
+        this.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') this.close();
+        });
+
+        this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+      }
+
+      open() {
+        this.setAttribute('aria-hidden', 'false');
+        this.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        this.form.hidden = false;
+        this.successEl.hidden = true;
+        this.errorEl.hidden = true;
+        this.form.reset();
+        requestAnimationFrame(() => {
+          this.querySelector('#klaviyo-modal-name').focus();
+        });
+      }
+
+      close() {
+        this.setAttribute('aria-hidden', 'true');
+        this.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      async handleSubmit(e) {
+        e.preventDefault();
+        var name = this.querySelector('#klaviyo-modal-name');
+        var email = this.querySelector('#klaviyo-modal-email');
+        var consent = this.querySelector('#klaviyo-modal-consent');
+
+        if (!name.value.trim() || !email.value.trim() || !consent.checked) {
+          this.showError('Please fill in all fields and accept the consent.');
+          return;
+        }
+        if (!email.validity.valid) {
+          this.showError('Please enter a valid email address.');
+          return;
+        }
+
+        this.submitBtn.disabled = true;
+        this.submitBtn.textContent = 'Sending...';
+        this.errorEl.hidden = true;
+
+        try {
+          await window.WalkfullyKlaviyo.subscribe({
+            email: email.value.trim(),
+            fullName: name.value.trim()
+          });
+          this.form.hidden = true;
+          this.successEl.hidden = false;
+          setTimeout(() => this.close(), 3000);
+        } catch (err) {
+          this.showError('Something went wrong. Please try again.');
+        } finally {
+          this.submitBtn.disabled = false;
+          this.submitBtn.textContent = this.submitText;
+        }
+      }
+
+      showError(msg) {
+        this.errorEl.textContent = msg;
+        this.errorEl.hidden = false;
+      }
+    });
+  }
+</script>

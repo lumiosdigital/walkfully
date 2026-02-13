@@ -100,7 +100,7 @@
               {{ button_text }}
             </a>
           {% else %}
-            <button type="button" class="about-story__button about-story__button--disabled" disabled>
+            <button type="button" class="about-story__button" data-klaviyo-modal-trigger>
               {{ button_text }}
             </button>
           {% endif %}
@@ -434,7 +434,7 @@
   }
 
   .about-story__media--rounded {
-    border-radius: 12px;
+    border-radius: 20px;
   }
 
   .about-story__image {
