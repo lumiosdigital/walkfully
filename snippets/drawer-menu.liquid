@@ -109,6 +109,7 @@
                   </div>
                 </li>
 
+                {% comment %} Login/account link disabled — no customer accounts
                 {%- if shop.customer_accounts_enabled -%}
                   <li>
                     <div class="panel-swipe__list-item fancy-link">
@@ -127,6 +128,7 @@
                   </div>
                   </li>
                 {%- endif -%}
+                {% endcomment %}
 
                 {%- if has_social_icons and section.settings.show_social_icons_in_drawer_menu -%}
                   <li>

@@ -13,15 +13,15 @@
     recaptchaSiteKey: '6LdeRmosAAAAACMQelRrN60vNVef0rOj2dLiydtP',
 
     getRecaptchaToken() {
-      return new Promise(function(resolve, reject) {
+      return new Promise(function(resolve) {
         if (typeof grecaptcha === 'undefined') {
-          reject(new Error('reCAPTCHA not loaded'));
+          resolve(null);
           return;
         }
         grecaptcha.ready(function() {
           grecaptcha.execute('6LdeRmosAAAAACMQelRrN60vNVef0rOj2dLiydtP', { action: 'subscribe' })
             .then(resolve)
-            .catch(reject);
+            .catch(function() { resolve(null); });
         });
       });
     },
@@ -33,7 +33,7 @@
       var firstName = parts[0] || '';
       var lastName = parts.slice(1).join(' ') || '';
 
-      var response = await fetch('https://a.klaviyo.com/client/subscriptions/', {
+      var response = await fetch('https://a.klaviyo.com/client/subscriptions/?company_id=' + this.companyId, {
         method: 'POST',
         headers: {
           'revision': '2024-10-15',
@@ -47,14 +47,10 @@
               profile: {
                 data: {
                   type: 'profile',
-                  attributes: {
-                    email: email,
-                    first_name: firstName,
-                    last_name: lastName,
-                    properties: {
-                      recaptcha_token: token
-                    }
-                  }
+                  attributes: Object.assign(
+                    { email: email, first_name: firstName, last_name: lastName },
+                    token ? { properties: { recaptcha_token: token } } : {}
+                  )
                 }
               }
             },

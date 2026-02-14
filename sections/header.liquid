@@ -110,6 +110,7 @@
   </{{ logo_wrapping_tag }}>
 {% endcapture %}
 
+{% comment %} Login/account button disabled — no customer accounts
 {% capture account_button %}
   {%- if shop.customer_accounts_enabled -%}
     <div class="btn-icon header__account-button">
@@ -122,6 +123,7 @@
     </div>
   {%- endif -%}
 {% endcapture %}
+{% endcomment %}
 
 {% capture navigation %}
   <nav class="header__menu">
@@ -264,6 +266,7 @@
           </div>
         {% endif %}
 
+        {% comment %} Login/account icon disabled — no customer accounts
         <a
           href="{{ routes.account_url }}"
           class="btn-icon"
@@ -271,6 +274,7 @@
         >
           {% render 'theme-icon', icon: 'user', size: '1.4em' %}
         </a>
+        {% endcomment %}
 
         <a
           href="{{ routes.cart_url }}"

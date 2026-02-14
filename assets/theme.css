@@ -12007,8 +12007,11 @@ a.pagination__button-link:hover, a.pagination__button-link:focus {
 
 .team-card__image {
   width: 100%;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
+  height: 340px;
+}
+
+.team-card__image img {
+  height: 100% !important;
 }
 
 .team-card__image--placeholder {
