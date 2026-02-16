@@ -223,10 +223,40 @@
       var container = section.querySelector('.product-form__buttons');
       if (container) {
         var preorderText = '';
+        var comingSoonBtn = null;
+        var comingSoonBis = null;
         var updating = false;
 
         var observer = new MutationObserver(function() {
           if (updating) return;
+
+          // Capture the Timesact "Coming Soon" buttons when they first appear
+          var csBtn = container.querySelector('.timesact-button-cs');
+          if (csBtn && !comingSoonBtn) {
+            comingSoonBtn = csBtn.cloneNode(true);
+          }
+          var bisBtn = container.querySelector('.timesact-button-bis');
+          if (bisBtn && !comingSoonBis) {
+            comingSoonBis = bisBtn.cloneNode(true);
+          }
+
+          // Re-inject Coming Soon buttons if they disappeared after variant change
+          var wrapper = container.querySelector('.product-form__submit-wrapper');
+          if (wrapper && comingSoonBtn && !container.querySelector('.timesact-button-cs')) {
+            updating = true;
+            wrapper.appendChild(comingSoonBtn.cloneNode(true));
+            if (comingSoonBis) {
+              wrapper.appendChild(comingSoonBis.cloneNode(true));
+            }
+            // Hide the main submit button like Timesact does
+            var submitBtn = container.querySelector('.product-form__submit');
+            if (submitBtn) {
+              submitBtn.style.display = 'none';
+              submitBtn.disabled = true;
+            }
+            updating = false;
+          }
+
           var btn = container.querySelector('.product-form__submit');
           if (!btn) return;
 
@@ -908,6 +938,17 @@
   .walkfully-product__add-to-cart.timesact-button {
     opacity: 1 !important;
     cursor: pointer !important;
+  }
+
+  /* Match Timesact "Coming Soon" button to add-to-cart style */
+  .walkfully-product .timesact-button-cs {
+    width: 100% !important;
+    height: 56px !important;
+    border-radius: 3px !important;
+    border: none !important;
+    text-align: center !important;
+    opacity: 0.7 !important;
+    cursor: not-allowed !important;
   }
 
   /* Fade in button text to prevent flash of "Add to cart" before app replaces it */
