@@ -220,53 +220,17 @@
       fixSwiper();
 
       // Timesact pre-order app integration
+      // Only strip Timesact inline styles that override our button sizing.
+      // Let Timesact manage its own button injection and visibility.
       var container = section.querySelector('.product-form__buttons');
       if (container) {
-        var preorderText = '';
-        var comingSoonBtn = null;
-        var comingSoonBis = null;
         var updating = false;
 
         var observer = new MutationObserver(function() {
           if (updating) return;
 
-          // Capture the Timesact "Coming Soon" buttons when they first appear
-          var csBtn = container.querySelector('.timesact-button-cs');
-          if (csBtn && !comingSoonBtn) {
-            comingSoonBtn = csBtn.cloneNode(true);
-          }
-          var bisBtn = container.querySelector('.timesact-button-bis');
-          if (bisBtn && !comingSoonBis) {
-            comingSoonBis = bisBtn.cloneNode(true);
-          }
-
-          // Re-inject Coming Soon buttons if they disappeared after variant change
-          var wrapper = container.querySelector('.product-form__submit-wrapper');
-          if (wrapper && comingSoonBtn && !container.querySelector('.timesact-button-cs')) {
-            updating = true;
-            wrapper.appendChild(comingSoonBtn.cloneNode(true));
-            if (comingSoonBis) {
-              wrapper.appendChild(comingSoonBis.cloneNode(true));
-            }
-            // Hide the main submit button like Timesact does
-            var submitBtn = container.querySelector('.product-form__submit');
-            if (submitBtn) {
-              submitBtn.style.display = 'none';
-              submitBtn.disabled = true;
-            }
-            updating = false;
-          }
-
           var btn = container.querySelector('.product-form__submit');
           if (!btn) return;
-
-          // Capture pre-order text when Timesact first sets it
-          if (btn.classList.contains('timesact-button') && !preorderText) {
-            var span = btn.querySelector('span');
-            if (span && span.textContent.trim()) {
-              preorderText = span.textContent.trim();
-            }
-          }
 
           // Strip Timesact inline styles that shrink the button
           if (btn.classList.contains('timesact-button') && btn.getAttribute('style')) {
@@ -274,25 +238,9 @@
             btn.removeAttribute('style');
             updating = false;
           }
-
-          // Restore pre-order state if text reverted
-          if (preorderText) {
-            var span = btn.querySelector('span');
-            if (!span) return;
-            var needsUpdate = span.textContent.trim() !== preorderText || btn.disabled;
-            if (needsUpdate) {
-              updating = true;
-              span.textContent = preorderText;
-              btn.disabled = false;
-              if (!btn.classList.contains('timesact-button')) {
-                btn.classList.add('timesact-button');
-              }
-              updating = false;
-            }
-          }
         });
 
-        observer.observe(container, { childList: true, subtree: true, characterData: true, attributes: true });
+        observer.observe(container, { childList: true, subtree: true, attributes: true });
       }
     })();
   </script>
