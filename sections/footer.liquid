@@ -62,6 +62,7 @@
                   <input
                     type="text"
                     class="walkfully-footer__input"
+                    style="min-height: 52px; font-size: 16px;"
                     placeholder="{{ 'klaviyo.form.name_placeholder' | t }}"
                     required
                     autocomplete="name"
@@ -72,12 +73,13 @@
                   <input
                     type="email"
                     class="walkfully-footer__input"
+                    style="min-height: 52px; font-size: 16px;"
                     placeholder="{{ 'klaviyo.form.email_placeholder' | t }}"
                     required
                     autocomplete="email"
                     data-klaviyo-email
                   >
-                  <button type="submit" class="walkfully-footer__button">{{ 'klaviyo.form.subscribe_text' | t }}</button>
+                  <button type="submit" class="walkfully-footer__button" style="min-height: 52px;">{{ 'klaviyo.form.subscribe_text' | t }}</button>
                 </div>
                 <div class="walkfully-footer__consent">
                   <input type="checkbox" id="footer-klaviyo-consent" class="walkfully-footer__checkbox" required>
@@ -547,10 +549,12 @@
     }
 
     .walkfully-footer__form-row--name .walkfully-footer__input {
+      padding: 10px 10px !important;
       border-radius: 8px 8px 0 0 !important;
     }
 
     .walkfully-footer__form-row:not(.walkfully-footer__form-row--name) .walkfully-footer__input {
+      padding: 10px 10px !important;
       border-radius: 0 !important;
     }
 
