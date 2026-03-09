@@ -8500,6 +8500,8 @@ html.elements-border-radius--round :is(.custom-select .custom-select__button) {
 }
 
 .product-media-gallery .product-media-gallery__content .swiper .swiper-button-prev, .product-media-gallery .product-media-gallery__content .swiper .swiper-button-next {
+  background-color: #D14626;
+  color: #fff;
   opacity: .35;
 }
 
@@ -8553,6 +8555,25 @@ html.elements-border-radius--round :is(.custom-select .custom-select__button) {
 
 .product-media-gallery:not([data-media-size="1"]) .swiper-pagination-bullet.swiper-pagination-bullet-active {
   background-color: rgb(var(--color-foreground));
+}
+
+.product-media-gallery .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet {
+  opacity: 1 !important;
+  background: #D14626 !important;
+  width: 12px !important;
+  height: 12px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 20px !important;
+  border: none !important;
+  transition: width 0.3s ease, background 0.3s ease;
+  cursor: pointer;
+}
+
+.product-media-gallery .swiper-pagination .swiper-pagination-bullet-active.swiper-pagination-bullet-active {
+  width: 24px !important;
+  background: transparent !important;
+  border: 1px solid #D14626 !important;
 }
 
 @media (min-width: 64em) {
