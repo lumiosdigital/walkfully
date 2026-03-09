@@ -5451,6 +5451,7 @@ a.logos-marquee__logo:hover, a.logos-marquee__logo:focus {
   letter-spacing: -0.16px;
   width: 270px;
   color: #F7F1E5;
+  margin: 0 auto;
 }
 
 /* Responsive styles - 1024px breakpoint */
@@ -12780,6 +12781,24 @@ a.pagination__button-link:hover, a.pagination__button-link:focus {
     width: 20px;
     height: 20px;
   }
+
+  .journal-card__image-wrapper {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .journal-card--tall .journal-card__image-wrapper,
+  .journal-card:not(.journal-card--tall) .journal-card__image-wrapper {
+    aspect-ratio: unset;
+    min-height: 120px;
+  }
+
+  .journal-card__description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 
 /* ==========================================================================
@@ -12982,12 +13001,12 @@ a.pagination__button-link:hover, a.pagination__button-link:focus {
   }
 
   .product-showcase__card-title {
-    font-size: 0.875rem;
+    font-size: 1.125rem;
     margin-bottom: var(--space-2xs);
   }
 
   .product-showcase__card-description {
-    font-size: 0.75rem;
+    font-size: 0.9375rem;
     margin-bottom: var(--space-2xs);
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -12996,7 +13015,14 @@ a.pagination__button-link:hover, a.pagination__button-link:focus {
   }
 
   .product-showcase__card-link {
-    font-size: 0.625rem;
+    font-size: 0.75rem;
+  }
+
+  .product-showcase .animate.animate--slide-in {
+    opacity: 1 !important;
+    visibility: visible !important;
+    animation: none !important;
+    transform: none !important;
   }
 }
 
@@ -13015,15 +13041,15 @@ a.pagination__button-link:hover, a.pagination__button-link:focus {
   }
 
   .product-showcase__card-title {
-    font-size: 0.8125rem;
+    font-size: 1rem;
   }
 
   .product-showcase__card-description {
-    font-size: 0.6875rem;
+    font-size: 0.875rem;
   }
 
   .product-showcase__card-link {
-    font-size: 0.5625rem;
+    font-size: 0.6875rem;
   }
 }
 
