@@ -517,14 +517,49 @@
       gap: 24px 30px;
     }
 
+    .walkfully-footer__newsletter-text {
+      margin-bottom: 24px;
+    }
+
     .walkfully-footer__form-row {
       flex-direction: column;
-      gap: 10px;
+      gap: 0;
       height: auto;
+    }
+
+    .walkfully-footer__form-row--name {
+      margin-bottom: 0;
+    }
+
+    .walkfully-footer__input {
+      height: 48px !important;
+      font-size: 15px;
+      background-color: rgba(255, 255, 255, 0.5) !important;
+      border: 1px solid rgba(33, 38, 47, 0.15) !important;
+      border-bottom-width: 0 !important;
+      border-radius: 0 !important;
+    }
+
+    .walkfully-footer__input:focus {
+      background-color: rgba(255, 255, 255, 0.7) !important;
+      border-color: rgba(33, 38, 47, 0.4) !important;
+      border-bottom-width: 1px !important;
+    }
+
+    .walkfully-footer__form-row--name .walkfully-footer__input {
+      border-radius: 8px 8px 0 0 !important;
+    }
+
+    .walkfully-footer__form-row:not(.walkfully-footer__form-row--name) .walkfully-footer__input {
+      border-radius: 0 !important;
     }
 
     .walkfully-footer__button {
       width: 100%;
+      height: 48px !important;
+      border-radius: 0 0 8px 8px !important;
+      border-top: none !important;
+      font-size: 13px;
     }
 
     .walkfully-footer__watermark {
