@@ -11831,14 +11831,16 @@ a.pagination__button-link:hover, a.pagination__button-link:focus {
   margin: 0;
 }
 
-/* Story card hover effect */
-.story-card__link:hover .story-card__image img,
-.story-card__link:focus .story-card__image img {
-  transform: scale(1.05);
-}
+/* Story card hover effect - desktop only */
+@media screen and (min-width: 750px) {
+  .story-card__link:hover .story-card__image img,
+  .story-card__link:focus .story-card__image img {
+    transform: scale(1.05);
+  }
 
-.story-card__image img {
-  transition: transform 0.5s ease-out;
+  .story-card__image img {
+    transition: transform 0.5s ease-out;
+  }
 }
 
 /* Responsive adjustments for stories section */
@@ -11917,6 +11919,36 @@ a.pagination__button-link:hover, a.pagination__button-link:focus {
 
   .story-card__quote {
     font-size: 0.875rem;
+  }
+}
+
+/* Stories Section - Kill ALL animations/transitions/hover on mobile to prevent touch flicker */
+@media screen and (max-width: 749px) {
+  .stories-section,
+  .stories-section *,
+  .stories-section *::before,
+  .stories-section *::after {
+    animation: none !important;
+    animation-delay: 0s !important;
+    animation-fill-mode: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+
+  .stories-section .animate.animate--slide-in,
+  .stories-section .animate.animate--fade-in {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+
+  .story-card__image img {
+    transform: none !important;
+  }
+
+  .story-card__link:hover .story-card__image img,
+  .story-card__link:focus .story-card__image img {
+    transform: none !important;
   }
 }
 
@@ -13016,37 +13048,6 @@ a.pagination__button-link:hover, a.pagination__button-link:focus {
 
   .product-showcase__card-link {
     font-size: 0.875rem;
-  }
-
-  .product-showcase.section[data-animate-elements-on-scroll] .animate.animate--slide-in,
-  .product-showcase[data-animate-elements-on-scroll] .animate.animate--slide-in {
-    opacity: 1 !important;
-    visibility: visible !important;
-    animation: none !important;
-    animation-fill-mode: none !important;
-    transform: none !important;
-  }
-
-  /* Prevent touch-triggered hover from causing repaints that flash the text */
-  .product-showcase__card:hover .product-showcase__card-media .image img {
-    transform: none;
-  }
-
-  .product-showcase__card:hover .product-showcase__card-link {
-    opacity: 1;
-  }
-
-  .product-showcase__card-media .image img {
-    transition: none;
-  }
-
-  /* Force GPU compositing on stacked layers to prevent flicker */
-  .product-showcase__card-overlay,
-  .product-showcase__card-content {
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
   }
 }
 

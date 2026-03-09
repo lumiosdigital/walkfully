@@ -19,13 +19,9 @@
     --stories-nav-color: {{ section.settings.nav_color | default: '#21262F' }};
     --stories-track-color: {{ section.settings.nav_color | default: '#21262F' }};
   "
-  {% if section.settings.enable_animations %}
-    data-animate-elements-on-scroll
-    data-animate-delay="125"
-  {% endif %}
 >
   <div class="stories-section__container page-width">
-    <div class="stories-header {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
+    <div class="stories-header">
       {%- if show_eyebrow and section.settings.eyebrow_text != blank -%}
         <p class="stories-header__eyebrow stories-header__eyebrow--{{ section.settings.eyebrow_style | default: 'stylized' }}">{{ section.settings.eyebrow_text }}</p>
       {%- endif -%}
@@ -60,12 +56,12 @@
                   location: block.settings.location,
                   quote: block.settings.quote,
                   link: block.settings.link,
-                  animate: section.settings.enable_animations
+                  animate: false
                 %}
               </div>
             {% elsif block.type == 'team_member' %}
               <div class="stories-carousel__slide stories-carousel__slide--team swiper-slide" {{ block.shopify_attributes }}>
-                <div class="team-card {% if section.settings.enable_animations %}animate animate--slide-in{% endif %}">
+                <div class="team-card">
                   <div class="team-card__image-wrapper">
                     {%- if block.settings.member_image != blank -%}
                       {% render 'image',
