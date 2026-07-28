@@ -1,8 +1,8 @@
 # Walkfully — Shopify Theme
 
-Custom Shopify theme powering [walkfully.com](https://walkfully.com), the store for **Walkfully** — a direct-to-consumer walking-pad brand ("Walk more. Walk forever.") selling compact under-desk treadmills and accessories.
+Custom Shopify theme powering [walkfully.com](https://walkfully.com), the store for **Walkfully** — a direct-to-consumer weighted walking gear brand ("Walk more. Walk forever.") selling hip-loaded belts, packs and walk weights.
 
-Designed and built by Nicolas Cantarelli for Lumios Digital.
+Built by Nicolas Cantarelli at Lumios Digital, on top of Haven, a commercial base theme. The commerce foundation is Haven; the brand and content layer described below is the work in this repo.
 
 ## What the theme does
 
